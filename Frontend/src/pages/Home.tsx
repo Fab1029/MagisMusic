@@ -1,6 +1,7 @@
 import MiniatureCard from "@/components/MiniatureCard"
 import NavBar from "@/components/NavBar"
 
+
 function Home() {
   return (
     <div>
@@ -9,6 +10,8 @@ function Home() {
       </header>
 
       <MiniatureCard/>
+      <MiniatureCard isProfile={true}/>
+
     </div>
   )
 }
