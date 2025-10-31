@@ -1,3 +1,4 @@
+import MiniatureCard from "@/components/MiniatureCard"
 import NavBar from "@/components/NavBar"
 
 function Home() {
@@ -6,6 +7,8 @@ function Home() {
       <header>
         <NavBar/>
       </header>
+
+      <MiniatureCard/>
     </div>
   )
 }
