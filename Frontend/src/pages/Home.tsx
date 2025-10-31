@@ -1,6 +1,12 @@
+import NavBar from "@/components/NavBar"
+
 function Home() {
   return (
-    <div>Home</div>
+    <div>
+      <header>
+        <NavBar/>
+      </header>
+    </div>
   )
 }
 
