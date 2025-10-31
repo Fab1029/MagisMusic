@@ -110,6 +110,50 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Sobrescribir los valores dependiendo de nuestro tema */
+
+:root {
+  /* Colores de fondo */
+  --background: #121212;
+  --foreground: #ECEFF1;
+  --card: #1E1E1E;
+  --card-foreground: #ECEFF1;
+  --popover: #1E1E1E;
+  --popover-foreground: #ECEFF1;
+
+  /* Colores primarios */
+  --primary: #9C64FF;
+  --primary-foreground: #FFFFFF;
+
+  /* Colores secundarios */
+  --secondary: #7E7E7E;
+  --secondary-foreground: #FFFFFF;
+
+  /* Colores de acento */
+  --accent: #64B5F6;
+  --accent-foreground: #ECEFF1;
+
+  /* Bordes y otros */
+  --border: #3C3C3C;
+  --ring: rgba(156, 100, 255, 0.5);
+  --input: #2A2A2A;
+  --muted: #2A2A2A;
+  --muted-foreground: #78909C;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #ECEFF1;
+  --card: #1E1E1E;
+  --card-foreground: #ECEFF1;
+  --primary: #9C64FF;
+  --primary-foreground: #FFFFFF;
+  --secondary: #7E7E7E;
+  --secondary-foreground: #FFFFFF;
+  --border: #3C3C3C;
+  --ring: rgba(156, 100, 255, 0.7);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
