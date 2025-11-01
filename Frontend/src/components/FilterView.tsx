@@ -1,6 +1,12 @@
+import Filter from "./Filter"
+
 function FilterView() {
   return (
-    <div>FilterView</div>
+    <div>
+        <Filter/>
+
+
+    </div>
   )
 }
 

@@ -1,3 +1,4 @@
+import FilterView from "@/components/FilterView"
 import MainView from "@/components/MainView"
 import NavBar from "@/components/NavBar"
 import SongsPanel from "@/components/SongsPanel"
@@ -26,7 +27,8 @@ function Home() {
         <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar">
           {/* Implementar algo para poder enrutar mediante query params*/}
           {/*<MainView/>*/}
-          <SongsPanel columns={columns} data={songs}/>
+          {/*<SongsPanel columns={columns} data={songs}/>*/}
+          {<FilterView/>}
 
           <footer>
           </footer>

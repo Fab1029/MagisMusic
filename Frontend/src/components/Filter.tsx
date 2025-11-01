@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 
-const categories = ["Todo", "Artista", "Álbumes", "Canciones"];
+const categories = ["Todo", "Artista", "Álbumes", "Canciones", "Listas"];
 
 function Filter() {
   const [currentIndex, setCurrentIndex] = useState(0);
