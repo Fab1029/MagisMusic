@@ -1,10 +1,10 @@
 import icons from "@/constants/icons"
 
-interface MiniatureCard {
-    isProfile?: boolean;
+export interface MiniatureCardProps {
+  isProfile?: boolean;
 }
 
-function MiniatureCard({isProfile = false}: MiniatureCard) {
+function MiniatureCard({isProfile = false}: MiniatureCardProps) {
   return (
     <div 
       className="group p-2 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card-foreground cursor-pointer w-40 rounded-lg"
