@@ -12,7 +12,7 @@ function CustomCarousel({data}: CustomCarouselProps) {
       >
         <CarouselContent className="-ml-2">
           {data.map((item, index) => (
-            <CarouselItem key={index} className="pl-2 md:basis-1/2 lg:basis-1/6">
+            <CarouselItem key={index} className="pl-2 md:basis-1/2 lg:basis-1/5">
               {item}
             </CarouselItem>
           ))}
