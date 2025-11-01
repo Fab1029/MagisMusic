@@ -6,7 +6,7 @@ interface MiniatureCard {
 
 function MiniatureCard({isProfile = false}: MiniatureCard) {
   return (
-    <button 
+    <div 
       className="group p-2 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card cursor-pointer w-40 rounded-lg"
     >   
       <div className="relative">
@@ -15,11 +15,11 @@ function MiniatureCard({isProfile = false}: MiniatureCard) {
           src="https://i.scdn.co/image/ab67616d00001e0208256748d3e6c3ed016cab16"
         />
 
-        <button 
+        <span 
           className="
             absolute bottom-2 right-2 
             flex items-center justify-center 
-            bg-primary rounded-full w-12 h-12 p-1
+            bg-primary rounded-full w-11 h-11 p-1
             opacity-0 translate-y-5 
             transition-all duration-200 ease-out
             hover:scale-115
@@ -27,11 +27,11 @@ function MiniatureCard({isProfile = false}: MiniatureCard) {
           "
         >
           <img 
-            className="w-6 h-6 object-contain" 
+            className="w-5 h-5 object-contain" 
             src={icons.playIcon}
             alt="Play"
           />
-        </button>
+        </span>
 
       </div>
       
@@ -39,7 +39,7 @@ function MiniatureCard({isProfile = false}: MiniatureCard) {
         <h3 className="text-base font-bold truncate text-left">Rosalía</h3>
         <p className="text-sm text-secondary truncate text-left">Rosalía, Feat ROCU</p>
       </div>
-    </button>
+    </div>
   )
 }
 
