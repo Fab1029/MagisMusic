@@ -11,7 +11,7 @@ const NavBar = () => {
   return (
     <nav className="px-6 py-4 flex items-center justify-between">
       
-      <button className="w-10 h-10 flex items-center justify-center cursor-pointer">
+      <button className="w-15 h-15 flex items-center justify-center cursor-pointer">
         <img className="w-full h-full object-contain" src={icons.magisMusicIcon} alt="Icon Magis Music"/>
       </button>
 

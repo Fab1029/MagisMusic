@@ -7,6 +7,5 @@ export default {
   magisMusicIcon,
   homeIcon,
   searchIcon,
-  playIcon
-
+  playIcon,
 };

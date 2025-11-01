@@ -7,7 +7,7 @@ interface MiniatureCard {
 function MiniatureCard({isProfile = false}: MiniatureCard) {
   return (
     <div 
-      className="group p-2 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card cursor-pointer w-40 rounded-lg"
+      className="group p-2 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card-foreground cursor-pointer w-40 rounded-lg"
     >   
       <div className="relative">
         <img 
