@@ -1,6 +1,7 @@
 import CustomCarousel from "@/components/CustomCarousel"
 import Filter from "@/components/Filter"
 import HeaderSection from "@/components/HeaderSection"
+import MainPanel from "@/components/MainPanel"
 import MiniatureCard from "@/components/MiniatureCard"
 import NavBar from "@/components/NavBar"
 
@@ -28,29 +29,8 @@ function Home() {
 
         {/* CONTENIDO PRINCIPAL */}
         <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar">
-          <section>
-            <Filter/>
-          </section>
-
-          <section>
-            <HeaderSection title="Canciones en tendencia"/> 
-            <CustomCarousel data={Array.from({length: 10}, () => <MiniatureCard/>)} />
-          </section>
-
-          <section>
-            <HeaderSection title="Artistas"/> 
-            <CustomCarousel data={Array.from({length: 10}, () => <MiniatureCard isProfile={true}/>)} />
-          </section>
-
-          <section>
-            <HeaderSection title="Álbumes"/> 
-            <CustomCarousel data={Array.from({length: 10}, () => <MiniatureCard/>)} />
-          </section>
-
-          <section>
-            <HeaderSection title="Play List"/> 
-            <CustomCarousel data={Array.from({length: 10}, () => <MiniatureCard/>)} />
-          </section>
+          {/* Implementar algo para poder enrutar mediante query params*/}
+          <MainPanel/>
 
           <footer>
           </footer>
