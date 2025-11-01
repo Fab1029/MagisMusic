@@ -17,13 +17,17 @@ import {
 import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[];
+  columns: ColumnDef<TData, TValue>[];
+  showHeaders?:boolean;
+  
 }
 
 export function CustomTable<TData, TValue>({
-  columns,
   data,
+  columns,
+  showHeaders = true,
+  
 }: DataTableProps<TData, TValue>) {
   const [selectIndex, setSelectedIndex] = useState<number>();
 
@@ -37,24 +41,27 @@ export function CustomTable<TData, TValue>({
   return (
     <div className="overflow-hidden rounded-md">
       <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                )
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
+        {showHeaders && (
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  )
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+        )}
+        
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => (
