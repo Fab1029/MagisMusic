@@ -2,7 +2,7 @@ import CustomCarousel from "./CustomCarousel"
 import HeaderSection from "./HeaderSection"
 import MiniatureCard from "./MiniatureCard"
 
-function MainPanel() {
+function MainView() {
   return (
     <div>
       <section>
@@ -29,4 +29,4 @@ function MainPanel() {
   )
 }
 
-export default MainPanel
+export default MainView

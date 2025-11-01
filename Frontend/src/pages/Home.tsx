@@ -1,12 +1,7 @@
-import CustomCarousel from "@/components/CustomCarousel"
-import Filter from "@/components/Filter"
-import HeaderSection from "@/components/HeaderSection"
-import MainPanel from "@/components/MainPanel"
-import MiniatureCard from "@/components/MiniatureCard"
+import MainView from "@/components/MainView"
 import NavBar from "@/components/NavBar"
-
-
-
+import SongsPanel from "@/components/SongsPanel"
+import { columns, songs } from "@/constants/test"
 
 function Home() {
   return (
@@ -30,7 +25,8 @@ function Home() {
         {/* CONTENIDO PRINCIPAL */}
         <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar">
           {/* Implementar algo para poder enrutar mediante query params*/}
-          <MainPanel/>
+          {/*<MainView/>*/}
+          <SongsPanel columns={columns} data={songs}/>
 
           <footer>
           </footer>
