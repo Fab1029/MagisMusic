@@ -3,21 +3,21 @@ import { create } from "zustand";
 export const filters = [
   "Todo",
   "Artista",
-  "Álbumes",
+  "Albumes",
   "Canciones",
   "Listas"
 ]
 
 interface SearchState {
-  queryParams: string;
+  query: string;
   filter: string;
-  setQueryParams: (query: string) => void;
+  setQuery: (query: string) => void;
   setFilter: (filter: string) => void;
 }
 
 export const useSearchStore = create<SearchState>((set) => ({
-  queryParams: "",
+  query: "",
   filter: filters[0],
-  setQueryParams: (queryParams) => set({ queryParams }),
+  setQuery: (query) => set({ query }),
   setFilter: (filter) => set({ filter }),
 }));
