@@ -1,8 +1,31 @@
 import icons from "@/constants/icons"
-import { useRef } from "react"
+import { filters, useSearchStore } from "@/store/useSearchStore";
+import { useEffect, useRef, useState } from "react"
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const inputRef = useRef(null);
+  const navigate = useNavigate();
+  const { setQueryParams, filter, setFilter } = useSearchStore();
+  const [searchValue, setSearchValue] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (searchValue.trim().length > 0) {
+        {/* HACER LA BUSQUEDA DE LOS VALORES */}
+        const url = `/?search=${encodeURIComponent(searchValue.trim())}/${filter}`;
+        
+        navigate(url);
+        setQueryParams(url);
+      }
+      else {
+        setFilter(filters[0]);
+        navigate('/');
+      }
+    }, 1000); 
+
+    return () => clearTimeout(handler);
+  }, [searchValue, filter]);
 
   const handleFocusInput = () => {
     inputRef.current?.focus(); 
@@ -30,6 +53,8 @@ const NavBar = () => {
           <img className="w-7 h-7 object-contain" src={icons.searchIcon}/>
           <input 
             ref={inputRef}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             className="focus:outline-none w-md text-secondary font-regular" 
             placeholder="¿Qué quieres escuchar?"
           />

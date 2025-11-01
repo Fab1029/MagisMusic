@@ -1,8 +1,5 @@
 import FilterView from "@/components/FilterView"
-import MainView from "@/components/MainView"
 import NavBar from "@/components/NavBar"
-import SongsPanel from "@/components/SongsPanel"
-import { columns, songs } from "@/constants/test"
 
 function Home() {
   return (

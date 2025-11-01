@@ -1,22 +1,19 @@
-import { useState } from "react";
-
-
-const categories = ["Todo", "Artista", "Álbumes", "Canciones", "Listas"];
+import { filters, useSearchStore } from "@/store/useSearchStore";
 
 function Filter() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const { filter, setFilter } = useSearchStore();
 
-  const handleChangeFilter = (index:number) => {
-    setCurrentIndex(index);
+  const handleChangeFilter = (currentFilter:string) => {
+    setFilter(currentFilter);
   };
 
   return (
     <div className="gap-2 flex items-center">
-      {categories.map((category, index) => (
+      {filters.map((category, index) => (
         <button 
           key={index}
-          onClick={() => handleChangeFilter(index)}
-          className={`px-4 py-2 rounded-full transition-all duration-300 ease-in-out ${currentIndex === index ? 'bg-primary ring-2 ring-primary' : 'bg-card-foreground'}`}
+          onClick={() => handleChangeFilter(category)}
+          className={`px-4 py-2 rounded-full transition-all duration-300 ease-in-out ${category === filter ? 'bg-primary ring-2 ring-primary' : 'bg-card-foreground'}`}
         >
           {category}
         </button>
