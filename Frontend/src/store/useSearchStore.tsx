@@ -2,9 +2,9 @@ import { create } from "zustand";
 
 export const filters = [
   "Todo",
+  "Canciones",
   "Artista",
   "Albumes",
-  "Canciones",
   "Listas"
 ]
 

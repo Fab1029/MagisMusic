@@ -23,7 +23,13 @@ const NavBar = () => {
     }, 1000); 
 
     return () => clearTimeout(handler);
-  }, [searchValue, filter]);
+  }, [searchValue]);
+
+  useEffect(() => {
+    if (searchValue.trim().length > 0) {
+      navigate(`/?search=${encodeURIComponent(searchValue.trim())}/${filter}`);
+    }
+  }, [filter]);
 
   const handleFocusInput = () => {
     inputRef.current?.focus(); 
