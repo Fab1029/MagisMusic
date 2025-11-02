@@ -53,7 +53,7 @@ const NavBar = () => {
       <div className="gap-2 flex">
         <button 
           onClick={handleBackToMain}
-          className="p-2 flex items-center justify-end cursor-pointer rounded-full bg-card" 
+          className="p-2 flex items-center justify-end cursor-pointer rounded-full bg-card transition-all duration-200 ease-in-out hover:bg-secondary" 
         >
           <img className="w-8 h-8 object-contain" src={icons.homeIcon} alt="Icon Home"/>
         </button>
