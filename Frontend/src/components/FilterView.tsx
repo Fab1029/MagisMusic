@@ -3,6 +3,7 @@ import Filter from "./Filter"
 import { CustomTable } from "./CustomTable";
 import { columns, songs } from "@/constants/test";
 import GridPanel from "./GridPanel";
+import FilterGeneralPanel from "./FilterGeneralPanel";
 
 function FilterView() {
   const { filter } = useSearchStore();
@@ -22,7 +23,7 @@ function FilterView() {
         return <GridPanel data={Array.from({length: 20}, () => ({}) )}/>
       
       default:
-        return <div></div>
+        return <FilterGeneralPanel/>
     }      
   }
 
