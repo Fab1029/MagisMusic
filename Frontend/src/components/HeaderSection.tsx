@@ -10,7 +10,7 @@ function HeaderSection({title, onClick}: HeaderSectionProps) {
         {title}
       </h1>
       <button 
-        className="mr-8 cursor-pointer text-gray-300 text-sm
+        className="mr-8 cursor-pointer text-secondary text-sm
         transition-all duration-100 ease-in-out hover:text-white"
       >
         Mostrar todos
