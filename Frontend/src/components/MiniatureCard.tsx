@@ -2,9 +2,12 @@ import icons from "@/constants/icons"
 
 export interface MiniatureCardProps {
   isProfile?: boolean;
+  title:string;
+  image: string;
+  subtitle?:string
 }
 
-function MiniatureCard({isProfile = false}: MiniatureCardProps) {
+function MiniatureCard({isProfile = false, title, subtitle, image}: MiniatureCardProps) {
   return (
     <div 
       className="group p-2 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card-foreground cursor-pointer w-40 rounded-lg"
@@ -12,7 +15,7 @@ function MiniatureCard({isProfile = false}: MiniatureCardProps) {
       <div className="relative">
         <img 
           className={`w-35 h-35 object-contain ${isProfile ? 'rounded-full': 'rounded-sm'}`} 
-          src="https://i.scdn.co/image/ab67616d00001e0208256748d3e6c3ed016cab16"
+          src={image}
         />
 
         <span 
@@ -36,8 +39,8 @@ function MiniatureCard({isProfile = false}: MiniatureCardProps) {
       </div>
       
       <div className="w-full mt-2 self-start">
-        <h3 className="text-base font-bold truncate text-left">Rosalía</h3>
-        <p className="text-sm text-secondary truncate text-left">Rosalía, Feat ROCU</p>
+        <h3 className="text-base font-bold truncate text-left">{title}</h3>
+        <p className="text-sm text-secondary truncate text-left">{subtitle}</p>
       </div>
     </div>
   )

@@ -33,6 +33,7 @@ export const DeezerRepository  = {
                     preview: item.preview,
                     album: item.album.title,
                     image: item.album.cover,
+                    artist: item.artist.name,
                 }
             ));
 
@@ -40,7 +41,82 @@ export const DeezerRepository  = {
         }catch(error) {
             throw new Error(`Deezer Repository Error: ${error}`);
         }        
-    }
+    },
 
+    async getChartAlbums (limit = 10)  {
+        try{
+            const response= await fetch(`${BASE_URL}/chart/0/albums?limit=${limit}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const albums = data.data.map((item) => (
+                {
+                    id: item.id,
+                    title: item.title,
+                    trackList: item.tracklist,
+                    image: item.cover,
+                    artist: item.artist.name,
+                }
+            ));
+
+            return albums;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
+
+    async getChartArtists (limit = 10)  {
+        try{
+            const response= await fetch(`${BASE_URL}/chart/0/artists?limit=${limit}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const artists = data.data.map((item) => (
+                {
+                    id: item.id,
+                    name: item.name,
+                    image: item.picture,
+                    trackList: item.tracklist,
+                }
+            ));
+
+            return artists;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
+
+    async getChartPlayLists (limit = 10)  {
+        try{
+            const response= await fetch(`${BASE_URL}/chart/0/playlists?limit=${limit}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const playLists = data.data.map((item) => (
+                {
+                    id: item.id,
+                    title: item.title,
+                    image: item.picture,
+                    trackList: item.tracklist,
+                }
+            ));
+
+            return playLists;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
 
 }
