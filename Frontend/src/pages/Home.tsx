@@ -4,6 +4,9 @@ import NavBar from "@/components/NavBar";
 import { filters } from "@/store/useSearchStore";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { FloatingPlayer } from "@/components/FloatingPlayer";
+import { AppFooter } from "@/components/AppFooter";
+
 
 function Home() {
   const location = useLocation();
@@ -43,12 +46,13 @@ function Home() {
         </aside>
 
         {/* CONTENIDO PRINCIPAL */}
-        <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar">
+        <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar pb-16">
           {isMainView ? <MainView /> : <FilterView />}
           <footer>
-
+            <AppFooter />
           </footer>
         </div>
+        <FloatingPlayer />
       </main>
     </div>
   );
