@@ -1,6 +1,7 @@
 import FilterView from "@/components/FilterView";
 import MainView from "@/components/MainView";
 import NavBar from "@/components/NavBar";
+import Aside from "@/components/Aside";
 import { filters } from "@/store/useSearchStore";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -39,11 +40,7 @@ function Home() {
 
       {/* MAIN */}
       <main className="flex flex-1 overflow-hidden">
-        <aside className="w-100 shrink-0 bg-card m-2 p-2 rounded-md">
-          <div className="h-full flex items-center justify-center">
-            ASIDE
-          </div>
-        </aside>
+        <Aside/>
 
         {/* CONTENIDO PRINCIPAL */}
         <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar pb-16">

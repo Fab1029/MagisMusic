@@ -5,7 +5,7 @@ import playIcon from "@/assets/icons/play.png";
 import facebookIcon from "@/assets/icons/facebook.png";
 import igIcon from "@/assets/icons/ig.png";
 import twitterIcon from "@/assets/icons/twitter.png";
-
+import agregarIcon from "@/assets/icons/agregar.png"
 
 
 export default {
@@ -15,5 +15,6 @@ export default {
   playIcon,
   facebookIcon,
   igIcon,
-  twitterIcon
+  twitterIcon,
+  agregarIcon,
 };
