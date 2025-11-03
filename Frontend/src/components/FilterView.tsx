@@ -1,11 +1,11 @@
 import { filters, useSearchStore } from "@/store/useSearchStore"
 import Filter from "./Filter"
 import { CustomTable } from "./CustomTable";
-import { columns, songs } from "@/constants/test";
 import GridPanel from "./GridPanel";
 import FilterGeneralPanel from "./FilterGeneralPanel";
 import { useQueries } from "@tanstack/react-query";
 import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQuery, getSearchTracksByQuery } from "@/services/deezer.service";
+import { columns } from "@/models/Track";
 
 function FilterView() {
   const { query } = useSearchStore();
@@ -37,7 +37,7 @@ function FilterView() {
   const handleView = () => {
     switch(filter) {
       case filters[1]:
-        return <CustomTable columns={columns} data={songs}/>
+        return <CustomTable columns={columns} data={tracks.data?.map((item:any) => ({...item}) )}/>
 
       case filters[2]:
         return <GridPanel data={artists} isProfile/>
