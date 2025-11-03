@@ -4,9 +4,35 @@ import { CustomTable } from "./CustomTable";
 import { columns, songs } from "@/constants/test";
 import GridPanel from "./GridPanel";
 import FilterGeneralPanel from "./FilterGeneralPanel";
+import { useQueries } from "@tanstack/react-query";
+import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQuery, getSearchTracksByQuery } from "@/services/deezer.service";
 
 function FilterView() {
+  const { query } = useSearchStore();
   const { filter } = useSearchStore();
+  
+  const results = useQueries({
+    queries: [
+      {
+        queryKey: ["searchTracks", query],
+        queryFn: () => getSearchTracksByQuery(query),
+      },
+      {
+        queryKey: ["searchArtists", query],
+        queryFn: () => getSearchArtistsByQuery(query),
+      },
+      {
+        queryKey: ["searchAlbums", query],
+        queryFn: () => getSearchAlbumnsByQuery(query),
+      },
+      {
+        queryKey: ["searchPlaylists", query],
+        queryFn: () => getSearchPlayListsByQuery(query),
+      },
+    ],
+  });
+
+  const [tracks, artists, albums, playlists] = results;
 
   const handleView = () => {
     switch(filter) {
@@ -14,16 +40,16 @@ function FilterView() {
         return <CustomTable columns={columns} data={songs}/>
 
       case filters[2]:
-        return <GridPanel data={Array.from({length: 20}, () => ({isProfile: true}) )}/>
+        return <GridPanel data={artists} isProfile/>
       
       case filters[3]:
-        return <GridPanel data={Array.from({length: 20}, () => ({}) )}/>
+        return <GridPanel data={albums}/>
       
       case filters[4]:
-        return <GridPanel data={Array.from({length: 20}, () => ({}) )}/>
+        return <GridPanel data={playlists}/>
       
       default:
-        return <FilterGeneralPanel/>
+        return <FilterGeneralPanel tracks={tracks} albums={albums} artists={artists} playlists={playlists}/>
     }      
   }
 
