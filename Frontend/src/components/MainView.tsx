@@ -9,6 +9,8 @@ import {
   getMostPopularPlayLists 
 } from "@/services/deezer.service";
 
+import MainSectionSkeleton from "./MainSectionSkeleton";
+
 function MainView() {
   const results = useQueries({
     queries: [
@@ -34,8 +36,8 @@ function MainView() {
   const [tracks, artists, albums, playlists] = results;
 
   return (
-    <div>
-      {!tracks.isLoading && tracks.data && (
+    <div className="gap-5 flex flex-col">
+      {(!tracks.isLoading && tracks.data) ? (
         <section>
           <HeaderSection title="Canciones en tendencia" />
           <CustomCarousel
@@ -49,9 +51,11 @@ function MainView() {
             ))}
           />
         </section>
+      ): (
+        <MainSectionSkeleton/>
       )}
 
-      {!artists.isLoading && artists.data && (
+      {(!artists.isLoading && artists.data) ? (
         <section>
           <HeaderSection title="Artistas" />
           <CustomCarousel
@@ -60,9 +64,11 @@ function MainView() {
             ))}
           />
         </section>
+      ): (
+        <MainSectionSkeleton/>
       )}
 
-      {!albums.isLoading && albums.data && (
+      {(!albums.isLoading && albums.data) ? (
         <section>
           <HeaderSection title="Álbumes" />
           <CustomCarousel
@@ -71,9 +77,11 @@ function MainView() {
             ))}
           />
         </section>
+      ): (
+        <MainSectionSkeleton/>
       )}
 
-      {!playlists.isLoading && playlists.data && (
+      {(!playlists.isLoading && playlists.data) ? (
         <section>
           <HeaderSection title="Playlists" />
           <CustomCarousel
@@ -82,6 +90,8 @@ function MainView() {
             ))}
           />
         </section>
+      ): (
+        <MainSectionSkeleton/>
       )}
     </div>
   );
