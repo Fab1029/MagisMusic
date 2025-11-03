@@ -1,4 +1,5 @@
-import MiniatureCard, { type MiniatureCardProps } from "./MiniatureCard";
+import GridPanelSkeleton from "./GridPanelSkeleton";
+import MiniatureCard from "./MiniatureCard";
 
 
 interface GridPanelProps {
@@ -14,7 +15,7 @@ function GridPanel({data, isProfile}: GridPanelProps) {
           {data.data.map((item:any, index:number) => <MiniatureCard title={item.name || item.title} subtitle={item.artist || 'Artista'} image={item.image} key={index} isProfile={isProfile}/>)}
         </div>
       ): (
-        <div></div>
+        <GridPanelSkeleton/>
       )}
     </>
   )
