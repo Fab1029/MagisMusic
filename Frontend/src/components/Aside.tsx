@@ -3,7 +3,7 @@ import ListItemCard from "./ListItemCard";
 import icons from "@/constants/icons";
 import { Button } from "./ui/button"
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
-import { CustomDropdownMenu } from "./CustomDropdownmenu";
+import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { InlineSearch } from "./InlineSearch";
 
 const Aside = () => {
