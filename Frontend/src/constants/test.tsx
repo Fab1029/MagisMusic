@@ -12,10 +12,6 @@ interface Song {
 
 export const columns: ColumnDef<Song>[] = [
   {
-    accessorKey: "id",
-    header: "#",
-  },
-  {
     accessorKey: "image",
     header: "",
     cell: ({ row }) => (

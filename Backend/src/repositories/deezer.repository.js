@@ -29,7 +29,7 @@ export const DeezerRepository  = {
                 {
                     id: item.id,
                     title: item.title,
-                    duration: item.duration,
+                    duration: (item.duration / 60).toFixed(2),
                     preview: item.preview,
                     album: item.album.title,
                     image: item.album.cover,
@@ -119,4 +119,107 @@ export const DeezerRepository  = {
         }        
     },
 
+    async getSearchTracks (query)  {
+        try{
+            const response= await fetch(`${BASE_URL}/search/track?q=${query}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const tracks = data.data.map((item) => (
+                {
+                    id: item.id,
+                    title: item.title,
+                    duration: (item.duration / 60).toFixed(2),
+                    preview: item.preview,
+                    album: item.album.title,
+                    image: item.album.cover,
+                    artist: item.artist.name,
+                }
+            ));
+
+            return tracks;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
+
+    async getSearchAlbums (query)  {
+        try{
+            const response= await fetch(`${BASE_URL}/search/album?q=${query}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const albums = data.data.map((item) => (
+                {
+                    id: item.id,
+                    title: item.title,
+                    trackList: item.tracklist,
+                    image: item.cover,
+                    artist: item.artist.name,
+                }
+            ));
+
+            return albums;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
+
+    async getSearchArtists (query)  {
+        try{
+            const response= await fetch(`${BASE_URL}/search/artist?q=${query}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const artists = data.data.map((item) => (
+                {
+                    id: item.id,
+                    name: item.name,
+                    image: item.picture,
+                    trackList: item.tracklist,
+                }
+            ));
+
+            return artists;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
+
+    async getSearchPlayLists (query)  {
+        try{
+            const response= await fetch(`${BASE_URL}/search/playlist?q=${query}`);
+            const data = await response.json();
+
+            if(data.error) {
+                const message = BASE_ERROR[data.error.code] || "Unknown Deezer API Error";
+                throw new Error(`Chart Repository Error: ${message}`);
+            }
+            
+            const playLists = data.data.map((item) => (
+                {
+                    id: item.id,
+                    title: item.title,
+                    image: item.picture,
+                    trackList: item.tracklist,
+                }
+            ));
+
+            return playLists;
+        }catch(error) {
+            throw new Error(`Deezer Repository Error: ${error}`);
+        }        
+    },
 }

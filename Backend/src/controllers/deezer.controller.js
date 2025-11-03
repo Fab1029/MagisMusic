@@ -48,4 +48,54 @@ export const DeezerController  = {
             throw new Error(`Deezer Controller Error: ${error}`);
         }
     },
+
+    async getSearchTracksByQuery(req , res) {
+        try {
+            const query = String(req.query.q);
+            const tracks = await DeezerService.getSearchTracksByQuery(query);
+            
+            res.json(tracks);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    async getSearchAlbumsByQuery(req , res) {
+        try {
+            const query = String(req.query.q);
+            const albums = await DeezerService.getSearchAlbumsByQuery(query);
+            
+            res.json(albums);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    async getSearchArtistsByQuery(req , res) {
+        try {
+            const query = String(req.query.q);
+            const artists = await DeezerService.getSearchArtistsByQuery(query);
+            
+            res.json(artists);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    async getSearchPlayListsByQuery(req , res) {
+        try {
+            const query = String(req.query.q);
+            const playLists = await DeezerService.getSearchPlayListsByQuery(query);
+            
+            res.json(playLists);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    
 }

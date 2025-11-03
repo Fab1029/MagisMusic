@@ -1,15 +1,23 @@
-import MiniatureCard, { type MiniatureCardProps } from "./MiniatureCard";
+import GridPanelSkeleton from "./GridPanelSkeleton";
+import MiniatureCard from "./MiniatureCard";
 
 
 interface GridPanelProps {
-    data: MiniatureCardProps[];
+  data: any;
+  isProfile?:boolean;
 }
 
-function GridPanel({data}: GridPanelProps) {
+function GridPanel({data, isProfile}: GridPanelProps) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-        {data.map((item, index) => <MiniatureCard key={index} isProfile={item.isProfile}/>)}
-    </div>
+    <>
+      {(!data.isLoading && data.data) ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+          {data.data.map((item:any, index:number) => <MiniatureCard title={item.name || item.title} subtitle={item.artist || 'Artista'} image={item.image} key={index} isProfile={isProfile}/>)}
+        </div>
+      ): (
+        <GridPanelSkeleton/>
+      )}
+    </>
   )
 }
 
