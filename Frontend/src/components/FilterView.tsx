@@ -11,7 +11,7 @@ import CustomTableSkeleton from "./CustomTableSkeleton";
 function FilterView() {
   const { query } = useSearchStore();
   const { filter } = useSearchStore();
-  
+  console.log(filter);
   const results = useQueries({
     queries: [
       {

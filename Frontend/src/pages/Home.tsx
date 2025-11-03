@@ -2,7 +2,7 @@ import FilterView from "@/components/FilterView";
 import MainView from "@/components/MainView";
 import NavBar from "@/components/NavBar";
 import Aside from "@/components/Aside";
-import { filters } from "@/store/useSearchStore";
+import { filters, useSearchStore } from "@/store/useSearchStore";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
@@ -11,6 +11,7 @@ import { AppFooter } from "@/components/AppFooter";
 
 function Home() {
   const location = useLocation();
+  const { setQuery, setFilter } = useSearchStore();
   const [isMainView, setIsMainView] = useState(true);
 
   useEffect(() => {
@@ -20,15 +21,22 @@ function Home() {
     const match = search.match(regex);
 
     if (match) {
+      const query = search.split('/')[0].split('=')[1];
       const decodedFilter = search.split('/')[1];
 
       if (filters.includes(decodedFilter)) {
+
+        setQuery(query);
+        setFilter(decodedFilter);
         setIsMainView(false);
-        return;
       }
+
+    }
+    else {
+      setIsMainView(true);
     }
 
-    setIsMainView(true);
+    
   }, [location]);
 
   return (

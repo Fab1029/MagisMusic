@@ -7,8 +7,8 @@ interface CustomTableSkeletonProps {
 const CustomTableSkeleton = ({rowsNumber}: CustomTableSkeletonProps) => {
   return (
     <div className="gap-5 flex flex-col justify-between">
-      {Array.from({length: rowsNumber}, () => (
-        <Skeleton className="w-full h-10"/>
+      {Array.from({length: rowsNumber}, (_, index) => (
+        <Skeleton  key={index} className="w-full h-10"/>
       ))}
     </div>
   )
