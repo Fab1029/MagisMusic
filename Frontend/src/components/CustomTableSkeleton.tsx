@@ -6,9 +6,9 @@ interface CustomTableSkeletonProps {
 
 const CustomTableSkeleton = ({rowsNumber}: CustomTableSkeletonProps) => {
   return (
-    <div className="gap-5 flex flex-col">
+    <div className="gap-5 flex flex-col justify-between">
       {Array.from({length: rowsNumber}, () => (
-        <Skeleton className="w-full h-10 bg-card-foreground"/>
+        <Skeleton className="w-full h-10"/>
       ))}
     </div>
   )

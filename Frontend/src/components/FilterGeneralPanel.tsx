@@ -1,4 +1,4 @@
-import { columnsMin, songs } from "@/constants/test"
+import { columnsMin } from "@/constants/test"
 import { CustomTable } from "./CustomTable"
 import HeaderSection from "./HeaderSection"
 import { filters } from "@/store/useSearchStore"
@@ -6,6 +6,10 @@ import MiniatureCardLarge from "./MiniatureCardLarge"
 import CustomCarousel from "./CustomCarousel"
 import MiniatureCard from "./MiniatureCard"
 import MainSectionSkeleton from "./MainSectionSkeleton"
+import CustomTableSkeleton from "./CustomTableSkeleton"
+import { Skeleton } from "./ui/skeleton"
+import MiniatureCardLargeSkeleton from "./MiniatureCardLargeSkeleton"
+
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -19,16 +23,44 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
     <div className="gap-5 flex flex-col">
 			<div className="gap-2 flex">
 				<section className="gap-2 flex flex-col flex-1 h-full">
-					<h1 className="font-bold text-2xl">
-						Resultado principal
-					</h1>
-					<MiniatureCardLarge/>
+					{(!tracks.isLoading && tracks.data) ? (
+						<>
+							<h1 className="font-bold text-2xl">
+								Resultado principal
+							</h1>
+							<MiniatureCardLarge title={tracks.data[0].title} subtitle={tracks.data[0].artist} image={tracks.data[0].image}/>
+						</>
+					): (
+						<>
+							<Skeleton className="w-30 h-8"/>
+							<MiniatureCardLargeSkeleton />
+						</>
+						
+					)}
 				</section>
 
+
 				<section className="gap-2 flex flex-col flex-1 h-full">
-					<HeaderSection title={filters[1]}/>
-					<CustomTable columns={columnsMin} data={songs.slice(0, 3)} showHeaders={false}/>
+					{(!tracks.isLoading && tracks.data) ? (
+						<>
+							<HeaderSection title={filters[1]}/>
+							<CustomTable columns={columnsMin} data={tracks.data.slice(0, 3)} showHeaders={false}/>
+						</>
+						
+					) : (
+						<>
+							<div className="flex items-center justify-between">
+								<Skeleton className="h-8 w-35"/>
+								<Skeleton className="h-8 w-20"/>
+							</div>
+							<CustomTableSkeleton rowsNumber={3}/>
+						</>
+						
+					)}						
 				</section>
+
+
+				
 			</div>
 
 			{(!tracks.isLoading && tracks.data) ? (

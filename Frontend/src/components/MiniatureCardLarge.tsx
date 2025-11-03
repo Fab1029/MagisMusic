@@ -1,13 +1,19 @@
 import icons from "@/constants/icons"
 
-function MiniatureCardLarge() {
+interface MiniatureCardLargeProps {
+	title:string;
+  image: string;
+  subtitle?:string
+}
+
+function MiniatureCardLarge({title, image, subtitle}: MiniatureCardLargeProps) {
   return (
     <div 
 			className="group p-2 flex flex-col transition-all ease-in-out duration-300 backdrop-brightness-125 hover:bg-card-foreground cursor-pointer w-full rounded-lg relative"
 		>   
 			<img 
 				className="w-35 h-35 object-contain rounded-sm" 
-				src="https://i.scdn.co/image/ab67616d00001e0208256748d3e6c3ed016cab16"
+				src={image}
 			/>
 
 			<button 
@@ -29,8 +35,8 @@ function MiniatureCardLarge() {
 			</button>
 			
 			<div className="w-full mt-2 self-start">
-				<h3 className="font-bold truncate text-left text-lg">Rosalía</h3>
-				<p className="text-sm text-secondary truncate text-left">Rosalía, Feat ROCU</p>
+				<h3 className="font-bold truncate text-left text-lg">{title}</h3>
+				<p className="text-sm text-secondary truncate text-left">{subtitle}</p>
 			</div>
 		</div>
   )

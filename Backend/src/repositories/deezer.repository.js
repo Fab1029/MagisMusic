@@ -29,7 +29,7 @@ export const DeezerRepository  = {
                 {
                     id: item.id,
                     title: item.title,
-                    duration: item.duration,
+                    duration: (item.duration / 60).toFixed(2),
                     preview: item.preview,
                     album: item.album.title,
                     image: item.album.cover,
@@ -133,7 +133,7 @@ export const DeezerRepository  = {
                 {
                     id: item.id,
                     title: item.title,
-                    duration: item.duration,
+                    duration: (item.duration / 60).toFixed(2),
                     preview: item.preview,
                     album: item.album.title,
                     image: item.album.cover,
