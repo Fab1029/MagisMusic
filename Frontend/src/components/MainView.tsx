@@ -24,7 +24,6 @@ function MainView() {
         <HeaderSection title="Play List"/> 
         <CustomCarousel data={Array.from({length: 10}, () => <MiniatureCard/>)} />
       </section>
-
     </div>
   )
 }
