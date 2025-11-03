@@ -34,4 +34,36 @@ export const DeezerService  = {
         }
     },
 
+    async getSearchTracksByQuery (query) {
+        try{
+            return await DeezerRepository.getSearchTracks(query);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
+
+    async getSearchAlbumsByQuery (query) {
+        try{
+            return await DeezerRepository.getSearchAlbums(query);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
+
+    async getSearchArtistsByQuery (query) {
+        try{
+            return await DeezerRepository.getSearchArtists(query);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
+
+    async getSearchPlayListsByQuery (query) {
+        try{
+            return await DeezerRepository.getSearchPlayLists(query);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
+
 }
