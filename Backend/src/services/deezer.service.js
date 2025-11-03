@@ -8,6 +8,30 @@ export const DeezerService  = {
         }catch(error) {
             throw new Error(`Deezer Service Error: ${error}`);
         }
-    }
+    },
+
+    async getMostPopularAlbumns (limit = 10) {
+        try{
+            return await DeezerRepository.getChartAlbums(limit);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
+
+    async getMostPopularArtists (limit = 10) {
+        try{
+            return await DeezerRepository.getChartArtists(limit);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
+
+    async getMostPopularPlayLists (limit = 10) {
+        try{
+            return await DeezerRepository.getChartPlayLists(limit);
+        }catch(error) {
+            throw new Error(`Deezer Service Error: ${error}`);
+        }
+    },
 
 }
