@@ -1,20 +1,39 @@
-import { useState } from "react";
 import InfoCard from "./InfoCard";
 import ListItemCard from "./ListItemCard";
 import icons from "@/constants/icons";
 import { Button } from "./ui/button"
+import { TooltipDropdownButton } from "./TooltipDropdownButton";
+import { CustomDropdownMenu } from "./CustomDropdownmenu";
+import { InlineSearch } from "./InlineSearch";
 
 const Aside = () => {
-  
+  const items_agregar = [
+    { label: "Playlist" },
+    { label: "Carpeta" },
+    { label: "Jam" },
+  ]
+
+  const items_recientes = [
+    { label: "Sort by", disabled: true },
+    { label: "Recientes" },
+    { label: "Añadidos Recientes" },
+    { label: "Alfabético" }
+  ]
+
   return (
     <aside className=" flex flex-col w-100 gap-5 shrink-0 bg-card m-2 p-2 rounded-md overflow-y-auto custom-scrollbar pb-20">
       <div className="flex items-center justify-between p-3">
         <h1 className="font-bold">Tu biblioteca</h1>
-        <button className="rounded-full p-2 hover:bg-secondary transition-all duration-300 ease-in-out">
-          <img 
-            className="w-5 h-5"
-            src={icons.agregarIcon} alt="" />
-        </button>
+
+        <TooltipDropdownButton
+          trigger={
+            <Button variant="pill" className="bg-card p-2 rounded-full">
+              <img className="w-5 h-5" src={icons.agregarIcon} alt="Opciones" />
+            </Button>
+          }
+          infoHover="Crear playlist"
+          menuItems={items_agregar}
+        />
       </div>
 
       <div className="flex gap-3">
@@ -23,12 +42,17 @@ const Aside = () => {
       </div>
 
       <div className="flex justify-between px-4">
-        <img className="w-4 h-4 object-contain" src={icons.searchIcon}/>
-        <button 
-          className="text-secondary font-semibold hover:scale-102 hover:text-primary-foreground
-          transition-all duration-300 ease-in-out cursor-pointer">
-          Recientes
-        </button>
+        <InlineSearch />
+        <CustomDropdownMenu
+          trigger = {
+            <button 
+            className="text-secondary font-semibold hover:scale-102 hover:text-primary-foreground
+            transition-all duration-300 ease-in-out cursor-pointer">
+            Recientes
+          </button>
+          }
+          menuItems={items_recientes}
+        />
       </div>
 
       <div>

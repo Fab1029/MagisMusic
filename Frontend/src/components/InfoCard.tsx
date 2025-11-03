@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Button } from "./ui/button";
 
 export interface InfoCardProps {
   title?: string;
@@ -20,20 +21,14 @@ function InfoCard({
         className
       )}
     >
-      {/* Título */}
+
       {title && <h2 className="text-l font-bold text-foreground">{title}</h2>}
 
-      {/* Descripción */}
       {description && (
         <p className="text-sm text-foreground/80">{description}</p>
       )}
 
-      <button
-          className="inline-flex w-auto self-start px-2 text-black bg-white py-1 rounded-full font-semibold hover:scale-102
-          transition-all duration-300 ease-in-out cursor-pointer"
-        >
-          {textButton}
-        </button>
+      <Button variant="pillHover" className="inline-flex w-auto self-start">{textButton}</Button>
     </div>
   );
 }
