@@ -11,6 +11,7 @@ import {
 
 import MainSectionSkeleton from "./MainSectionSkeleton";
 import ContentView from "./ContentView";
+import { useNavigate } from "react-router-dom";
 
 function MainView() {
   const results = useQueries({
@@ -41,7 +42,7 @@ function MainView() {
       
       {(!tracks.isLoading && tracks.data) ? (
         <section>
-          <HeaderSection title="Canciones en tendencia" />
+          <HeaderSection title="Canciones en tendencia"/>
           <CustomCarousel
             data={tracks.data.map((item: any, i: number) => (
               <MiniatureCard
