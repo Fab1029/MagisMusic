@@ -25,18 +25,15 @@ function Home() {
       const decodedFilter = search.split('/')[1];
 
       if (filters.includes(decodedFilter)) {
-
         setQuery(query);
         setFilter(decodedFilter);
         setIsMainView(false);
+
+        return;
       }
-
     }
-    else {
-      setIsMainView(true);
-    }
-
     
+    setIsMainView(true);
   }, [location]);
 
   return (

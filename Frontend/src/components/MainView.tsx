@@ -10,6 +10,7 @@ import {
 } from "@/services/deezer.service";
 
 import MainSectionSkeleton from "./MainSectionSkeleton";
+import ContentView from "./ContentView";
 
 function MainView() {
   const results = useQueries({
@@ -37,6 +38,7 @@ function MainView() {
 
   return (
     <div className="gap-5 flex flex-col">
+      
       {(!tracks.isLoading && tracks.data) ? (
         <section>
           <HeaderSection title="Canciones en tendencia" />
@@ -93,6 +95,7 @@ function MainView() {
       ): (
         <MainSectionSkeleton/>
       )}
+      {/*<ContentView tracks={tracks}/>*/}
     </div>
   );
 }
