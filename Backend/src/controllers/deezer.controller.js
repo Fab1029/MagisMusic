@@ -51,6 +51,7 @@ export const DeezerController  = {
 
     async getSearchTracksByQuery(req , res) {
         try {
+            console.log(req, "ESTE E SEL REQUEST");
             const query = String(req.query.q);
             const tracks = await DeezerService.getSearchTracksByQuery(query);
             
@@ -97,5 +98,52 @@ export const DeezerController  = {
         }
     },
 
+    async getTrackById(req , res) {
+        try {
+            const id = Number(req.params.id);
+            const track = await DeezerService.getTrackById(id);
+            
+            res.json(track);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    async getAlbumById(req , res) {
+        try {
+            const id = Number(req.params.id);
+            const album = await DeezerService.getAlbumById(id);
+            
+            res.json(album);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    async getPlayListById(req , res) {
+        try {
+            const id = Number(req.params.id);
+            const playlist = await DeezerService.getPlayListById(id);
+            
+            res.json(playlist);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
+
+    async getArtistById(req , res) {
+        try {
+            const id = Number(req.params.id);
+            const artist = await DeezerService.getArtistById(id);
+            
+            res.json(artist);
+
+        } catch (error) {
+            throw new Error(`Deezer Controller Error: ${error}`);
+        }
+    },
     
 }

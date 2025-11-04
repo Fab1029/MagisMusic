@@ -12,8 +12,7 @@ import { useLocation } from "react-router-dom";
 const SectionView = () => {
   const filter = useLocation().pathname.split('/')[2];
 
-
-  const handleQuery = (limit: number = 25) => {
+  const handleQuery = (limit: number = 40) => {
     switch (filter) {
       case filters[1]:
         return  getMostPopularTracks(limit);

@@ -20,6 +20,10 @@ function MainView() {
     navigate(`/section/${filter}`);
   };
 
+  const handleOnCardClick = (id:number, filter:string) => {
+    navigate(`/content/${id}/${filter}`);
+  }
+
   const results = useQueries({
     queries: [
       {
@@ -56,6 +60,7 @@ function MainView() {
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
+                onCardClick={() => handleOnCardClick(item.id, filters[1])}
               />
             ))}
           />
@@ -69,7 +74,14 @@ function MainView() {
           <HeaderSection title="Artistas" onClick={() => handleNavigate(filters[2])}/>
           <CustomCarousel
             data={artists.data.map((item: any, i: number) => (
-              <MiniatureCard key={i} isProfile title={item.name} image={item.image} subtitle="Artista"/>
+              <MiniatureCard 
+                key={i} 
+                isProfile 
+                title={item.name} 
+                image={item.image} 
+                subtitle="Artista" 
+                onCardClick={() => handleOnCardClick(item.id, filters[2])}
+              />
             ))}
           />
         </section>
@@ -82,7 +94,13 @@ function MainView() {
           <HeaderSection title="Álbumes" onClick={() => handleNavigate(filters[3])}/>
           <CustomCarousel
             data={albums.data.map((item: any, i: number) => (
-              <MiniatureCard key={i} title={item.title} image={item.image} subtitle={item.artist}/>
+              <MiniatureCard 
+                key={i} 
+                title={item.title} 
+                image={item.image} 
+                subtitle={item.artist} 
+                onCardClick={() => handleOnCardClick(item.id, filters[3])}
+              />
             ))}
           />
         </section>
@@ -95,14 +113,19 @@ function MainView() {
           <HeaderSection title="Playlists" onClick={() => handleNavigate(filters[4])}/>
           <CustomCarousel
             data={playlists.data.map((item: any, i: number) => (
-              <MiniatureCard key={i} title={item.title} image={item.image} />
+              <MiniatureCard 
+                key={i} 
+                title={item.title} 
+                image={item.image} 
+                onCardClick={() => handleOnCardClick(item.id, filters[4])}
+              />
             ))}
           />
         </section>
       ): (
         <MainSectionSkeleton/>
       )}
-      {/*<ContentView tracks={tracks}/>*/}
+
     </div>
   );
 }

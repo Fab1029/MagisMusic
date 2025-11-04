@@ -4,12 +4,15 @@ export interface MiniatureCardProps {
   isProfile?: boolean;
   title:string;
   image: string;
-  subtitle?:string
+  subtitle?:string;
+  onCardClick: () => void;
+  onPlayClick: () => void;
 }
 
-function MiniatureCard({isProfile = false, title, subtitle, image}: MiniatureCardProps) {
+function MiniatureCard({isProfile = false, title, subtitle, image, onCardClick}: MiniatureCardProps) {
   return (
     <div 
+      onClick={onCardClick}
       className="group p-2 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card-foreground cursor-pointer w-40 rounded-lg"
     >   
       <div className="relative">

@@ -120,3 +120,62 @@ export const getSearchArtistsByQuery = async(query: string) => {
     }
 };
 
+export const getTrackById = async(id: number) => {
+    try{
+        const response = await fetch(`${BASE_URL}/tracks/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Error al obtener cancion por id');            
+        }
+
+        return await response.json();
+
+    }catch(error) {
+        throw new Error('Error al obtener cancion por id');    
+    }
+};
+
+export const getAlbumById = async(id: number) => {
+    try{
+        const response = await fetch(`${BASE_URL}/albums/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Error al obtener album por id');            
+        }
+
+        return await response.json();
+
+    }catch(error) {
+        throw new Error('Error al obtener album por id');    
+    }
+};
+
+export const getArtistById = async(id: number) => {
+    try{
+        const response = await fetch(`${BASE_URL}/artists/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Error al obtener artistas por id');            
+        }
+
+        return await response.json();
+
+    }catch(error) {
+        throw new Error('Error al obtener artistas por id');    
+    }
+};
+
+export const getPlayListById = async(id: number) => {
+    try{
+        const response = await fetch(`${BASE_URL}/playlists/${id}`);
+
+        if (!response.ok) {
+            throw new Error('Error al obtener play list por id');            
+        }
+
+        return await response.json();
+
+    }catch(error) {
+        throw new Error('Error al obtener play list por id');      
+    }
+};

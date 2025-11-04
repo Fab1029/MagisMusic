@@ -2,11 +2,10 @@ import icons from "@/constants/icons";
 import { CustomTable } from "./CustomTable";
 import { columns } from "@/models/Track";
 
-interface ContentViewProps {
-  tracks:any;
-}
 
-function ContentView({tracks}: ContentViewProps) {
+
+function ContentView() {
+  
   return (
     <div>
       <div className="p-5 relative">
@@ -49,7 +48,7 @@ function ContentView({tracks}: ContentViewProps) {
         </div>
       </div>
 
-      <CustomTable columns={columns} data={tracks.data?.map((item:any) => ({...item}) )}/>
+      {/*<CustomTable columns={columns} data={tracks.data?.map((item:any) => ({...item}) )}/>*/}
     </div>
   );
 }
