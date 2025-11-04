@@ -1,6 +1,6 @@
 import icons from "@/constants/icons"
 import { filters, useSearchStore } from "@/store/useSearchStore";
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
@@ -8,11 +8,10 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { query, setQuery, filter, setFilter } = useSearchStore();
 
-
   useEffect(() => {
     const handler = setTimeout(() => {
       if (query.trim().length > 0) {
-        navigate(`/?search=${encodeURIComponent(query.trim())}/${filter}`);
+        navigate(`/search/${query.trim()}/${filter}`);
       }
       else {
         handleBackToMain();
@@ -22,9 +21,10 @@ const NavBar = () => {
     return () => clearTimeout(handler);
   }, [query]);
 
+
   useEffect(() => {
     if (query.trim().length > 0) {
-      navigate(`/?search=${encodeURIComponent(query.trim())}/${filter}`);
+      navigate(`/search/${query.trim()}/${filter}`);
     }
   }, [filter]);
 

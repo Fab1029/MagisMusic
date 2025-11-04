@@ -10,10 +10,16 @@ import {
 } from "@/services/deezer.service";
 
 import MainSectionSkeleton from "./MainSectionSkeleton";
-import ContentView from "./ContentView";
 import { useNavigate } from "react-router-dom";
+import { filters } from "@/store/useSearchStore";
 
 function MainView() {
+  const navigate = useNavigate();
+
+  const handleNavigate = (filter: string) => {
+    navigate(`/section/${filter}`);
+  };
+
   const results = useQueries({
     queries: [
       {
@@ -42,7 +48,7 @@ function MainView() {
       
       {(!tracks.isLoading && tracks.data) ? (
         <section>
-          <HeaderSection title="Canciones en tendencia"/>
+          <HeaderSection title="Canciones en tendencia" onClick={() => handleNavigate(filters[1])}/>
           <CustomCarousel
             data={tracks.data.map((item: any, i: number) => (
               <MiniatureCard
@@ -60,7 +66,7 @@ function MainView() {
 
       {(!artists.isLoading && artists.data) ? (
         <section>
-          <HeaderSection title="Artistas" />
+          <HeaderSection title="Artistas" onClick={() => handleNavigate(filters[2])}/>
           <CustomCarousel
             data={artists.data.map((item: any, i: number) => (
               <MiniatureCard key={i} isProfile title={item.name} image={item.image} subtitle="Artista"/>
@@ -73,7 +79,7 @@ function MainView() {
 
       {(!albums.isLoading && albums.data) ? (
         <section>
-          <HeaderSection title="Álbumes" />
+          <HeaderSection title="Álbumes" onClick={() => handleNavigate(filters[3])}/>
           <CustomCarousel
             data={albums.data.map((item: any, i: number) => (
               <MiniatureCard key={i} title={item.title} image={item.image} subtitle={item.artist}/>
@@ -86,7 +92,7 @@ function MainView() {
 
       {(!playlists.isLoading && playlists.data) ? (
         <section>
-          <HeaderSection title="Playlists" />
+          <HeaderSection title="Playlists" onClick={() => handleNavigate(filters[4])}/>
           <CustomCarousel
             data={playlists.data.map((item: any, i: number) => (
               <MiniatureCard key={i} title={item.title} image={item.image} />

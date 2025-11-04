@@ -1,6 +1,5 @@
 import { CustomTable } from "./CustomTable"
 import HeaderSection from "./HeaderSection"
-import { filters, useSearchStore } from "@/store/useSearchStore"
 import MiniatureCardLarge from "./MiniatureCardLarge"
 import CustomCarousel from "./CustomCarousel"
 import MiniatureCard from "./MiniatureCard"
@@ -10,6 +9,7 @@ import { Skeleton } from "./ui/skeleton"
 import MiniatureCardLargeSkeleton from "./MiniatureCardLargeSkeleton"
 import { columnsMin } from "@/models/Track"
 import { useNavigate } from "react-router-dom"
+import { filters, useSearchStore } from "@/store/useSearchStore"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -23,7 +23,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
   const { query } = useSearchStore();
 
   const handleNavigate = (filter:string) => {
-    navigate(`/?search=${encodeURIComponent(query.trim())}/${filter}`);
+    navigate(`/search/${query.trim()}/${filter}`);
   };
 
   return (

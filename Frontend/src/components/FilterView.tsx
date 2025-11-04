@@ -55,7 +55,7 @@ function FilterView() {
       default:
         return <FilterGeneralPanel tracks={tracks} albums={albums} artists={artists} playlists={playlists}/>
     }      
-  }
+  };
 
   return (
     <div className="gap-2 flex flex-col">
