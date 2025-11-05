@@ -28,7 +28,7 @@ const SectionView = () => {
   };
 
   const data = useQuery({
-    queryKey: ["dataContentView", filter],
+    queryKey: ["dataSectionView", filter],
     queryFn: () => handleQuery(),
   });
 

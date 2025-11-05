@@ -61,7 +61,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 					{(!tracks.isLoading && tracks.data) ? (
 						<>
 							<HeaderSection title={filters[1]} onClick={() => handleNavigate(filters[1])}/>
-							<CustomTable columns={columnsMin} data={tracks.data.slice(0, 3)} showHeaders={false}/>
+							<CustomTable columns={columnsMin} data={tracks.data.slice(0, 4)} showHeaders={false}/>
 						</>
 						
 					) : (

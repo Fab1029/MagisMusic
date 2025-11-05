@@ -44,17 +44,6 @@ export const columns: ColumnDef<Song>[] = [
 
 export const columnsMin: ColumnDef<Song>[] = [
   {
-    accessorKey: "image",
-    header: "",
-    cell: ({ row }) => (
-      <img
-        src={row.original.image}
-        alt={row.original.title}
-        className="w-10 h-10 rounded-md object-contain"
-      />
-    )
-  },
-  {
     accessorKey: "title",
     header: "Título",
   },

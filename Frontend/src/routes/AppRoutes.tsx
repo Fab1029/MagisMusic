@@ -4,10 +4,12 @@ import FilterView from "@/components/FilterView";
 import SectionView from "@/components/SectionView";
 import Home from "@/pages/Home";
 import ContentView from "@/components/ContentView";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 function AppRoutes() {
   return (
     <Router>
+      <ScrollToTop/>
       <Routes>
         <Route path="/" element={<Home />}>
           <Route index element={<MainView />} />

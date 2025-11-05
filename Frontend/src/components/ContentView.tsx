@@ -1,11 +1,38 @@
 import icons from "@/constants/icons";
 import { CustomTable } from "./CustomTable";
 import { columns } from "@/models/Track";
-
-
+import { useLocation } from "react-router-dom";
+import { filters } from "@/store/useSearchStore";
+import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer.service";
+import { useQuery } from "@tanstack/react-query";
+import CustomTableSkeleton from "./CustomTableSkeleton";
+import { Skeleton } from "./ui/skeleton";
 
 function ContentView() {
-  
+  const pathName = useLocation().pathname;
+  const id = Number(pathName.split('/')[2]);
+  const filter = pathName.split('/')[3];
+  console.log(id, " ", filter);
+  const handleQuery = () => {
+    switch (filter) {
+      case filters[1]:
+        return  getTrackById(id);
+      case filters[2]:
+        return  getArtistById(id);
+      case filters[3]:
+        return  getAlbumById(id);
+      case filters[4]:
+        return  getPlayListById(id);
+      default:
+        return [];
+    }
+  };
+
+  const data = useQuery({
+    queryKey: ["dataContentView", filter, id],
+    queryFn: () => handleQuery(),
+  });
+
   return (
     <div>
       <div className="p-5 relative">
@@ -13,20 +40,34 @@ function ContentView() {
         <div className="bg-primary mask-b-from-gray-50 absolute inset-0 z-0 rounded-tl-md" />
 
         <div className="gap-10 flex items-end-safe relative z-1">
-          <img
-            className="w-64 h-64 rounded-md"
-            src="https://cdn-images.dzcdn.net/images/cover/5718f7c81c27e0b2417e2a4c45224f8a/1000x1000-000000-80-0-0.jpg"
-          />
+          {(!data.isLoading && data.data) ? (
+            <img
+              className="w-64 h-64 rounded-md"
+              src={data.data.image}
+            />
+          ): (
+            <Skeleton className="w-64 h-64 rounded-md"/>
+          )}
+          
           <div className="gap-5 flex flex-col">
-            <h1 className="font-bold text-7xl text-white">444 Remix</h1>
-            <h3 className="font-bold text-2xl text-accent-foreground">Bad Bunny</h3>
+            {(!data.isLoading && data.data) ? (
+              <>
+                <h1 className="font-bold text-7xl text-white truncate max-w-xl">{data.data.title || data.data.name}</h1>
+                <h3 className="font-bold text-2xl text-accent-foreground truncate max-w-xl">{data.data.artist || data.data.description || 'Artista'}</h3>
+              </>
+            ): (
+              <>
+                <Skeleton className="h-15 w-60"/>
+                <Skeleton className="h-10 w-30"/>
+              </>
+            )}
+            
           </div>
         </div>
 
         <div className="mt-6 flex gap-4 relative z-1 items-center">
           <button 
             className="
-
               flex items-center justify-center 
               bg-primary rounded-full w-14 h-14 p-1
               transition-all duration-200 ease-out
@@ -47,8 +88,11 @@ function ContentView() {
           </button>
         </div>
       </div>
-
-      {/*<CustomTable columns={columns} data={tracks.data?.map((item:any) => ({...item}) )}/>*/}
+      {(!data.isLoading && data.data) ? (
+        <CustomTable columns={columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}/>
+      ): (
+        <CustomTableSkeleton rowsNumber={3}/>
+      )}
     </div>
   );
 }
