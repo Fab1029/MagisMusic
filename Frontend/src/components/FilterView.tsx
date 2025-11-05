@@ -7,10 +7,11 @@ import { useQueries } from "@tanstack/react-query";
 import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQuery, getSearchTracksByQuery } from "@/services/deezer.service";
 import { columns } from "@/models/Track";
 import CustomTableSkeleton from "./CustomTableSkeleton";
+import { useLocation } from "react-router-dom";
 
 function FilterView() {
   const { query } = useSearchStore();
-  const { filter } = useSearchStore();
+  const filter  = useLocation().pathname.split('/')[3];
 
   const results = useQueries({
     queries: [

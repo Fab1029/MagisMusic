@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import GridPanelSkeleton from "./GridPanelSkeleton";
 import MiniatureCard from "./MiniatureCard";
-import { useSearchStore } from "@/store/useSearchStore";
+
 
 
 interface GridPanelProps {
@@ -11,10 +11,16 @@ interface GridPanelProps {
 
 function GridPanel({data, isProfile}: GridPanelProps) {
   const navigate = useNavigate();
-  const {filter} = useSearchStore();
+  const pathName = useLocation().pathname;
 
   const handleOnCardClick = (id:number) => {
-    navigate(`/content/${id}/${filter}`);
+    if (pathName.split('/')[1] === 'search') {
+      navigate(`/content/${id}/${pathName.split('/')[3]}`);
+    }
+    else {
+      navigate(`/content/${id}/${pathName.split('/')[2]}`);
+    }
+    
   };
 
   return (

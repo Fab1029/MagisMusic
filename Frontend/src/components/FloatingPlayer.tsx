@@ -6,16 +6,16 @@ import { useEffect, useMemo, useState } from "react";
 import { usePlayerStore } from "@/store/usePlayerStore";
 
 interface SongInfoProps {
-  imageSrc: string;
+  image: string;
   title: string;
   artist: string;
 }
 
-const SongInfo: React.FC<SongInfoProps> = ({ imageSrc, title, artist }) => {
+const SongInfo: React.FC<SongInfoProps> = ({ image, title, artist }) => {
   const [isLiked, setIsLiked] = useState(false);
   return (
     <div className="flex items-center space-x-3 w-1/4">
-      <img src={imageSrc} alt={`${title} cover`} className="h-14 w-14 object-cover rounded" />
+      <img src={image} alt={`${title} cover`} className="h-14 w-14 object-cover rounded" />
       <div className="flex flex-col">
         <span className="text-sm font-semibold truncate max-w-40">{title}</span>
         <span className="text-xs text-gray-400 truncate max-w-40">{artist}</span>
@@ -24,9 +24,9 @@ const SongInfo: React.FC<SongInfoProps> = ({ imageSrc, title, artist }) => {
         variant="ghost"
         size="icon"
         onClick={() => setIsLiked(!isLiked)}
-        className="text-gray-400 hover:text-white transition-colors"
+        className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent"
       >
-        <Heart className={`h-5 w-5 ${isLiked ? 'fill-green-500 text-green-500' : ''}`} />
+        <Heart className={`h-5 w-5 transition-all duration-200 ease-in-out ${isLiked ? 'fill-primary text-primary' : ''}`} />
       </Button>
     </div>
   );
@@ -51,10 +51,10 @@ export const FloatingPlayer: React.FC = () => {
   } = usePlayerStore();
 
   if (!currentSong) {
-    return <div className="fixed bottom-0 left-0 right-0 bg-black/90 h-16 border-t border-gray-800 p-2 z-50"></div>;
+    return;
   }
   
-  const totalDuration = currentSong.durationSeconds;
+  const totalDuration = Number(currentSong.duration);
 
   {/* Simulacion de avance del tiempo (Hook useEffect) */}
   
@@ -86,18 +86,19 @@ export const FloatingPlayer: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
+      <audio src={currentSong.preview} autoPlay/>
       <div className="flex items-center justify-between h-full">
 
         <SongInfo 
-          imageSrc={currentSong.imageSrc}
+          image={currentSong.image}
           title={currentSong.title}
           artist={currentSong.artist}
         />
 
         <div className="flex flex-col items-center w-1/2 max-w-md">
           <div className="flex items-center space-x-6 mb-2">
-            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-colors">
-              <SkipBack className="h-5 w-5 fill-current" />
+            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
+              <SkipBack className="h-5 w-5 fill-current transition-all duration-150 hover:scale-110" />
             </Button>
             
             <Button
@@ -112,8 +113,8 @@ export const FloatingPlayer: React.FC = () => {
               }
             </Button>
             
-            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-colors">
-              <SkipForward className="h-5 w-5 fill-current" />
+            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
+              <SkipForward className="h-5 w-5 fill-current transition-all duration-150 hover:scale-110" />
             </Button>
           </div>
           

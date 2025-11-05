@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Timer } from "lucide-react";
 
-interface Song {
+export interface Song {
   id: string;
   title: string;
   album?: string;

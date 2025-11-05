@@ -20,10 +20,9 @@ interface FilterGeneralPanelProps {
 
 function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralPanelProps) {
   const navigate = useNavigate();
-  const { query, setFilter } = useSearchStore();
+  const { query } = useSearchStore();
 
   const handleNavigate = (filter:string) => {
-    setFilter(filter);
     navigate(`/search/${query.trim()}/${filter}`);
   };
 

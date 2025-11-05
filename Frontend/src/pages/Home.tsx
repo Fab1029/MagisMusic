@@ -3,8 +3,10 @@ import NavBar from "@/components/NavBar";
 import Aside from "@/components/Aside";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { AppFooter } from "@/components/AppFooter";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 function Home() {
+  const { currentSong } = usePlayerStore();
   return (
     <div className="flex flex-col w-screen h-screen">
 
@@ -22,8 +24,10 @@ function Home() {
             <AppFooter />
           </footer>
         </div>
-
-        <FloatingPlayer />
+        {currentSong && (
+          <FloatingPlayer />
+        )}
+        
       </main>
     </div>
   );

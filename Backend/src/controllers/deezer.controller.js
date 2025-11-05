@@ -51,7 +51,6 @@ export const DeezerController  = {
 
     async getSearchTracksByQuery(req , res) {
         try {
-            console.log(req, "ESTE E SEL REQUEST");
             const query = String(req.query.q);
             const tracks = await DeezerService.getSearchTracksByQuery(query);
             

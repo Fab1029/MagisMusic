@@ -1,12 +1,13 @@
 import icons from "@/constants/icons"
 import { filters, useSearchStore } from "@/store/useSearchStore";
 import { useEffect, useRef } from "react"
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
-  const { query, setQuery, filter, setFilter } = useSearchStore();
+  const { query, setQuery } = useSearchStore();
+  const filter = useLocation().pathname.split('/')[3] || filters[0];
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -22,17 +23,11 @@ const NavBar = () => {
   }, [query]);
 
 
-  useEffect(() => {
-    if (query.trim().length > 0) {
-      navigate(`/search/${query.trim()}/${filter}`);
-    }
-  }, [filter]);
 
  
   const handleBackToMain = () => {
     navigate('/');
     setQuery('');
-    setFilter(filters[0]);
   };
 
   return (

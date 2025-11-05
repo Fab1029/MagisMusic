@@ -7,12 +7,15 @@ import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/se
 import { useQuery } from "@tanstack/react-query";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { Skeleton } from "./ui/skeleton";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 function ContentView() {
   const pathName = useLocation().pathname;
-  const id = Number(pathName.split('/')[2]);
   const filter = pathName.split('/')[3];
-  console.log(id, " ", filter);
+  const id = Number(pathName.split('/')[2]);
+
+  const { setSongs, playPause } = usePlayerStore();
+
   const handleQuery = () => {
     switch (filter) {
       case filters[1]:
@@ -66,7 +69,8 @@ function ContentView() {
         </div>
 
         <div className="mt-6 flex gap-4 relative z-1 items-center">
-          <button 
+          <button
+            onClick={() => {setSongs(data.data?.tracks || [data.data]); playPause()}} 
             className="
               flex items-center justify-center 
               bg-primary rounded-full w-14 h-14 p-1
@@ -93,6 +97,7 @@ function ContentView() {
       ): (
         <CustomTableSkeleton rowsNumber={3}/>
       )}
+
     </div>
   );
 }
