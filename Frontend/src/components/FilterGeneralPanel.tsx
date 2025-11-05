@@ -1,7 +1,5 @@
-import { columnsMin } from "@/constants/test"
 import { CustomTable } from "./CustomTable"
 import HeaderSection from "./HeaderSection"
-import { filters } from "@/store/useSearchStore"
 import MiniatureCardLarge from "./MiniatureCardLarge"
 import CustomCarousel from "./CustomCarousel"
 import MiniatureCard from "./MiniatureCard"
@@ -9,7 +7,9 @@ import MainSectionSkeleton from "./MainSectionSkeleton"
 import CustomTableSkeleton from "./CustomTableSkeleton"
 import { Skeleton } from "./ui/skeleton"
 import MiniatureCardLargeSkeleton from "./MiniatureCardLargeSkeleton"
-
+import { columnsMin } from "@/models/Track"
+import { useNavigate } from "react-router-dom"
+import { filters, useSearchStore } from "@/store/useSearchStore"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -19,6 +19,17 @@ interface FilterGeneralPanelProps {
 }
 
 function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralPanelProps) {
+  const navigate = useNavigate();
+  const { query } = useSearchStore();
+
+  const handleNavigate = (filter:string) => {
+    navigate(`/search/${query.trim()}/${filter}`);
+  };
+
+  const handleOnCardClick = (id:number, filter:string) => {
+    navigate(`/content/${id}/${filter}`);
+  };
+
   return (
     <div className="gap-5 flex flex-col">
 			<div className="gap-2 flex">
@@ -28,7 +39,12 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 							<h1 className="font-bold text-2xl">
 								Resultado principal
 							</h1>
-							<MiniatureCardLarge title={tracks.data[0].title} subtitle={tracks.data[0].artist} image={tracks.data[0].image}/>
+							<MiniatureCardLarge 
+                title={tracks.data[0].title} 
+                subtitle={tracks.data[0].artist} 
+                image={tracks.data[0].image}
+                onCardClick={() => handleOnCardClick(tracks.data[0].id, filters[1])}
+              />
 						</>
 					): (
 						<>
@@ -43,8 +59,8 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 				<section className="gap-2 flex flex-col flex-1 h-full">
 					{(!tracks.isLoading && tracks.data) ? (
 						<>
-							<HeaderSection title={filters[1]}/>
-							<CustomTable columns={columnsMin} data={tracks.data.slice(0, 3)} showHeaders={false}/>
+							<HeaderSection title={filters[1]} onClick={() => handleNavigate(filters[1])}/>
+							<CustomTable columns={columnsMin} data={tracks.data.slice(0, 4)} showHeaders={false}/>
 						</>
 						
 					) : (
@@ -65,7 +81,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 
 			{(!tracks.isLoading && tracks.data) ? (
         <section>
-          <HeaderSection title="Canciones en tendencia" />
+          <HeaderSection title="Canciones en tendencia" onClick={() => handleNavigate(filters[1])}/>
           <CustomCarousel
             data={tracks.data.slice(0,10).map((item: any, i: number) => (
               <MiniatureCard
@@ -73,6 +89,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
+                onCardClick={() => handleOnCardClick(item.id, filters[1])}
               />
             ))}
           />
@@ -83,10 +100,17 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 
       {(!artists.isLoading && artists.data) ? (
         <section>
-          <HeaderSection title="Artistas" />
+          <HeaderSection title="Artistas" onClick={() => handleNavigate(filters[2])}/>
           <CustomCarousel
             data={artists.data.slice(0,10).map((item: any, i: number) => (
-              <MiniatureCard key={i} isProfile title={item.name} image={item.image} subtitle="Artista"/>
+              <MiniatureCard 
+                key={i} 
+                isProfile 
+                title={item.name} 
+                image={item.image} 
+                subtitle="Artista"
+                onCardClick={() => handleOnCardClick(item.id, filters[2])}
+              />
             ))}
           />
         </section>
@@ -96,10 +120,16 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 
       {(!albums.isLoading && albums.data) ? (
         <section>
-          <HeaderSection title="Álbumes" />
+          <HeaderSection title="Álbumes" onClick={() => handleNavigate(filters[3])}/>
           <CustomCarousel
             data={albums.data.slice(0,10).map((item: any, i: number) => (
-              <MiniatureCard key={i} title={item.title} image={item.image} subtitle={item.artist}/>
+              <MiniatureCard 
+                key={i} 
+                title={item.title} 
+                image={item.image} 
+                subtitle={item.artist}
+                onCardClick={() => handleOnCardClick(item.id, filters[3])}
+              />
             ))}
           />
         </section>
@@ -109,10 +139,15 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 
       {(!playlists.isLoading && playlists.data) ? (
         <section>
-          <HeaderSection title="Playlists" />
+          <HeaderSection title="Playlists" onClick={() => handleNavigate(filters[4])}/>
           <CustomCarousel
             data={playlists.data.slice(0,10).map((item: any, i: number) => (
-              <MiniatureCard key={i} title={item.title} image={item.image} />
+              <MiniatureCard 
+                key={i} 
+                title={item.title} 
+                image={item.image} 
+                onCardClick={() => handleOnCardClick(item.id, filters[4])}
+              />
             ))}
           />
         </section>

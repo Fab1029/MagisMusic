@@ -13,4 +13,9 @@ router.get("/search/albumns", DeezerController.getSearchAlbumsByQuery);
 router.get("/search/artists", DeezerController.getSearchArtistsByQuery);
 router.get("/search/playlists", DeezerController.getSearchPlayListsByQuery);
 
+router.get("/tracks/:id", DeezerController.getTrackById);
+router.get("/albums/:id", DeezerController.getAlbumById);
+router.get("/artists/:id", DeezerController.getArtistById);
+router.get("/playlists/:id", DeezerController.getPlayListById);
+
 export default router;

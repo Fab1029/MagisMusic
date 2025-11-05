@@ -3,12 +3,15 @@ import icons from "@/constants/icons"
 interface MiniatureCardLargeProps {
 	title:string;
   image: string;
-  subtitle?:string
+  subtitle?:string;
+  onCardClick: () => void;
+  onPlayClick: () => void;
 }
 
-function MiniatureCardLarge({title, image, subtitle}: MiniatureCardLargeProps) {
+function MiniatureCardLarge({title, image, subtitle, onCardClick}: MiniatureCardLargeProps) {
   return (
     <div 
+      onClick={onCardClick}
 			className="group p-2 flex flex-col transition-all ease-in-out duration-300 backdrop-brightness-125 hover:bg-card-foreground cursor-pointer w-full rounded-lg relative"
 		>   
 			<img 

@@ -10,8 +10,20 @@ import {
 } from "@/services/deezer.service";
 
 import MainSectionSkeleton from "./MainSectionSkeleton";
+import { useNavigate } from "react-router-dom";
+import { filters } from "@/store/useSearchStore";
 
 function MainView() {
+  const navigate = useNavigate();
+
+  const handleNavigate = (filter: string) => {
+    navigate(`/section/${filter}`);
+  };
+
+  const handleOnCardClick = (id:number, filter:string) => {
+    navigate(`/content/${id}/${filter}`);
+  }
+
   const results = useQueries({
     queries: [
       {
@@ -37,9 +49,10 @@ function MainView() {
 
   return (
     <div className="gap-5 flex flex-col">
+      
       {(!tracks.isLoading && tracks.data) ? (
         <section>
-          <HeaderSection title="Canciones en tendencia" />
+          <HeaderSection title="Canciones en tendencia" onClick={() => handleNavigate(filters[1])}/>
           <CustomCarousel
             data={tracks.data.map((item: any, i: number) => (
               <MiniatureCard
@@ -47,6 +60,7 @@ function MainView() {
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
+                onCardClick={() => handleOnCardClick(item.id, filters[1])}
               />
             ))}
           />
@@ -57,10 +71,17 @@ function MainView() {
 
       {(!artists.isLoading && artists.data) ? (
         <section>
-          <HeaderSection title="Artistas" />
+          <HeaderSection title="Artistas" onClick={() => handleNavigate(filters[2])}/>
           <CustomCarousel
             data={artists.data.map((item: any, i: number) => (
-              <MiniatureCard key={i} isProfile title={item.name} image={item.image} subtitle="Artista"/>
+              <MiniatureCard 
+                key={i} 
+                isProfile 
+                title={item.name} 
+                image={item.image} 
+                subtitle="Artista" 
+                onCardClick={() => handleOnCardClick(item.id, filters[2])}
+              />
             ))}
           />
         </section>
@@ -70,10 +91,16 @@ function MainView() {
 
       {(!albums.isLoading && albums.data) ? (
         <section>
-          <HeaderSection title="Álbumes" />
+          <HeaderSection title="Álbumes" onClick={() => handleNavigate(filters[3])}/>
           <CustomCarousel
             data={albums.data.map((item: any, i: number) => (
-              <MiniatureCard key={i} title={item.title} image={item.image} subtitle={item.artist}/>
+              <MiniatureCard 
+                key={i} 
+                title={item.title} 
+                image={item.image} 
+                subtitle={item.artist} 
+                onCardClick={() => handleOnCardClick(item.id, filters[3])}
+              />
             ))}
           />
         </section>
@@ -83,16 +110,22 @@ function MainView() {
 
       {(!playlists.isLoading && playlists.data) ? (
         <section>
-          <HeaderSection title="Playlists" />
+          <HeaderSection title="Playlists" onClick={() => handleNavigate(filters[4])}/>
           <CustomCarousel
             data={playlists.data.map((item: any, i: number) => (
-              <MiniatureCard key={i} title={item.title} image={item.image} />
+              <MiniatureCard 
+                key={i} 
+                title={item.title} 
+                image={item.image} 
+                onCardClick={() => handleOnCardClick(item.id, filters[4])}
+              />
             ))}
           />
         </section>
       ): (
         <MainSectionSkeleton/>
       )}
+
     </div>
   );
 }

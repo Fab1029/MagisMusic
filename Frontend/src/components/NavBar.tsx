@@ -1,43 +1,33 @@
 import icons from "@/constants/icons"
 import { filters, useSearchStore } from "@/store/useSearchStore";
-import { useEffect, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react"
+import { useLocation, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = useState("");
-  const { setQuery, filter, setFilter } = useSearchStore();
+  const { query, setQuery } = useSearchStore();
+  const filter = useLocation().pathname.split('/')[3] || filters[0];
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (searchValue.trim().length > 0) {
-        navigate(`/?search=${encodeURIComponent(searchValue.trim())}/${filter}`);
+      if (query.trim().length > 0) {
+        navigate(`/search/${query.trim()}/${filter}`);
       }
       else {
-        navigate('/');  
-        setFilter(filters[0]);
+        handleBackToMain();
       }
-
-      setQuery(searchValue.trim());
     }, 1000); 
 
     return () => clearTimeout(handler);
-  }, [searchValue]);
+  }, [query]);
 
-  useEffect(() => {
-    if (searchValue.trim().length > 0) {
-      navigate(`/?search=${encodeURIComponent(searchValue.trim())}/${filter}`);
-    }
-  }, [filter]);
 
-  const handleFocusInput = () => {
-    inputRef.current?.focus(); 
-  };
 
+ 
   const handleBackToMain = () => {
     navigate('/');
-    setSearchValue('');
+    setQuery('');
   };
 
   return (
@@ -62,14 +52,14 @@ const NavBar = () => {
           transition-all duration-300 ease-in-out
           focus-within:ring-2 focus-within:ring-primary
           bg-card backdrop-blur-md cursor-pointer"
-          onClick={handleFocusInput}
+          onClick={() => inputRef.current?.focus()}
           
         >
           <img className="w-7 h-7 object-contain" src={icons.searchIcon}/>
           <input 
             ref={inputRef}
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             className="focus:outline-none w-md text-secondary font-regular" 
             placeholder="¿Qué quieres escuchar?"
           />
