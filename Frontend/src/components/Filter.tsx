@@ -1,5 +1,6 @@
 import { filters, useSearchStore } from "@/store/useSearchStore";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 function Filter() {
   const navigate = useNavigate();
@@ -13,13 +14,14 @@ function Filter() {
   return (
     <div className="gap-2 flex items-center">
       {filters.map((filter, index) => (
-        <button 
+        <Button 
           key={index}
+          variant='filter'
           onClick={() => handleChangeFilter(filter)}
-          className={`px-4 py-2 rounded-full transition-all duration-300 ease-in-out ${filter === currentFilter ? 'bg-primary ring-2 ring-primary' : 'bg-card-foreground'}`}
+          className={`${filter === currentFilter ? 'bg-primary ring-2 ring-primary' : ''}`}
         >
           {filter}
-        </button>
+        </Button>
       ))}
     </div>
   )

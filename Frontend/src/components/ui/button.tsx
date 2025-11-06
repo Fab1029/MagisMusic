@@ -21,7 +21,9 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
         pill: "px-4 py-1 bg-input rounded-full hover:text-primary-foreground hover:bg-secondary transition-all duration-300 ease-in-out",
         pillHover: " inline-flex w-auto self-start  px-2 py-1 bg-white text-black rounded-full font-semibold hover:scale-102 transition-all duration-300 ease-in-out cursor-pointer",
-        pillHoverSecondary: "inline-flex w-auto self-start text-secondary font-semibold hover:scale-110 hover:text-primary-foreground transition-all duration-300 ease-in-out cursor-pointer"
+        pillHoverSecondary: "inline-flex w-auto self-start text-secondary font-semibold hover:scale-110 hover:text-primary-foreground transition-all duration-300 ease-in-out cursor-pointer",
+        header: "mr-8 cursor-pointer text-secondary text-sm transition-all duration-100 ease-in-out hover:text-white",
+        filter: "px-4 py-2 rounded-full transition-all duration-300 ease-in-out bg-card-foreground"
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

@@ -69,7 +69,6 @@ const NavBar = () => {
       </div>
 
       <div className="flex gap-5">
-        
         <Button variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
         <Button variant="pillHover" className="text-md py-6">Inicia sesión</Button>
       </div>
