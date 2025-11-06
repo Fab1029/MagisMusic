@@ -2,6 +2,7 @@ import icons from "@/constants/icons"
 import { filters, useSearchStore } from "@/store/useSearchStore";
 import { useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const NavBar = () => {
   const inputRef = useRef(null);
@@ -68,17 +69,9 @@ const NavBar = () => {
       </div>
 
       <div className="flex gap-5">
-        <button 
-          className="text-secondary font-semibold hover:scale-110 hover:text-primary-foreground
-          transition-all duration-300 ease-in-out cursor-pointer">
-          Registrate
-        </button>
-        <button
-          className="text-black bg-white px-5  py-3 rounded-full font-semibold hover:scale-110
-          transition-all duration-300 ease-in-out cursor-pointer"
-        >
-          Inicia sesión
-        </button>
+        
+        <Button variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
+        <Button variant="pillHover" className="text-md py-6">Inicia sesión</Button>
       </div>
 
     </nav>
