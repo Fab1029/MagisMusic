@@ -1,10 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import GridPanelSkeleton from "./GridPanelSkeleton";
 import MiniatureCard from "./MiniatureCard";
-import PlayButton from "./PlayButton";
-import icons from "@/constants/icons";
-
-
 
 interface GridPanelProps {
   data: any;
@@ -37,20 +33,6 @@ function GridPanel({data, isProfile}: GridPanelProps) {
               image={item.image} 
               isProfile={isProfile}
               onCardClick={() => handleOnCardClick(item.id)}
-              child={(
-                <PlayButton 
-                  className='top-1/2 right-3'
-                  child={(
-                    <img 
-                      className="w-5 h-5 object-contain" 
-                      src={icons.playIcon}
-                      alt="Play"
-                    />
-                  )} 
-                  onClick={() => {}}
-                />
-              )} 
-
             />
           )}
         </div>

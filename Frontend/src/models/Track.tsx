@@ -1,3 +1,6 @@
+import { TooltipDropdownButton } from "@/components/TooltipDropdownButton";
+import { Button } from "@/components/ui/button";
+import icons from "@/constants/icons";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Timer } from "lucide-react";
 
@@ -39,6 +42,23 @@ export const columns: ColumnDef<Song>[] = [
     accessorKey: "duration",
     header: () => <Timer/>,
   },
+  {
+    accessorKey: "options",
+    header: '' ,
+    cell: () => (
+      (
+      <TooltipDropdownButton
+        trigger={
+          <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110">
+            <img src={icons.moreIcon} className="w-6 h-6 object-contain" alt="More option"/>
+          </Button>
+        }
+        infoHover="Más opciones"
+        menuItems={[{label: 'Opcion 1'}]}
+      />
+    )
+    )
+  },
 ];
 
 
@@ -54,5 +74,22 @@ export const columnsMin: ColumnDef<Song>[] = [
   {
     accessorKey: "duration",
     header: "",
+  },
+  {
+    accessorKey: "options",
+    header: '' ,
+    cell: () => (
+      (
+      <TooltipDropdownButton
+        trigger={
+          <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110">
+            <img src={icons.moreIcon} className="w-6 h-6 object-contain" alt="More option"/>
+          </Button>
+        }
+        infoHover="Más opciones"
+        menuItems={[{label: 'Opcion 1'}]}
+      />
+    )
+    )
   },
 ];

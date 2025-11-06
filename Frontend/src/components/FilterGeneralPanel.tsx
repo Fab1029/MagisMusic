@@ -1,17 +1,14 @@
 import { CustomTable } from "./CustomTable"
 import HeaderSection from "./HeaderSection"
-import MiniatureCardLarge from "./MiniatureCardLarge"
 import CustomCarousel from "./CustomCarousel"
 import MiniatureCard from "./MiniatureCard"
 import MainSectionSkeleton from "./MainSectionSkeleton"
 import CustomTableSkeleton from "./CustomTableSkeleton"
 import { Skeleton } from "./ui/skeleton"
-import MiniatureCardLargeSkeleton from "./MiniatureCardLargeSkeleton"
 import { columnsMin } from "@/models/Track"
 import { useNavigate } from "react-router-dom"
 import { filters, useSearchStore } from "@/store/useSearchStore"
-import PlayButton from "./PlayButton"
-import icons from "@/constants/icons"
+import MiniatureCardSkeleton from "./MiniatureCardSkeleton"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -47,25 +44,12 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 subtitle={tracks.data[0].artist} 
                 image={tracks.data[0].image}
                 onCardClick={() => handleOnCardClick(tracks.data[0].id, filters[1])}
-                child={(
-                  <PlayButton 
-                    className="w-15 h-15 right-10 bottom-10"
-                    child={(
-                      <img 
-                        className="w-7 h-7 object-contain" 
-                        src={icons.playIcon}
-                        alt="Play"
-                      />
-                    )} 
-                    onClick={() => {}}
-                  />
-                )}  
               />
 						</>
 					): (
 						<>
 							<Skeleton className="w-30 h-8"/>
-							<MiniatureCardLargeSkeleton />
+							<MiniatureCardSkeleton className="gap-6 p-0"/>
 						</>
 						
 					)}
@@ -105,20 +89,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
-                onCardClick={() => handleOnCardClick(item.id, filters[1])}
-                child={(
-                  <PlayButton 
-                    className='top-1/2 right-3'
-                    child={(
-                      <img 
-                        className="w-5 h-5 object-contain" 
-                        src={icons.playIcon}
-                        alt="Play"
-                      />
-                    )} 
-                    onClick={() => {}}
-                  />
-                )}  
+                onCardClick={() => handleOnCardClick(item.id, filters[1])} 
               />
             ))}
           />
@@ -139,19 +110,6 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 image={item.image} 
                 subtitle="Artista"
                 onCardClick={() => handleOnCardClick(item.id, filters[2])}
-                child={(
-                  <PlayButton 
-                    className='top-1/2 right-3'
-                    child={(
-                      <img 
-                        className="w-5 h-5 object-contain" 
-                        src={icons.playIcon}
-                        alt="Play"
-                      />
-                    )} 
-                    onClick={() => {}}
-                  />
-                )} 
               />
             ))}
           />
@@ -171,19 +129,6 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 image={item.image} 
                 subtitle={item.artist}
                 onCardClick={() => handleOnCardClick(item.id, filters[3])}
-                child={(
-                  <PlayButton 
-                    className='top-1/2 right-3'
-                    child={(
-                      <img 
-                        className="w-5 h-5 object-contain" 
-                        src={icons.playIcon}
-                        alt="Play"
-                      />
-                    )} 
-                    onClick={() => {}}
-                  />
-                )} 
               />
             ))}
           />
@@ -202,19 +147,6 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title} 
                 image={item.image} 
                 onCardClick={() => handleOnCardClick(item.id, filters[4])}
-                child={(
-                  <PlayButton 
-                    className='top-1/2 right-3'
-                    child={(
-                      <img 
-                        className="w-5 h-5 object-contain" 
-                        src={icons.playIcon}
-                        alt="Play"
-                      />
-                    )} 
-                    onClick={() => {}}
-                  />
-                )} 
               />
             ))}
           />
