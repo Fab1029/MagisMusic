@@ -12,6 +12,8 @@ import {
 import MainSectionSkeleton from "./MainSectionSkeleton";
 import { useNavigate } from "react-router-dom";
 import { filters } from "@/store/useSearchStore";
+import PlayButton from "./PlayButton";
+import icons from "@/constants/icons";
 
 function MainView() {
   const navigate = useNavigate();
@@ -61,6 +63,19 @@ function MainView() {
                 subtitle={item.artist}
                 image={item.image}
                 onCardClick={() => handleOnCardClick(item.id, filters[1])}
+                child={(
+                  <PlayButton 
+                    className='top-1/2 right-3'
+                    child={(
+                      <img 
+                        className="w-5 h-5 object-contain" 
+                        src={icons.playIcon}
+                        alt="Play"
+                      />
+                    )} 
+                    onClick={() => {}}
+                  />
+                )} 
               />
             ))}
           />
@@ -81,6 +96,19 @@ function MainView() {
                 image={item.image} 
                 subtitle="Artista" 
                 onCardClick={() => handleOnCardClick(item.id, filters[2])}
+                child={(
+                  <PlayButton 
+                    className='top-1/2 right-3'
+                    child={(
+                      <img 
+                        className="w-5 h-5 object-contain" 
+                        src={icons.playIcon}
+                        alt="Play"
+                      />
+                    )} 
+                    onClick={() => {}}
+                  />
+                )} 
               />
             ))}
           />
@@ -100,6 +128,19 @@ function MainView() {
                 image={item.image} 
                 subtitle={item.artist} 
                 onCardClick={() => handleOnCardClick(item.id, filters[3])}
+                child={(
+                  <PlayButton 
+                    className='top-1/2 right-3'
+                    child={(
+                      <img 
+                        className="w-5 h-5 object-contain" 
+                        src={icons.playIcon}
+                        alt="Play"
+                      />
+                    )} 
+                    onClick={() => {}}
+                  />
+                )} 
               />
             ))}
           />
@@ -118,6 +159,19 @@ function MainView() {
                 title={item.title} 
                 image={item.image} 
                 onCardClick={() => handleOnCardClick(item.id, filters[4])}
+                child={(
+                  <PlayButton 
+                    className='top-1/2 right-3'
+                    child={(
+                      <img 
+                        className="w-5 h-5 object-contain" 
+                        src={icons.playIcon}
+                        alt="Play"
+                      />
+                    )} 
+                    onClick={() => {}}
+                  />
+                )} 
               />
             ))}
           />
