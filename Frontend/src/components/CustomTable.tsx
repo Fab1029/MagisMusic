@@ -13,21 +13,28 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
-interface DataTableProps<TData, TValue> {
+interface Identifiable {
+    id: string;
+}
+
+interface DataTableProps<TData extends Identifiable, TValue> {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
   showHeaders?: boolean;
+  onRowClick: (row: TData, index: number) => void;
+  selectedSongId?: string | null;
 }
 
-export function CustomTable<TData extends object, TValue>({
+export function CustomTable<TData extends Identifiable, TValue>({
   data,
   columns,
   showHeaders = true,
+  onRowClick,
+  selectedSongId = null,
 }: DataTableProps<TData, TValue>) {
-  const [selectIndex, setSelectedIndex] = useState<number>();
-
+  
   const columnsWithId = useMemo<ColumnDef<TData, any>[]>(() => {
     const idColumn: ColumnDef<TData, any> = {
       id: "id_column",
@@ -64,26 +71,29 @@ export function CustomTable<TData extends object, TValue>({
             ))}
           </TableHeader>
         )}
-
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row, index) => (
-              <TableRow
-                key={row.id}
-                onClick={() => setSelectedIndex(index)}
-                className={`border-0 cursor-pointer transition-all duration-200 ease-in-out ${
-                  selectIndex === index
+            table.getRowModel().rows.map((row, index) => {
+              const song = row.original; 
+              const isSelected = song.id === selectedSongId;
+              return (
+                  <TableRow
+                    key={row.id}
+                    onClick={() => onRowClick(song, index)}
+                    className={`border-0 cursor-pointer transition-all duration-200 ease-in-out ${
+                    isSelected
                     ? "bg-card-foreground"
                     : "hover:bg-muted"
-                }`}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="py-4">
+                    }`}
+                    >
+                    {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="py-4">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))
+                    </TableCell>
+                    ))}
+                  </TableRow>
+                );
+              })
           ) : (
             <TableRow>
               <TableCell colSpan={columnsWithId.length} className="h-24 text-center">
