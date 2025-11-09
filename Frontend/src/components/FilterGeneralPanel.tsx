@@ -1,15 +1,14 @@
 import { CustomTable } from "./CustomTable"
 import HeaderSection from "./HeaderSection"
-import MiniatureCardLarge from "./MiniatureCardLarge"
 import CustomCarousel from "./CustomCarousel"
 import MiniatureCard from "./MiniatureCard"
 import MainSectionSkeleton from "./MainSectionSkeleton"
 import CustomTableSkeleton from "./CustomTableSkeleton"
 import { Skeleton } from "./ui/skeleton"
-import MiniatureCardLargeSkeleton from "./MiniatureCardLargeSkeleton"
 import { columnsMin } from "@/models/Track"
 import { useNavigate } from "react-router-dom"
 import { filters, useSearchStore } from "@/store/useSearchStore"
+import MiniatureCardSkeleton from "./MiniatureCardSkeleton"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -39,7 +38,8 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 							<h1 className="font-bold text-2xl">
 								Resultado principal
 							</h1>
-							<MiniatureCardLarge 
+							<MiniatureCard 
+                clasName='gap-5 w-full h-full items-start'
                 title={tracks.data[0].title} 
                 subtitle={tracks.data[0].artist} 
                 image={tracks.data[0].image}
@@ -49,14 +49,14 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 					): (
 						<>
 							<Skeleton className="w-30 h-8"/>
-							<MiniatureCardLargeSkeleton />
+							<MiniatureCardSkeleton className="gap-6 p-0"/>
 						</>
 						
 					)}
 				</section>
 
 
-				<section className="gap-2 flex flex-col flex-1 h-full">
+				<section className="gap-2 flex flex-col flex-2 h-full">
 					{(!tracks.isLoading && tracks.data) ? (
 						<>
 							<HeaderSection title={filters[1]} onClick={() => handleNavigate(filters[1])}/>
@@ -89,7 +89,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
-                onCardClick={() => handleOnCardClick(item.id, filters[1])}
+                onCardClick={() => handleOnCardClick(item.id, filters[1])} 
               />
             ))}
           />

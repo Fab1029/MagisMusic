@@ -2,6 +2,7 @@ import icons from "@/constants/icons"
 import { filters, useSearchStore } from "@/store/useSearchStore";
 import { useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom";
+import { Button } from "./ui/button";
 
 const NavBar = () => {
   const inputRef = useRef(null);
@@ -33,21 +34,23 @@ const NavBar = () => {
   return (
     <nav className="px-6 py-4 flex items-center justify-between">
       
-      <button 
+      <Button 
+        variant="default"
         onClick={handleBackToMain}
-        className="w-15 h-15 flex items-center justify-center cursor-pointer"
+        className="w-22 h-22 flex items-center justify-center cursor-pointer bg-transparent hover:bg-transparent"
       >
         <img className="w-full h-full object-contain" src={icons.magisMusicIcon} alt="Icon Magis Music"/>
-      </button>
+      </Button>
 
       <div className="gap-2 flex">
-        <button 
+        <Button 
+          variant="pill"
           onClick={handleBackToMain}
-          className="p-2 flex items-center justify-end cursor-pointer rounded-full bg-card transition-all duration-200 ease-in-out hover:bg-secondary" 
+          className="p-2 flex items-center justify-end cursor-pointer rounded-full bg-card transition-all duration-400 ease-in-out hover:bg-secondary h-full" 
         >
           <img className="w-8 h-8 object-contain" src={icons.homeIcon} alt="Icon Home"/>
-        </button>
-          
+        </Button>
+        
         <button className="p-3 flex items-center gap-5 rounded-full 
           transition-all duration-300 ease-in-out
           focus-within:ring-2 focus-within:ring-primary
@@ -68,17 +71,8 @@ const NavBar = () => {
       </div>
 
       <div className="flex gap-5">
-        <button 
-          className="text-secondary font-semibold hover:scale-110 hover:text-primary-foreground
-          transition-all duration-300 ease-in-out cursor-pointer">
-          Registrate
-        </button>
-        <button
-          className="text-black bg-white px-5  py-3 rounded-full font-semibold hover:scale-110
-          transition-all duration-300 ease-in-out cursor-pointer"
-        >
-          Inicia sesión
-        </button>
+        <Button variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
+        <Button variant="pillHover" className="text-md py-6">Inicia sesión</Button>
       </div>
 
     </nav>

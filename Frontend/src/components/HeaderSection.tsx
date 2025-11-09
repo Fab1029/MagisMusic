@@ -1,3 +1,5 @@
+import { Button } from "./ui/button";
+
 interface HeaderSectionProps {
   title: string;
   onClick?: () => void;
@@ -9,13 +11,12 @@ function HeaderSection({title, onClick}: HeaderSectionProps) {
       <h1 className="font-bold text-2xl">
         {title}
       </h1>
-      <button
+      <Button
+        variant='header'
         onClick={onClick} 
-        className="mr-8 cursor-pointer text-secondary text-sm
-        transition-all duration-100 ease-in-out hover:text-white"
       >
         Mostrar todos
-      </button>
+      </Button>
     </div>
   )
 }

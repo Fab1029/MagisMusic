@@ -7,7 +7,8 @@ import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/se
 import { useQuery } from "@tanstack/react-query";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { Skeleton } from "./ui/skeleton";
-import { usePlayerStore } from "@/store/usePlayerStore";
+import { Button } from "./ui/button";
+import { TooltipDropdownButton } from "./TooltipDropdownButton";
 
 function ContentView() {
   const pathName = useLocation().pathname;
@@ -91,13 +92,24 @@ function ContentView() {
               src={icons.playIcon}
               alt="Play"
             />
-          </button>
-          <button className="w-8 h-8 cursor-pointer transition-all duration-200 ease-in-out hover:scale-110 ml-5">
-            <img src={icons.unlikeIcon} className="w-full h-full object-contain" alt="Like item"/>
-          </button>
-          <button className="w-8 h-8 cursor-pointer transition-all duration-200 ease-in-out hover:scale-110">
-            <img src={icons.moreIcon} className="w-full h-full object-contain" alt="Like item"/>
-          </button>
+          </Button>
+          
+          <Button
+            variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
+          >
+            <img src={icons.unlikeIcon} className="w-8 h-8 object-contain" alt="Like item"/>
+          </Button>
+          
+          <TooltipDropdownButton
+            trigger={
+              <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-105">
+                <img src={icons.moreIcon} className="w-10 h-10 object-contain" alt="Like item"/>
+              </Button>
+            }
+            infoHover="Más opciones"
+            menuItems={[{label: 'Opcion 1'}]}
+          />
+          
         </div>
       </div>
       {(!data.isLoading && data.data) ? (
@@ -109,6 +121,14 @@ function ContentView() {
         <CustomTableSkeleton rowsNumber={3}/>
       )}
 
+      <div>
+        {(!data.isLoading && data.data) ? (
+          <CustomTable columns={columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}/>
+        ): (
+          <CustomTableSkeleton rowsNumber={3}/>
+        )}
+      </div>
+      
     </div>
   );
 }

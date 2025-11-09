@@ -2,8 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import GridPanelSkeleton from "./GridPanelSkeleton";
 import MiniatureCard from "./MiniatureCard";
 
-
-
 interface GridPanelProps {
   data: any;
   isProfile?:boolean;
@@ -35,7 +33,6 @@ function GridPanel({data, isProfile}: GridPanelProps) {
               image={item.image} 
               isProfile={isProfile}
               onCardClick={() => handleOnCardClick(item.id)}
-
             />
           )}
         </div>

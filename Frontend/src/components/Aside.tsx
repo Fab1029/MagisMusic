@@ -45,11 +45,9 @@ const Aside = () => {
         <InlineSearch />
         <CustomDropdownMenu
           trigger = {
-            <button 
-            className="text-secondary font-semibold hover:scale-102 hover:text-primary-foreground
-            transition-all duration-300 ease-in-out cursor-pointer">
-            Recientes
-          </button>
+            <Button variant="pillHoverSecondary">
+              Recientes
+            </Button>
           }
           menuItems={items_recientes}
         />
