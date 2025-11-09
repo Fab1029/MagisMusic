@@ -1,6 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import GridPanelSkeleton from "./GridPanelSkeleton";
 import MiniatureCard from "./MiniatureCard";
+import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer.service";
+import { filters } from "@/store/useSearchStore";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 interface GridPanelProps {
   data: any;
@@ -10,15 +13,34 @@ interface GridPanelProps {
 function GridPanel({data, isProfile}: GridPanelProps) {
   const navigate = useNavigate();
   const pathName = useLocation().pathname;
+  const { setSongs} = usePlayerStore();
+  const filter = pathName.split('/')[1] === 'search' ? 
+    pathName.split('/')[3]
+    :
+    pathName.split('/')[2];
+  
+  const handlePlayButton = async(id: number, filter:string) => {
+    let response;
 
-  const handleOnCardClick = (id:number) => {
-    if (pathName.split('/')[1] === 'search') {
-      navigate(`/content/${id}/${pathName.split('/')[3]}`);
-    }
-    else {
-      navigate(`/content/${id}/${pathName.split('/')[2]}`);
+    switch (filter) {
+      case filters[1]:
+        response = await getTrackById(id);
+        break;
+      case filters[2]:
+        response = await getArtistById(id);
+        break;
+      case filters[3]:
+        response = await getAlbumById(id);
+        break;
+      case filters[4]:
+        response = await getPlayListById(id);
+        break;
+      default:
+        return;
     }
     
+    const tracks = response.tracks?.map((item:any) => ({...item})) || [response];
+    setSongs(tracks, 0); 
   };
 
   return (
@@ -32,7 +54,8 @@ function GridPanel({data, isProfile}: GridPanelProps) {
               subtitle={item.artist || 'Artista'} 
               image={item.image} 
               isProfile={isProfile}
-              onCardClick={() => handleOnCardClick(item.id)}
+              onCardClick={() => navigate(`/content/${item.id}/${filter}`)}
+              onPlayClick={() => handlePlayButton(item.id, filter)}
             />
           )}
         </div>

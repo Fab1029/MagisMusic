@@ -6,15 +6,20 @@ import {
   getMostPopularTracks, 
   getMostPopularArtists, 
   getMostPopularAlbums, 
-  getMostPopularPlayLists 
+  getMostPopularPlayLists, 
+  getArtistById,
+  getAlbumById,
+  getPlayListById
 } from "@/services/deezer.service";
 
 import MainSectionSkeleton from "./MainSectionSkeleton";
 import { useNavigate } from "react-router-dom";
 import { filters } from "@/store/useSearchStore";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 function MainView() {
   const navigate = useNavigate();
+  const { setSongs } = usePlayerStore();
 
   const handleNavigate = (filter: string) => {
     navigate(`/section/${filter}`);
@@ -47,6 +52,27 @@ function MainView() {
 
   const [tracks, artists, albums, playlists] = results;
 
+  const handlePlayButton = async(id: number, filter:string) => {
+    let response;
+
+    switch (filter) {
+      case filters[2]:
+        response = await getArtistById(id);
+        break;
+      case filters[3]:
+        response = await getAlbumById(id);
+        break;
+      case filters[4]:
+        response = await getPlayListById(id);
+        break;
+      default:
+        return;
+    }
+    
+    const tracks = response.tracks?.map((item:any) => ({...item})) || [response];
+    setSongs(tracks, 0); 
+  };
+
   return (
     <div className="gap-5 flex flex-col">
       
@@ -60,6 +86,7 @@ function MainView() {
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
+                onPlayClick={() => setSongs([item])}
                 onCardClick={() => handleOnCardClick(item.id, filters[1])}
               />
             ))}
@@ -80,6 +107,7 @@ function MainView() {
                 title={item.name} 
                 image={item.image} 
                 subtitle="Artista" 
+                onPlayClick={() => handlePlayButton(item.id, filters[2])}
                 onCardClick={() => handleOnCardClick(item.id, filters[2])}
               />
             ))}
@@ -99,6 +127,7 @@ function MainView() {
                 title={item.title} 
                 image={item.image} 
                 subtitle={item.artist} 
+                onPlayClick={() => handlePlayButton(item.id, filters[3])}
                 onCardClick={() => handleOnCardClick(item.id, filters[3])}
               />
             ))}
@@ -117,6 +146,7 @@ function MainView() {
                 key={i} 
                 title={item.title} 
                 image={item.image} 
+                onPlayClick={() => handlePlayButton(item.id, filters[4])}
                 onCardClick={() => handleOnCardClick(item.id, filters[4])}
               />
             ))}

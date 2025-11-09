@@ -8,7 +8,7 @@ export interface MiniatureCardProps {
   subtitle?:string;
   isProfile?: boolean;
   onCardClick: () => void;
-  onPlayClick?: () => void;
+  onPlayClick: () => void;
 }
 
 function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onCardClick, onPlayClick}: MiniatureCardProps) {
@@ -25,6 +25,10 @@ function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onC
         
         <Button
           variant={'play'}
+          onClick={(e) => {
+            e.stopPropagation(); // 👈 Evita que el click llegue al div padre
+            onPlayClick();
+          }}
           className="w-12 h-12 opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 absolute -bottom-1 -right-1"
         >
           <img 

@@ -167,11 +167,11 @@ export const FloatingPlayer: React.FC = () => {
                     const downVolume = Math.max(volume - VOLUME_STEP, 0);
                     handleVolumeChange([downVolume]);
                     break;
-                
+                /*
                 case ' ':
                     event.preventDefault(); 
                     playPause(); 
-                    break;
+                    break;*/
                 default:
                     return;
             }

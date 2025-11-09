@@ -8,9 +8,11 @@ import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQ
 import { columns } from "@/models/Track";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { useLocation } from "react-router-dom";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 function FilterView() {
   const { query } = useSearchStore();
+  const { setSongs, currentSong } = usePlayerStore();
   const filter  = useLocation().pathname.split('/')[3];
 
   const results = useQueries({
@@ -40,7 +42,14 @@ function FilterView() {
     switch(filter) {
       case filters[1]:
         if (!tracks.isLoading && tracks.data)
-          return <CustomTable columns={columns} data={tracks.data.map((item:any) => ({...item}) )}/>
+          return (
+            <CustomTable 
+              columns={columns} 
+              data={tracks.data.map((item:any) => ({...item}) )} 
+              onRowClick={(_, index) => setSongs(tracks.data, index)} 
+              selectedSongId={currentSong?.id || null}
+            />
+        )
         else
           return <CustomTableSkeleton rowsNumber={25}/>
           

@@ -9,6 +9,8 @@ import { columnsMin } from "@/models/Track"
 import { useNavigate } from "react-router-dom"
 import { filters, useSearchStore } from "@/store/useSearchStore"
 import MiniatureCardSkeleton from "./MiniatureCardSkeleton"
+import { getAlbumById, getArtistById, getPlayListById } from "@/services/deezer.service"
+import { usePlayerStore } from "@/store/usePlayerStore"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -20,6 +22,7 @@ interface FilterGeneralPanelProps {
 function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralPanelProps) {
   const navigate = useNavigate();
   const { query } = useSearchStore();
+  const { setSongs, currentSong } = usePlayerStore();
 
   const handleNavigate = (filter:string) => {
     navigate(`/search/${query.trim()}/${filter}`);
@@ -27,6 +30,27 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 
   const handleOnCardClick = (id:number, filter:string) => {
     navigate(`/content/${id}/${filter}`);
+  };
+
+  const handlePlayButton = async(id: number, filter:string) => {
+    let response;
+
+    switch (filter) {
+      case filters[2]:
+        response = await getArtistById(id);
+        break;
+      case filters[3]:
+        response = await getAlbumById(id);
+        break;
+      case filters[4]:
+        response = await getPlayListById(id);
+        break;
+      default:
+        return;
+    }
+    
+    const tracks = response.tracks?.map((item:any) => ({...item})) || [response];
+    setSongs(tracks, 0); 
   };
 
   return (
@@ -43,6 +67,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={tracks.data[0].title} 
                 subtitle={tracks.data[0].artist} 
                 image={tracks.data[0].image}
+                onPlayClick={() => setSongs([tracks.data[0]])}
                 onCardClick={() => handleOnCardClick(tracks.data[0].id, filters[1])}
               />
 						</>
@@ -60,7 +85,13 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 					{(!tracks.isLoading && tracks.data) ? (
 						<>
 							<HeaderSection title={filters[1]} onClick={() => handleNavigate(filters[1])}/>
-							<CustomTable columns={columnsMin} data={tracks.data.slice(0, 4)} showHeaders={false}/>
+							<CustomTable 
+                columns={columnsMin} 
+                data={tracks.data.slice(0, 4)} 
+                showHeaders={false}
+                onRowClick={(_, index) => setSongs(tracks.data.slice(0, 4), index)}
+                selectedSongId={currentSong?.id || null}
+              />
 						</>
 						
 					) : (
@@ -89,6 +120,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
+                onPlayClick={() => setSongs([item])}
                 onCardClick={() => handleOnCardClick(item.id, filters[1])} 
               />
             ))}
@@ -109,6 +141,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.name} 
                 image={item.image} 
                 subtitle="Artista"
+                onPlayClick={() => handlePlayButton(item.id, filters[2])}
                 onCardClick={() => handleOnCardClick(item.id, filters[2])}
               />
             ))}
@@ -128,6 +161,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title} 
                 image={item.image} 
                 subtitle={item.artist}
+                onPlayClick={() => handlePlayButton(item.id, filters[3])}
                 onCardClick={() => handleOnCardClick(item.id, filters[3])}
               />
             ))}
@@ -146,6 +180,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 key={i} 
                 title={item.title} 
                 image={item.image} 
+                onPlayClick={() => handlePlayButton(item.id, filters[4])}
                 onCardClick={() => handleOnCardClick(item.id, filters[4])}
               />
             ))}

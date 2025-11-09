@@ -9,6 +9,7 @@ import CustomTableSkeleton from "./CustomTableSkeleton";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 function ContentView() {
   const pathName = useLocation().pathname;
@@ -36,13 +37,15 @@ function ContentView() {
     queryKey: ["dataContentView", filter, id],
     queryFn: () => handleQuery(),
   });
+
   const handleRowClick = (song: any, index: number) => {
-      const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
-      setSongs(tracks, index);
+    const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
+    setSongs(tracks, index);
   };
+
   const handlePlayButton = () => {
-       const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
-       setSongs(tracks, 0); 
+    const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
+    setSongs(tracks, 0); 
   };
 
   return (
@@ -78,7 +81,7 @@ function ContentView() {
         </div>
 
         <div className="mt-6 flex gap-4 relative z-1 items-center">
-          <button
+          <Button
             onClick={handlePlayButton} 
             className="
               flex items-center justify-center 
@@ -120,15 +123,6 @@ function ContentView() {
       ): (
         <CustomTableSkeleton rowsNumber={3}/>
       )}
-
-      <div>
-        {(!data.isLoading && data.data) ? (
-          <CustomTable columns={columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}/>
-        ): (
-          <CustomTableSkeleton rowsNumber={3}/>
-        )}
-      </div>
-      
     </div>
   );
 }
