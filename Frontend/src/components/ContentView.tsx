@@ -15,6 +15,8 @@ function ContentView() {
   const filter = pathName.split('/')[3];
   const id = Number(pathName.split('/')[2]);
 
+  const { setSongs, currentSong } = usePlayerStore();
+
   const handleQuery = () => {
     switch (filter) {
       case filters[1]:
@@ -34,6 +36,14 @@ function ContentView() {
     queryKey: ["dataContentView", filter, id],
     queryFn: () => handleQuery(),
   });
+  const handleRowClick = (song: any, index: number) => {
+      const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
+      setSongs(tracks, index);
+  };
+  const handlePlayButton = () => {
+       const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
+       setSongs(tracks, 0); 
+  };
 
   return (
     <div>
@@ -67,11 +77,15 @@ function ContentView() {
           </div>
         </div>
 
-        <div className="mt-6 flex gap-5 relative z-1 items-center">
-          
-          <Button
-            variant={'play'}
-            className="w-15 h-15 mr-5"
+        <div className="mt-6 flex gap-4 relative z-1 items-center">
+          <button
+            onClick={handlePlayButton} 
+            className="
+              flex items-center justify-center 
+              bg-primary rounded-full w-14 h-14 p-1
+              transition-all duration-200 ease-out
+              hover:scale-114 cursor-pointer
+            "
           >
             <img 
               className="w-7 h-7 object-contain" 
@@ -98,6 +112,14 @@ function ContentView() {
           
         </div>
       </div>
+      {(!data.isLoading && data.data) ? (
+        <CustomTable columns={columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}
+        onRowClick={handleRowClick}
+        selectedSongId={currentSong?.id || null}
+        />
+      ): (
+        <CustomTableSkeleton rowsNumber={3}/>
+      )}
 
       <div>
         {(!data.isLoading && data.data) ? (

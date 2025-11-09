@@ -1,8 +1,9 @@
 import { Heart, SkipBack, Play, SkipForward, Pause } from "lucide-react";
+import { Volume2, VolumeX, Volume1 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Slider } from "@/components/ui/slider";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayerStore } from "@/store/usePlayerStore";
 
 interface SongInfoProps {
@@ -10,6 +11,39 @@ interface SongInfoProps {
   title: string;
   artist: string;
 }
+
+interface VolumeIndicatorProps {
+    volume: number;
+    isVisible: boolean;
+}
+
+const VolumeIndicator: React.FC<VolumeIndicatorProps> = ({ volume, isVisible }) => {
+    let Icon;
+    if (volume === 0) {
+        Icon = VolumeX;
+    } else if (volume < 50) {
+        Icon = Volume1;
+    } else {
+        Icon = Volume2;
+    }
+    const visibilityClass = isVisible 
+        ? 'opacity-100 translate-y-0' 
+        : 'opacity-0 translate-y-5';
+
+    return (
+        <div 
+            className={`
+                fixed bottom-24 right-5 bg-background/90 backdrop-blur 
+                p-3 rounded-lg shadow-xl text-white transition-all duration-300 
+                flex items-center space-x-3 z-[60] 
+                ${visibilityClass}
+            `}
+        >
+            <Icon className="h-6 w-6 text-primary" />
+            <span className="font-semibold text-lg">{volume}%</span>
+        </div>
+    );
+};
 
 const SongInfo: React.FC<SongInfoProps> = ({ image, title, artist }) => {
   const [isLiked, setIsLiked] = useState(false);
@@ -39,7 +73,8 @@ const formatTime = (seconds: number) => {
 };
 
 export const FloatingPlayer: React.FC = () => {
-  
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [previewDuration, setPreviewDuration] = useState(0);
   const { 
     currentSong, 
     isPlaying, 
@@ -47,57 +82,119 @@ export const FloatingPlayer: React.FC = () => {
     volume, 
     playPause, 
     setProgress,
-    setVolume
+    setVolume,
+    nextSong,
+    prevSong,
   } = usePlayerStore();
 
   if (!currentSong) {
-    return;
+    return null;
   }
+
+  const [volumeIndicator, setVolumeIndicator] = useState({ 
+        value: volume, 
+        visible: false 
+    });
   
-  const totalDuration = Number(currentSong.duration);
+  const volumeTimerRef = useRef<number | null>(null);
 
-  {/* Simulacion de avance del tiempo (Hook useEffect) */}
-  
-  useEffect(() => {
-    let interval: number | undefined = undefined;
-
-    if (isPlaying && progressSeconds < totalDuration) {
-      interval = setInterval(() => {
-        setProgress(progressSeconds + 1);
-      }, 1000) as unknown as number;
-
-    } else if (progressSeconds >= totalDuration) {
-      clearInterval(interval);
-      playPause();
-      setProgress(0);
+  const handleVolumeChange = (newVolumeArray: number[]) => {
+        const newVolume = newVolumeArray[0];
+        setVolume(newVolume);
+        setVolumeIndicator({ value: newVolume, visible: true });
+        if (volumeTimerRef.current !== null) {
+            clearTimeout(volumeTimerRef.current);
+        }
+        volumeTimerRef.current = setTimeout(() => {
+            setVolumeIndicator(prev => ({ ...prev, visible: false }));
+            volumeTimerRef.current = null;
+        }, 1500) as unknown as number;
     }
 
-    return () => clearInterval(interval);
-  }, [isPlaying, progressSeconds, totalDuration, setProgress, playPause]);
+  const totalDuration = previewDuration > 0 ? previewDuration : Number(currentSong.duration);
+ 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isPlaying){
+      audio.play().catch(e => console.error("Error al reproducir audio:", e));
+    }else{
+      audio.pause();
+    }
+    audio.volume = volume / 100;
+    const handleTimeUpdate = () => {
+      setProgress(Math.floor(audio.currentTime));
+    };
+    const handleEnded = () => {
+      nextSong();
+    };
+    const handleLoadedMetadata = () => {
+      setPreviewDuration(Math.floor(audio.duration));
+    };
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    };
+  }, [isPlaying, volume, currentSong, setProgress, nextSong]);
 
-  {/* Calculo porcentaje de progreso para el componente Progress */}
   const progressPercentage = useMemo(() => {
     return (progressSeconds / totalDuration) * 100;
   }, [progressSeconds, totalDuration]);
 
-  const handleVolumeChange = (newVolumeArray: number[]) => {
-    setVolume(newVolumeArray[0]);
-  }
+  useEffect(() => {
+        const VOLUME_STEP = 5; 
+        setVolumeIndicator(prev => ({ ...prev, value: volume }));
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+                event.preventDefault(); 
+            }           
+            let newVolume = volume;
+            switch (event.key) {
+                case 'ArrowUp':
+                    newVolume = Math.min(volume + VOLUME_STEP, 100);
+                    setVolume(newVolume);
+                    const upVolume = Math.min(volume + VOLUME_STEP, 100);
+                    handleVolumeChange([upVolume]);
+                    break;
+
+                case 'ArrowDown':
+                    newVolume = Math.max(volume - VOLUME_STEP, 0);
+                    setVolume(newVolume);
+                    const downVolume = Math.max(volume - VOLUME_STEP, 0);
+                    handleVolumeChange([downVolume]);
+                    break;
+                
+                case ' ':
+                    event.preventDefault(); 
+                    playPause(); 
+                    break;
+                default:
+                    return;
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [volume, setVolume, playPause]);
+
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
-      <audio src={currentSong.preview} autoPlay/>
+      <audio ref={audioRef} src={currentSong.preview} key={currentSong.id}/>
       <div className="flex items-center justify-between h-full">
-
         <SongInfo 
           image={currentSong.image}
           title={currentSong.title}
           artist={currentSong.artist}
         />
-
         <div className="flex flex-col items-center w-1/2 max-w-md">
           <div className="flex items-center space-x-6 mb-2">
-            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
+            <Button onClick={prevSong} variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
               <SkipBack className="h-5 w-5 fill-current transition-all duration-150 hover:scale-110" />
             </Button>
             
@@ -113,7 +210,7 @@ export const FloatingPlayer: React.FC = () => {
               }
             </Button>
             
-            <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
+            <Button onClick={nextSong} variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
               <SkipForward className="h-5 w-5 fill-current transition-all duration-150 hover:scale-110" />
             </Button>
           </div>
@@ -143,9 +240,13 @@ export const FloatingPlayer: React.FC = () => {
               trackClassName="bg-gray-700"
               thumbClassName="h-3 w-3 bg-white border-none"
             />
-          </div>
+          </div>  
         </div>
       </div>
+      <VolumeIndicator 
+                volume={volumeIndicator.value} 
+                isVisible={volumeIndicator.visible} 
+            />
     </div>
   );
 };
