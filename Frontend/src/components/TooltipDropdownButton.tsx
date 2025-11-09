@@ -15,6 +15,7 @@ import type { ReactNode } from "react"
 
 interface MenuItem {
   label: string
+  description?: string
   shortcut?: string
   disabled?: boolean
   subItems?: MenuItem[]
@@ -48,9 +49,22 @@ export function TooltipDropdownButton({
         )
       } else {
         return (
-          <DropdownMenuItem key={index} disabled={item.disabled}>
-            {item.label}
-            {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+          <DropdownMenuItem 
+            key={index} 
+            disabled={item.disabled} 
+            className="flex justify-between items-start flex-col gap-0.5"
+          >
+            <div className="w-full flex justify-between items-center">
+              <span>{item.label}</span>
+              {item.shortcut && (
+                <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
+              )}
+            </div>
+            {item.description && (
+              <span className="text-xs text-foreground/50 leading-tight">
+                {item.description}
+              </span>
+            )}
           </DropdownMenuItem>
         )
       }
