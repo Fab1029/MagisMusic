@@ -26,6 +26,7 @@ interface TooltipDropdownButtonProps {
   infoHover: string
   menuItems: MenuItem[]
   menuWidth?: string
+  onSelect?: (item: MenuItem) => void
 }
 
 export function TooltipDropdownButton({
@@ -33,6 +34,7 @@ export function TooltipDropdownButton({
   infoHover,
   menuItems,
   menuWidth = "w-56",
+  onSelect,
 }: TooltipDropdownButtonProps) {
   const renderMenuItems = (items: MenuItem[]) =>
     items.map((item, index) => {
@@ -53,6 +55,7 @@ export function TooltipDropdownButton({
             key={index} 
             disabled={item.disabled} 
             className="flex justify-between items-start flex-col gap-0.5"
+            onClick={() => onSelect?.(item)} 
           >
             <div className="w-full flex justify-between items-center">
               <span>{item.label}</span>

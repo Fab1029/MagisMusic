@@ -4,7 +4,8 @@ services:
     container_name: kafka
     hostname: kafka
     ports:
-      - "9092:9092"
+      - "9092:9092"    # para el backend (fuera de Docker)
+      - "29092:29092"  # para Kafka UI (u otros contenedores)
     environment:
       # Activar modo KRaft (sin Zookeeper)
       KAFKA_KRAFT_MODE: 'true'
@@ -21,16 +22,20 @@ services:
       # Define el "quorum" de controladores (solo uno)
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
 
-      # Listeners: broker (9092) y controlador interno (9093)
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+       # 🔹 Listeners internos y externos
+      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      
+      # - "kafka:29092" para contenedores internos (UI)
+      # - "localhost:9092" para el backend en el host
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092,PLAINTEXT_EXTERNAL://localhost:9092
 
-      # Advertised listener — importante:
-      # - Si lo usarás solo desde tu host: usa localhost
-      # - Si lo usarás desde otro contenedor (ej. Kafka UI), usa "kafka"
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-
+      
       # Define qué listener usa el controlador
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+
+      # Indicar a kafka que lsitener usar para comunicarse consigo mismo o entre brokers
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
 
       # Factores de replicación internos mínimos (solo 1 nodo)
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
@@ -50,7 +55,7 @@ services:
       - "5000:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: "Local Kafka"
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:29092"
     depends_on:
       - kafka
 

@@ -5,6 +5,7 @@ import { Button } from "./ui/button"
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { InlineSearch } from "./InlineSearch";
+import { createJam } from "../services/jam.service"; 
 
 const Aside = () => {
   const items_agregar = [
@@ -22,6 +23,26 @@ const Aside = () => {
 
   const optionsButtonPill = ["Playlist", "Artistas", "Jams"];
 
+  const crearPlaylist = () => {
+    console.log("Crear playlist"); 
+  } 
+  
+  const crearCarpeta = () => {
+    console.log("Crear carpeta");
+  }
+
+  const crearJam = async () => {
+    console.log("Crear Jam");
+    const create = await createJam();
+    console.log(create);
+  }
+
+  const acciones = {
+    Playlist: crearPlaylist,
+    Carpeta: crearCarpeta,
+    Jam: crearJam,
+  };
+
   return (
     <aside className=" flex flex-col w-100 gap-5 shrink-0 bg-card m-2 p-2 rounded-md overflow-y-auto custom-scrollbar pb-20">
       <div className="flex items-center justify-between p-3">
@@ -36,6 +57,7 @@ const Aside = () => {
           }
           infoHover="Crear playlist, carpeta o jam"
           menuItems={items_agregar}
+          onSelect={(item) => acciones[item.label]?.()}
         />
       </div>
 

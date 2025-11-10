@@ -5,7 +5,7 @@ export const JamController = {
     try {
       const jam = await JamService.createJam();
       const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-      const link = `${frontendUrl}/jam/${jam.jamId}`;
+      const link = `${frontendUrl}/content/${jam.jamId}/Jam`;
 
       res.status(201).json({
         succes: true,
@@ -14,7 +14,12 @@ export const JamController = {
       });
 
     } catch (error) {
-        throw new Error(`Jam Controller Error: ${error}`);
+        console.error("Jam Controller Error:", error);
+        res.status(500).json({
+          success: false,
+          message: "Error al crear el jam",
+          error: error.message,
+        });
     }
   },
 
@@ -24,10 +29,13 @@ export const JamController = {
       const { action, song } = req.body;
       await JamService.sendEvent(jamId, { action, song });
 
-      res.json({ success: true });
-
     } catch (error) {
-        throw new Error(`Jam Controller Error: ${error}`);
+        console.log(`Jam Controller Error: ${error}`);
     }
+  },
+
+  async listenToJam(jamId, callback) {
+    // Retorna el consumidor creado
+    return await JamService.listenToJam(jamId, callback);
   },
 };

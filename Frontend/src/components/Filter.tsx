@@ -6,6 +6,7 @@ function Filter() {
   const navigate = useNavigate();
   const { query } = useSearchStore();
   const currentFilter = useLocation().pathname.split('/')[3];
+  const customFilters = filters.filter(item => item !== filters[5]);
 
   const handleChangeFilter = (filter:string) => {
     navigate(`/search/${query.trim()}/${filter}`);
@@ -13,7 +14,7 @@ function Filter() {
 
   return (
     <div className="gap-2 flex items-center">
-      {filters.map((filter, index) => (
+      {customFilters.map((filter, index) => (
         <Button 
           key={index}
           variant='filter'

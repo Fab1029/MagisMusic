@@ -15,7 +15,6 @@ function ContentView() {
   const pathName = useLocation().pathname;
   const filter = pathName.split('/')[3];
   const id = Number(pathName.split('/')[2]);
-
   const { setSongs, currentSong } = usePlayerStore();
 
   const handleQuery = () => {

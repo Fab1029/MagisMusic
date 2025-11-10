@@ -12,11 +12,13 @@ const NavBar = () => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
+      const currentPath = window.location.pathname;
+      const isSearchRoute = currentPath.startsWith('/search');
       if (query.trim().length > 0) {
         navigate(`/search/${query.trim()}/${filter}`);
       }
-      else {
-        handleBackToMain();
+      else if (isSearchRoute) {
+        handleBackToMain(); // Solo redirige si ya estás en /search
       }
     }, 1000); 
 
