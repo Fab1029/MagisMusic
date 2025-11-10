@@ -5,12 +5,13 @@ import { Button } from "./ui/button"
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { InlineSearch } from "./InlineSearch";
+import { createJam } from "../services/jam.service"; 
 
 const Aside = () => {
   const items_agregar = [
-    { label: "Playlist" },
-    { label: "Carpeta" },
-    { label: "Jam" },
+    { label: "Playlist", description: "Crea una lista de reproducción" },
+    { label: "Carpeta", description: "Organiza tus listas de reproducción" },
+    { label: "Jam", description: "Escuchen juntos desde cualquier lugar"},
   ]
 
   const items_recientes = [
@@ -20,6 +21,28 @@ const Aside = () => {
     { label: "Alfabético" }
   ]
 
+  const optionsButtonPill = ["Playlist", "Artistas", "Jams"];
+
+  const crearPlaylist = () => {
+    console.log("Crear playlist"); 
+  } 
+  
+  const crearCarpeta = () => {
+    console.log("Crear carpeta");
+  }
+
+  const crearJam = async () => {
+    console.log("Crear Jam");
+    const create = await createJam();
+    console.log(create);
+  }
+
+  const acciones = {
+    Playlist: crearPlaylist,
+    Carpeta: crearCarpeta,
+    Jam: crearJam,
+  };
+
   return (
     <aside className=" flex flex-col w-100 gap-5 shrink-0 bg-card m-2 p-2 rounded-md overflow-y-auto custom-scrollbar pb-20">
       <div className="flex items-center justify-between p-3">
@@ -27,18 +50,22 @@ const Aside = () => {
 
         <TooltipDropdownButton
           trigger={
-            <Button variant="pill" className="bg-card p-2 rounded-full">
+            <Button variant="pill" className="bg-card p-2 rounded-full gap-3">
               <img className="w-5 h-5" src={icons.agregarIcon} alt="Opciones" />
+              <span className="font-bold">Create</span>
             </Button>
           }
-          infoHover="Crear playlist"
+          infoHover="Crear playlist, carpeta o jam"
           menuItems={items_agregar}
+          onSelect={(item) => acciones[item.label]?.()}
         />
       </div>
 
       <div className="flex gap-3">
-        <Button variant="pill">Playlist</Button>
-        <Button variant="pill">Artistas</Button>
+        {optionsButtonPill.map((btn, index) => (
+          <Button key={index} variant="pill">{btn}</Button>
+        ))
+        }
       </div>
 
       <div className="flex justify-between px-4">

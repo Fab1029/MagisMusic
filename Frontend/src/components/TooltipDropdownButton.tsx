@@ -15,6 +15,7 @@ import type { ReactNode } from "react"
 
 interface MenuItem {
   label: string
+  description?: string
   shortcut?: string
   disabled?: boolean
   subItems?: MenuItem[]
@@ -25,6 +26,7 @@ interface TooltipDropdownButtonProps {
   infoHover: string
   menuItems: MenuItem[]
   menuWidth?: string
+  onSelect?: (item: MenuItem) => void
 }
 
 export function TooltipDropdownButton({
@@ -32,6 +34,7 @@ export function TooltipDropdownButton({
   infoHover,
   menuItems,
   menuWidth = "w-56",
+  onSelect,
 }: TooltipDropdownButtonProps) {
   const renderMenuItems = (items: MenuItem[]) =>
     items.map((item, index) => {
@@ -48,9 +51,23 @@ export function TooltipDropdownButton({
         )
       } else {
         return (
-          <DropdownMenuItem key={index} disabled={item.disabled}>
-            {item.label}
-            {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+          <DropdownMenuItem 
+            key={index} 
+            disabled={item.disabled} 
+            className="flex justify-between items-start flex-col gap-0.5"
+            onClick={() => onSelect?.(item)} 
+          >
+            <div className="w-full flex justify-between items-center">
+              <span>{item.label}</span>
+              {item.shortcut && (
+                <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>
+              )}
+            </div>
+            {item.description && (
+              <span className="text-xs text-foreground/50 leading-tight">
+                {item.description}
+              </span>
+            )}
           </DropdownMenuItem>
         )
       }

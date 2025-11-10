@@ -5,7 +5,7 @@ export const filters = [
   "Canciones",
   "Artista",
   "Albumes",
-  "Listas"
+  "Listas",
 ]
 
 interface SearchState {
