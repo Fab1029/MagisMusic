@@ -44,7 +44,7 @@ const Aside = () => {
   };
 
   return (
-    <aside className=" flex flex-col w-100 gap-5 shrink-0 bg-card m-2 p-2 rounded-md overflow-y-auto custom-scrollbar pb-20">
+    <aside className="hidden md:flex flex-col w-100 gap-5 shrink-0 bg-card m-2 p-2 rounded-md overflow-y-auto custom-scrollbar pb-20">
       <div className="flex items-center justify-between p-3">
         <h1 className="font-bold">Tu biblioteca</h1>
 
