@@ -10,9 +10,13 @@ import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { usePlayerStore } from "@/store/usePlayerStore";
+import { useJamStore } from "@/store/useJamStore";
+import { errorToast } from "./CustomSonner";
 
 function ContentView() {
+  const { idJam } = useJamStore();
   const pathName = useLocation().pathname;
+  
   const filter = pathName.split('/')[3];
   const id = Number(pathName.split('/')[2]);
   const { setSongs, currentSong } = usePlayerStore();
@@ -43,8 +47,16 @@ function ContentView() {
   };
 
   const handlePlayButton = () => {
-    const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
-    setSongs(tracks, 0); 
+    if (idJam)
+      errorToast(
+        'No se puede reproducir en este momento',
+        'Cierra el Jam actual para reproducir tus canciones'
+      );
+    else {
+      const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
+      setSongs(tracks, 0); 
+    }
+    
   };
 
   return (
