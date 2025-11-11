@@ -21,31 +21,85 @@ function MainView() {
   const navigate = useNavigate();
   const { setSongs } = usePlayerStore();
 
-  const handleNavigate = (filter: string) => {
-    navigate(`/section/${filter}`);
+  const handleNavigate = (filter: string) => navigate(`/section/${filter}`);
+  const handleOnCardClick = (id:number, filter:string) => navigate(`/content/${id}/${filter}`);
+
+  const cacheData = (key: string, data: any) => {
+    localStorage.setItem(key, JSON.stringify({
+      data,
+      timestamp: Date.now()
+    }));
   };
 
-  const handleOnCardClick = (id:number, filter:string) => {
-    navigate(`/content/${id}/${filter}`);
-  }
+
+  const getCachedData = (key: string) => {
+    const cached = localStorage.getItem(key);
+    if (!cached) return null;
+    try {
+      const parsed = JSON.parse(cached);
+      return parsed.data;
+    } catch {
+      return null;
+    }
+  };
 
   const results = useQueries({
     queries: [
       {
         queryKey: ["mostPopularTracks"],
-        queryFn: () => getMostPopularTracks(),
+        queryFn: async () => {
+          try {
+            const data = await getMostPopularTracks();
+            cacheData("mostPopularTracks", data);
+            return data;
+          } catch (err) {
+            const cached = getCachedData("mostPopularTracks");
+            if (cached) return cached; // fallback offline
+            throw err;
+          }
+        },
       },
       {
         queryKey: ["popularArtists"],
-        queryFn: () => getMostPopularArtists(),
+        queryFn: async () => {
+          try {
+            const data = await getMostPopularArtists();
+            cacheData("popularArtists", data);
+            return data;
+          } catch (err) {
+            const cached = getCachedData("popularArtists");
+            if (cached) return cached;
+            throw err;
+          }
+        },
       },
       {
         queryKey: ["popularAlbums"],
-        queryFn: () => getMostPopularAlbums(),
+        queryFn: async () => {
+          try {
+            const data = await getMostPopularAlbums();
+            cacheData("popularAlbums", data);
+            return data;
+          } catch (err) {
+            const cached = getCachedData("popularAlbums");
+            if (cached) return cached;
+            throw err;
+          }
+        },
       },
       {
         queryKey: ["popularPlaylists"],
-        queryFn: () => getMostPopularPlayLists(),
+        queryFn: async () => {
+          try {
+            const data = await getMostPopularPlayLists();
+            cacheData("popularPlaylists", data);
+            return data;
+          } catch (err) {
+            const cached = getCachedData("popularPlaylists");
+            if (cached) return cached;
+            throw err;
+          }
+        },
       },
     ],
   });
@@ -54,28 +108,19 @@ function MainView() {
 
   const handlePlayButton = async(id: number, filter:string) => {
     let response;
-
     switch (filter) {
-      case filters[2]:
-        response = await getArtistById(id);
-        break;
-      case filters[3]:
-        response = await getAlbumById(id);
-        break;
-      case filters[4]:
-        response = await getPlayListById(id);
-        break;
-      default:
-        return;
+      case filters[2]: response = await getArtistById(id); break;
+      case filters[3]: response = await getAlbumById(id); break;
+      case filters[4]: response = await getPlayListById(id); break;
+      default: return;
     }
-    
     const tracks = response.tracks?.map((item:any) => ({...item})) || [response];
     setSongs(tracks, 0); 
   };
 
   return (
     <div className="gap-5 flex flex-col">
-      
+
       {(!tracks.isLoading && tracks.data) ? (
         <section>
           <HeaderSection title="Canciones en tendencia" onClick={() => handleNavigate(filters[1])}/>
@@ -92,9 +137,7 @@ function MainView() {
             ))}
           />
         </section>
-      ): (
-        <MainSectionSkeleton/>
-      )}
+      ): <MainSectionSkeleton/>}
 
       {(!artists.isLoading && artists.data) ? (
         <section>
@@ -113,9 +156,7 @@ function MainView() {
             ))}
           />
         </section>
-      ): (
-        <MainSectionSkeleton/>
-      )}
+      ): <MainSectionSkeleton/>}
 
       {(!albums.isLoading && albums.data) ? (
         <section>
@@ -133,9 +174,7 @@ function MainView() {
             ))}
           />
         </section>
-      ): (
-        <MainSectionSkeleton/>
-      )}
+      ): <MainSectionSkeleton/>}
 
       {(!playlists.isLoading && playlists.data) ? (
         <section>
@@ -152,9 +191,7 @@ function MainView() {
             ))}
           />
         </section>
-      ): (
-        <MainSectionSkeleton/>
-      )}
+      ): <MainSectionSkeleton/>}
 
     </div>
   );
