@@ -34,12 +34,12 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="px-6 py-4 flex items-center justify-between">
+    <nav className="flex items-center py-2 justify-around md:justify-between md:px-6 md:py-4">
       
       <Button 
         variant="default"
         onClick={handleBackToMain}
-        className="w-22 h-22 flex items-center justify-center cursor-pointer bg-transparent hover:bg-transparent"
+        className="w-12 h-12 p-0 md:w-16 md:h-16 flex items-center justify-center cursor-pointer bg-transparent hover:bg-transparent"
       >
         <img className="w-full h-full object-contain" src={icons.magisMusicIcon} alt="Icon Magis Music"/>
       </Button>
@@ -48,31 +48,39 @@ const NavBar = () => {
         <Button 
           variant="pill"
           onClick={handleBackToMain}
-          className="p-2 flex items-center justify-end cursor-pointer rounded-full bg-card transition-all duration-400 ease-in-out hover:bg-secondary h-full" 
+          className="hidden md:flex p-2 items-center justify-end cursor-pointer rounded-full bg-card transition-all duration-400 ease-in-out hover:bg-secondary h-full" 
         >
           <img className="w-8 h-8 object-contain" src={icons.homeIcon} alt="Icon Home"/>
         </Button>
         
-        <button className="p-3 flex items-center gap-5 rounded-full 
+        <button className="gap-3 md:gap-5 p-3 flex items-center rounded-full 
           transition-all duration-300 ease-in-out
           focus-within:ring-2 focus-within:ring-primary
           bg-card backdrop-blur-md cursor-pointer"
           onClick={() => inputRef.current?.focus()}
           
         >
-          <img className="w-7 h-7 object-contain" src={icons.searchIcon}/>
+          <img className="w-4 h-4 md:w-7 md:h-7 object-contain" src={icons.searchIcon}/>
           <input 
             ref={inputRef}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="focus:outline-none w-md text-secondary font-regular" 
+            className="w-45 md:w-md focus:outline-none text-secondary font-regular" 
             placeholder="¿Qué quieres escuchar?"
           />
         </button>  
         
       </div>
 
-      <div className="flex gap-5">
+      <Button 
+        variant="default"
+        onClick={handleBackToMain}
+        className="w-6 h-6 p-0 flex items-center justify-center cursor-pointer bg-transparent hover:bg-transparent md:hidden"
+      >
+        <img className="w-full h-full object-contain" src={icons.menuIcon} alt="Icon Menu"/>
+      </Button>
+
+      <div className="hidden md:flex gap-5">
         <Button variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
         <Button variant="pillHover" className="text-md py-6">Inicia sesión</Button>
       </div>

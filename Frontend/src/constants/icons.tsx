@@ -9,6 +9,7 @@ import agregarIcon from "@/assets/icons/agregar.png";
 import unlikeIcon from "@/assets/icons/unlike.png";
 import likeIcon from "@/assets/icons/like.png";
 import moreIcon from "@/assets/icons/more.png";
+import menuIcon from "@/assets/icons/menu.png";
 
 export default {
   magisMusicIcon,
@@ -21,5 +22,7 @@ export default {
   agregarIcon,
   unlikeIcon,
   likeIcon,
-  moreIcon
+  moreIcon,
+  menuIcon
+
 };

@@ -14,7 +14,7 @@ function Home() {
         <NavBar />
       </header>
 
-      <main className="flex flex-1 overflow-hidden">
+      <main className="overflow-hidden flex flex-1">
         <Aside />
 
         <div className="flex-1 flex flex-col gap-5 overflow-y-auto bg-card m-2 p-2 rounded-md custom-scrollbar pb-16">
