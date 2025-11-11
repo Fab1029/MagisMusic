@@ -15,10 +15,10 @@ export interface MiniatureCardProps {
 }
 
 function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onCardClick, onPlayClick}: MiniatureCardProps) {
-  const { id }  = useJamStore();
+  const { idJam }  = useJamStore();
 
   const handleOnPlay = () => {
-    if(id)
+    if(idJam)
       errorToast(
         'No se puede reproducir en este momento',
         'Cierra el Jam actual para reproducir tus canciones'

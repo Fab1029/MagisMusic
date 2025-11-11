@@ -14,6 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { useMemo } from "react";
+import { useJamStore } from "@/store/useJamStore";
+import { errorToast } from "./CustomSonner";
 
 interface Identifiable {
     id: string;
@@ -35,6 +37,8 @@ export function CustomTable<TData extends Identifiable, TValue>({
   selectedSongId = null,
 }: DataTableProps<TData, TValue>) {
   
+  const { idJam } = useJamStore();
+
   const columnsWithId = useMemo<ColumnDef<TData, any>[]>(() => {
     const idColumn: ColumnDef<TData, any> = {
       id: "id_column",
@@ -79,7 +83,15 @@ export function CustomTable<TData extends Identifiable, TValue>({
               return (
                   <TableRow
                     key={row.id}
-                    onClick={() => onRowClick(song, index)}
+                    onClick={() => {
+                      if (idJam)
+                        errorToast(
+                          'No se puede reproducir en este momento',
+                          'Cierra el Jam actual para reproducir tus canciones'
+                        );
+                      else
+                        onRowClick(song, index)
+                    }}
                     className={`border-0 cursor-pointer transition-all duration-200 ease-in-out ${
                     isSelected
                     ? "bg-card-foreground"
