@@ -33,8 +33,8 @@ const SectionView = () => {
   });
 
   return (
-    <div className="gap-5 flex flex-col">
-      <h1 className="font-bold text-3xl capitalize">{filter}</h1>
+    <div className="gap-1 md:gap-5 flex flex-col">
+      <h1 className="text-2xl md:text-3xl font-bold capitalize">{filter}</h1>
       <GridPanel data={data} isProfile={filter === filters[2]} />
     </div>
   );
