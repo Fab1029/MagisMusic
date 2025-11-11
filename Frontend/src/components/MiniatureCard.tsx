@@ -30,7 +30,7 @@ function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onC
   return (
     <div 
       onClick={onCardClick}
-      className={`${clasName} w-40 group p-3 flex flex-col items-center justify-center transition-all ease-in-out duration-300 hover:bg-card-foreground cursor-pointer rounded-lg`}
+      className={`${clasName} bg-card-foreground w-40 group p-3 flex flex-col items-center justify-center transition-all ease-in-out duration-300 md:hover:bg-card-foreground cursor-pointer rounded-lg`}
     >   
       <div className="relative">
         <img 
@@ -44,7 +44,7 @@ function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onC
             e.stopPropagation();
             handleOnPlay();
           }}
-          className="w-12 h-12 opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 absolute -bottom-1 -right-1"
+          className="opacity-100 absolute bottom-4 right-1 md:opacity-0 w-12 h-12 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 md:-bottom-1 md:-right-1"
         >
           <img 
             className="object-contain" 
