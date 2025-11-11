@@ -5,11 +5,14 @@ import SectionView from "@/components/SectionView";
 import Home from "@/pages/Home";
 import ContentView from "@/components/ContentView";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { Toaster } from "sonner";
+
 
 function AppRoutes() {
   return (
     <Router>
       <ScrollToTop/>
+      <Toaster position="top-center"/>
       <Routes>
         <Route path="/" element={<Home />}>
           <Route index element={<MainView />} />
@@ -18,6 +21,7 @@ function AppRoutes() {
           <Route path="content/:id/:filter" element={<ContentView />} />
         </Route>
       </Routes>
+
     </Router>
   );
 }

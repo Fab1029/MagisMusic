@@ -6,6 +6,6 @@ interface JamState {
 }
 
 export const useJamStore = create<JamState>((set) => ({
-  id: "",
+  id: 'dsadad',
   setId: (id) => set({ id }),
 }));

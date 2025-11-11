@@ -1,5 +1,8 @@
 import icons from "@/constants/icons";
 import { Button } from "./ui/button";
+import { useJamStore } from "@/store/useJamStore";
+import { errorToast } from "./CustomSonner";
+
 
 export interface MiniatureCardProps {
   title:string;
@@ -12,6 +15,18 @@ export interface MiniatureCardProps {
 }
 
 function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onCardClick, onPlayClick}: MiniatureCardProps) {
+  const { id }  = useJamStore();
+
+  const handleOnPlay = () => {
+    if(id)
+      errorToast(
+        'No se puede reproducir en este momento',
+        'Cierra el Jam actual para reproducir tus canciones'
+      );
+    else
+      onPlayClick();  
+  }
+
   return (
     <div 
       onClick={onCardClick}
@@ -26,8 +41,8 @@ function MiniatureCard({isProfile = false, title, subtitle, image, clasName, onC
         <Button
           variant={'play'}
           onClick={(e) => {
-            e.stopPropagation(); // 👈 Evita que el click llegue al div padre
-            onPlayClick();
+            e.stopPropagation();
+            handleOnPlay();
           }}
           className="w-12 h-12 opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 absolute -bottom-1 -right-1"
         >
