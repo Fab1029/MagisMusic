@@ -2,7 +2,9 @@ import { Kafka } from "kafkajs";
 
 const kafka = new Kafka({
   clientId: "magis-music",
-  brokers: ["localhost:9092"], 
+  //brokers: ["localhost:9092"], 
+  //brokers: ["host.docker.internal:39092"],
+  brokers: ["172.24.96.1:39092"],
 });
 
 export const kafkaAdmin = kafka.admin();
