@@ -8,6 +8,9 @@ import { InlineSearch } from "./InlineSearch";
 import { createJam } from "../services/jam.service"; 
 import { Menu, X } from "lucide-react";
 import type React from "react";
+import { useJamStore } from "@/store/useJamStore";
+import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 
 interface AsideProps {
   isAsideMinimized: boolean;
@@ -36,7 +39,11 @@ const Aside: React.FC<AsideProps> = ({
     { label: "Alfabético" }
   ]
 
-  const optionsButtonPill = ["Playlist", "Artistas", "Jams"];
+  const { idJam, setIdJam, socket, setSocket } = useJamStore();
+  const navigate = useNavigate();
+
+  const baseOptions = ["Playlist", "Artistas"];
+  const optionsButtonPill = idJam ? [...baseOptions, "Jam"] : baseOptions;
 
   const crearPlaylist = () => {
     console.log("Crear playlist"); 
@@ -48,8 +55,42 @@ const Aside: React.FC<AsideProps> = ({
   const crearJam = async () => {
     console.log("Crear Jam");
     const create = await createJam();
+    const jamId = create.jamId;
     console.log(create);
+
+    const newSocket = io("http://localhost:4000"); // backend
+    
+    setIdJam(jamId);
+    setSocket(newSocket);
+    
+    newSocket.emit("createJam", jamId);
+
+    newSocket.on("joined_ack", (msg) => {
+      console.log("Conectado al jam:", msg);
+    });
   }
+
+  const handleFilterPlaylist = () => {
+      console.log("Filtro aplicado: Playlist");
+  }
+
+  const handleFilterArtistas = () => {
+      console.log("Filtro aplicado: Artistas");
+  }
+  
+  const handleFilterJams = () => {
+    if (idJam) {
+      navigate(`/jam/${idJam}`); 
+    } else {
+        console.log("Error: No hay un Jam ID activo para navegar.");
+    }
+  }
+
+  const accionesPill: { [key: string]: () => void } = {
+      "Playlist": handleFilterPlaylist,
+      "Artistas": handleFilterArtistas,
+      "Jam": handleFilterJams,
+  };
 
   const acciones = {
     Playlist: crearPlaylist,
@@ -126,8 +167,15 @@ const Aside: React.FC<AsideProps> = ({
         >
             <div className="flex gap-3 flex-wrap"> 
                 {optionsButtonPill.map((btn, index) => (
-                <Button key={index} variant="pill">{btn}</Button>
-              ))}
+                  <Button 
+                    key={index} 
+                    variant="pill"
+                    onClick={accionesPill[btn]}
+                  >
+                    {btn}
+                  </Button>
+                ))
+                }
             </div>
 
             <div className="flex justify-between">

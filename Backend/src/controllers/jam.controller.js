@@ -5,7 +5,7 @@ export const JamController = {
     try {
       const jam = await JamService.createJam();
       const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-      const link = `${frontendUrl}/content/${jam.jamId}/Jam`;
+      const link = `${frontendUrl}/jam/${jam.jamId}`;
 
       res.status(201).json({
         succes: true,
@@ -23,12 +23,9 @@ export const JamController = {
     }
   },
 
-  async sendEvent(req, res) {
+  async sendEvent(jamId, event) {
     try {
-      const { jamId } = req.params;
-      const { action, song } = req.body;
-      await JamService.sendEvent(jamId, { action, song });
-
+      await JamService.sendEvent(jamId, event);
     } catch (error) {
         console.log(`Jam Controller Error: ${error}`);
     }
@@ -36,6 +33,7 @@ export const JamController = {
 
   async listenToJam(jamId, callback) {
     // Retorna el consumidor creado
-    return await JamService.listenToJam(jamId, callback);
+    const groupId = `jam-group-${jamId}`;
+    return await JamService.listenToJam(jamId, groupId, callback);
   },
 };

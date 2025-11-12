@@ -4,6 +4,47 @@ import { Timer } from "lucide-react";
 import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { Button } from "./ui/button";
 import icons from "@/constants/icons";
+import { useJamStore } from "@/store/useJamStore";
+
+
+const OptionCell = ({ row }: { row: { original: Track } }) => {
+  const { idJam, socket, addSongToQueue } = useJamStore();
+
+  const baseMenuItems = [
+    { label: 'Añadir a Playlist', onClick: () => console.log('Añadir a Playlist') },
+    { label: 'Ver Artista', onClick: () => console.log('Ver Artista') },
+  ];
+    
+  if (idJam && socket?.connected) {
+    baseMenuItems.unshift({ 
+      label: 'Agregar al Jam', 
+      onClick: () => {
+        console.log(`Canción ${row.original.title} agregada al Jam ${idJam}`);
+  
+        socket.emit("jamEvent", { 
+          jamId: idJam, 
+          event: { type: "ADD_SONG", data: row.original } 
+        });
+
+        addSongToQueue(row.original); 
+      } 
+    });
+  }
+
+  return (
+    <CustomDropdownMenu
+      trigger={
+        <Button 
+          variant="pill" 
+          className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
+        >
+          <img src={icons.moreIcon} className="w-6 h-6 object-contain" alt="More option"/>
+        </Button>
+      }
+      menuItems={baseMenuItems}
+    />
+  );
+}
 
 const TruncatedText = ({
   value,
@@ -68,23 +109,7 @@ export const columns: ColumnDef<Track>[] = [
   {
     accessorKey: "options",
     header: "",
-    cell: () => (
-      <CustomDropdownMenu
-        trigger={
-          <Button
-            variant="pill"
-            className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
-          >
-            <img
-              src={icons.moreIcon}
-              className="w-6 h-6 object-contain"
-              alt="More option"
-            />
-          </Button>
-        }
-        menuItems={[{ label: "Opción 1" }]}
-      />
-    ),
+    cell: OptionCell,
   },
 ];
 
@@ -118,23 +143,7 @@ export const columnsMin: ColumnDef<Track>[] = [
   {
     accessorKey: "options",
     header: "",
-    cell: () => (
-      <CustomDropdownMenu
-        trigger={
-          <Button
-            variant="pill"
-            className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
-          >
-            <img
-              src={icons.moreIcon}
-              className="w-6 h-6 object-contain"
-              alt="More option"
-            />
-          </Button>
-        }
-        menuItems={[{ label: "Opción 1" }]}
-      />
-    ),
+    cell: OptionCell,
   },
 ];
 

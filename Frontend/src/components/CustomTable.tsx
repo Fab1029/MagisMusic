@@ -84,12 +84,12 @@ export function CustomTable<TData extends Identifiable, TValue>({
                   <TableRow
                     key={row.id}
                     onClick={() => {
-                      if (idJam)
+                      /*if (idJam)
                         errorToast(
                           'No se puede reproducir en este momento',
                           'Cierra el Jam actual para reproducir tus canciones'
                         );
-                      else
+                      else*/
                         onRowClick(song, index)
                     }}
                     className={`border-0 cursor-pointer transition-all duration-200 ease-in-out ${
