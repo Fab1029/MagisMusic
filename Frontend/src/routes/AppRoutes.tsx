@@ -6,7 +6,7 @@ import Home from "@/pages/Home";
 import ContentView from "@/components/ContentView";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Toaster } from "sonner";
-
+import JamView from "@/components/JamView";
 
 function AppRoutes() {
   return (
@@ -19,6 +19,7 @@ function AppRoutes() {
           <Route path="search/:query/:filter" element={<FilterView />} />
           <Route path="section/:filter" element={<SectionView />} />
           <Route path="content/:id/:filter" element={<ContentView />} />
+          <Route path="/jam/:jamId" element={<JamView />} />
         </Route>
       </Routes>
 
