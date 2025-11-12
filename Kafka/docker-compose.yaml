@@ -4,7 +4,7 @@ services:
     container_name: kafka
     hostname: kafka
     ports:
-      - "9092:9092"    # para el backend (fuera de Docker)
+      - "39092:9092"    # para el backend (fuera de Docker)
       - "29092:29092"  # para Kafka UI (u otros contenedores)
     environment:
       # Activar modo KRaft (sin Zookeeper)
@@ -22,13 +22,12 @@ services:
       # Define el "quorum" de controladores (solo uno)
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
 
-       # 🔹 Listeners internos y externos
-      KAFKA_LISTENERS: PLAINTEXT_INTERNAL://0.0.0.0:29092,PLAINTEXT_EXTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_INTERNAL:PLAINTEXT,PLAINTEXT_EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
-      
+       # Listeners internos y externos
+      KAFKA_LISTENERS: PLAINTEXT_EXTERNAL://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
       # - "kafka:29092" para contenedores internos (UI)
-      # - "localhost:9092" para el backend en el host
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_INTERNAL://kafka:29092,PLAINTEXT_EXTERNAL://localhost:9092
+      # - "localhost:39092" para el backend en el host
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://172.24.96.1:39092,PLAINTEXT_INTERNAL://kafka:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_EXTERNAL:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
 
       
       # Define qué listener usa el controlador
