@@ -20,6 +20,7 @@ interface MenuItem {
   shortcut?: string
   disabled?: boolean
   subItems?: MenuItem[]
+  onClick?: () => void
 }
 
 interface CustomDropdownMenuProps {
@@ -44,7 +45,11 @@ export function CustomDropdownMenu({ trigger, menuItems, menuWidth = "w-56" }: C
         )
       } else {
         return (
-          <DropdownMenuItem key={index} disabled={item.disabled}>
+          <DropdownMenuItem 
+            key={index} 
+            disabled={item.disabled}
+            onClick={item.onClick}
+          >
             {item.label}
             {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
           </DropdownMenuItem>
