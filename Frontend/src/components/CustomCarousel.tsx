@@ -6,20 +6,20 @@ interface CustomCarouselProps {
 
 function CustomCarousel({data}: CustomCarouselProps) {
   return (
-    <div className="px-18">
+    <div className="md:px-15">
       <Carousel
         className="w-full"
       >
-        <CarouselContent className="-ml-2">
+        <CarouselContent className="w-full">
           {data.map((item, index) => (
-            <CarouselItem key={index} className="pl-2 md:basis-1/2 lg:basis-1/5">
+            <CarouselItem key={index} className="basis-1/2 mr-4 lg:m-0 lg:basis-1/5">
               {item}
             </CarouselItem>
           ))}
         </CarouselContent>
 
-        <CarouselPrevious className="hover:bg-primary"/>
-        <CarouselNext className="hover:bg-primary"/>
+        <CarouselPrevious className="hidden md:flex hover:bg-primary"/>
+        <CarouselNext className="hidden md:flex hover:bg-primary"/>
       </Carousel>
     </div>
   )

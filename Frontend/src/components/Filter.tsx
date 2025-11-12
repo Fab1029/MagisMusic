@@ -13,7 +13,7 @@ function Filter() {
   };
 
   return (
-    <div className="gap-2 flex items-center">
+    <div className="grid grid-cols-3 gap-3 md:flex md:items-center">
       {customFilters.map((filter, index) => (
         <Button 
           key={index}
