@@ -26,7 +26,9 @@ export function InlineSearch() {
         type="text"
         placeholder="Busca en tu biblioteca"
         className={`transition-all duration-300 ease-in-out bg-input rounded-md px-3 py-1 outline-none text-sm
-          ${open ? "w-50 opacity-100" : "w-0 opacity-0 p-0"}`}
+        ${open ? "w-full max-w-[12rem] opacity-100" : "w-0 opacity-0 p-0"}
+        md:w-50 
+        `}
       />
     </div>
   );

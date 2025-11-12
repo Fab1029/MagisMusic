@@ -4,7 +4,12 @@ import { useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 
-const NavBar = () => {
+interface NavBarProps {
+    toggleMobileMenu: () => void;
+    isAsideMinimized: boolean;
+}
+
+const NavBar: React.FC<NavBarProps> = ({ toggleMobileMenu, isAsideMinimized }) => {
   const inputRef = useRef(null);
   const navigate = useNavigate();
   const { query, setQuery } = useSearchStore();
@@ -18,7 +23,7 @@ const NavBar = () => {
         navigate(`/search/${query.trim()}/${filter}`);
       }
       else if (isSearchRoute) {
-        handleBackToMain(); // Solo redirige si ya estás en /search
+        handleBackToMain();
       }
     }, 1000); 
 
@@ -74,7 +79,7 @@ const NavBar = () => {
 
       <Button 
         variant="default"
-        onClick={handleBackToMain}
+        onClick={toggleMobileMenu}
         className="w-6 h-6 p-0 flex items-center justify-center cursor-pointer bg-transparent hover:bg-transparent md:hidden"
       >
         <img className="w-full h-full object-contain" src={icons.menuIcon} alt="Icon Menu"/>

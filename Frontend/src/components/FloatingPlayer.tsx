@@ -48,7 +48,7 @@ const VolumeIndicator: React.FC<VolumeIndicatorProps> = ({ volume, isVisible }) 
 const SongInfo: React.FC<SongInfoProps> = ({ image, title, artist }) => {
   const [isLiked, setIsLiked] = useState(false);
   return (
-    <div className="flex items-center space-x-3 w-1/4">
+    <div className="flex items-center space-x-3 w-1/4 md:w-1/4">
       <img src={image} alt={`${title} cover`} className="h-14 w-14 object-cover rounded" />
       <div className="flex flex-col">
         <span className="text-sm font-semibold truncate max-w-40">{title}</span>
@@ -58,7 +58,7 @@ const SongInfo: React.FC<SongInfoProps> = ({ image, title, artist }) => {
         variant="ghost"
         size="icon"
         onClick={() => setIsLiked(!isLiked)}
-        className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent"
+        className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent hidden md:inline-flex"
       >
         <Heart className={`h-5 w-5 transition-all duration-200 ease-in-out ${isLiked ? 'fill-primary text-primary' : ''}`} />
       </Button>
@@ -186,13 +186,13 @@ export const FloatingPlayer: React.FC = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
       <audio ref={audioRef} src={currentSong.preview} key={currentSong.id}/>
-      <div className="flex items-center justify-between h-full">
+      <div className="flex items-center justify-between h-16 md:h-full">
         <SongInfo 
           image={currentSong.image}
           title={currentSong.title}
           artist={currentSong.artist}
         />
-        <div className="flex flex-col items-center w-1/2 max-w-md">
+        <div className="hidden md:flex flex-col items-center w-1/2 max-w-md">
           <div className="flex items-center space-x-6 mb-2">
             <Button onClick={prevSong} variant="ghost" size="icon" className="text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
               <SkipBack className="h-5 w-5 fill-current transition-all duration-150 hover:scale-110" />
@@ -214,39 +214,70 @@ export const FloatingPlayer: React.FC = () => {
               <SkipForward className="h-5 w-5 fill-current transition-all duration-150 hover:scale-110" />
             </Button>
           </div>
-          
-          <div className="flex items-center w-full space-x-2">
-            <span className="text-xs text-gray-400">{formatTime(progressSeconds)}</span>
-            <Progress 
-              value={progressPercentage} 
-              className="h-1 bg-gray-700" 
-              indicatorClassName="bg-white" 
-            />
-            <span className="text-xs text-gray-400">{formatTime(totalDuration)}</span>
+          <div className="flex items-center w-full space-x-2"> 
+              <span className="text-xs text-gray-400">{formatTime(progressSeconds)}</span>
+              <Progress 
+                  value={progressPercentage} 
+                  className="h-1 bg-gray-700" 
+                  indicatorClassName="bg-white" 
+              />
+              <span className="text-xs text-gray-400">{formatTime(totalDuration)}</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-end w-1/4 space-x-2">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></svg>
-          
-          <div className="w-24">
-            <Slider
-              defaultValue={[volume]}
-              max={100}
-              step={1}
-              value={[volume]}
-              onValueChange={handleVolumeChange}
-              className="[&>span:first-child]:h-1"
-              trackClassName="bg-gray-700"
-              thumbClassName="h-3 w-3 bg-white border-none"
-            />
-          </div>  
+        <div className="flex items-center justify-end w-1/2 md:w-1/4 space-x-2">
+          <div className="hidden md:flex items-center space-x-2 w-full max-w-xs justify-end">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon></svg>
+            
+            <div className="w-24">
+              <Slider
+                defaultValue={[volume]}
+                max={100}
+                step={1}
+                value={[volume]}
+                onValueChange={handleVolumeChange}
+                className="[&>span:first-child]:h-1"
+                trackClassName="bg-gray-700"
+                thumbClassName="h-3 w-3 bg-white border-none"
+              />
+            </div>  
+          </div>
         </div>
+            <div className="flex items-center space-x-2 md:hidden"> 
+                <Button onClick={prevSong} variant="ghost" size="icon" className="p-0 text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
+                    <SkipBack className="h-5 w-5 fill-current" />
+                </Button>
+                <Button
+                    variant="default"
+                    size="icon"
+                    className="rounded-full bg-white text-black hover:bg-white/80 transition-colors h-7 w-7"
+                    onClick={playPause}
+                >
+                    {isPlaying 
+                        ? <Pause className="h-4 w-4 fill-current" /> 
+                        : <Play className="h-4 w-4 fill-current ml-0.5" />
+                    }
+                </Button>
+                <Button onClick={nextSong} variant="ghost" size="icon" className="p-0 text-gray-400 hover:text-white transition-all duration-100 ease-in-out hover:bg-transparent">
+                    <SkipForward className="h-5 w-5 fill-current" />
+                </Button>
+            </div>        
+
       </div>
       <VolumeIndicator 
                 volume={volumeIndicator.value} 
                 isVisible={volumeIndicator.visible} 
             />
+      <div className="flex md:hidden items-center w-full space-x-2 pt-2">
+          <span className="text-xs text-gray-400">{formatTime(progressSeconds)}</span>
+          <Progress 
+              value={progressPercentage} 
+              className="h-1 bg-gray-700" 
+              indicatorClassName="bg-white" 
+          />
+          <span className="text-xs text-gray-400">{formatTime(totalDuration)}</span>
+      </div>
     </div>
+    
   );
 };
