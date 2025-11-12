@@ -1,6 +1,5 @@
 import icons from "@/constants/icons";
 import { CustomTable } from "./CustomTable";
-import { columns } from "@/models/Track";
 import { useLocation } from "react-router-dom";
 import { filters } from "@/store/useSearchStore";
 import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer.service";
@@ -12,8 +11,11 @@ import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useJamStore } from "@/store/useJamStore";
 import { errorToast } from "./CustomSonner";
+import { columns, columnsMobile } from "./Columns";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 function ContentView() {
+  const isMobile = useIsMobile();
   const { idJam } = useJamStore();
   const pathName = useLocation().pathname;
   
@@ -61,11 +63,11 @@ function ContentView() {
 
   return (
     <div>
-      <div className="p-5 relative">
+      <div className="p-3 md:p-5 relative">
 
-        <div className="bg-primary mask-b-from-gray-50 absolute inset-0 z-0 rounded-tl-md" />
+        <div className="bg-primary mask-b-from-gray-50 absolute inset-0 z-0 rounded-t-md" />
 
-        <div className="gap-10 flex items-end-safe relative z-1">
+        <div className="gap-2 flex flex-col relative z-1 items-start md:flex-row md:items-end-safe md:gap-10">
           {(!data.isLoading && data.data) ? (
             <img
               className="w-64 h-64 rounded-md"
@@ -75,16 +77,16 @@ function ContentView() {
             <Skeleton className="w-64 h-64 rounded-md"/>
           )}
           
-          <div className="gap-5 flex flex-col">
+          <div className="gap-2 flex flex-col md:gap-5">
             {(!data.isLoading && data.data) ? (
               <>
-                <h1 className="font-bold text-7xl text-white truncate max-w-xl">{data.data.title || data.data.name}</h1>
-                <h3 className="font-bold text-2xl text-accent-foreground truncate max-w-xl">{data.data.artist || data.data.description || 'Artista'}</h3>
+                <h1 className="font-bold text-white truncate text-4xl max-w-70 md:text-7xl md:max-w-xl">{data.data.title || data.data.name}</h1>
+                <h3 className="font-bold text-accent-foreground text-xl truncate max-w-70 md:text-2xl md:max-w-xl">{data.data.artist || data.data.description || 'Artista'}</h3>
               </>
             ): (
               <>
-                <Skeleton className="h-15 w-60"/>
-                <Skeleton className="h-10 w-30"/>
+                <Skeleton className="h-10 w-60 md:h-15"/>
+                <Skeleton className="h-8 w-30 md:h-10"/>
               </>
             )}
             
@@ -127,7 +129,7 @@ function ContentView() {
         </div>
       </div>
       {(!data.isLoading && data.data) ? (
-        <CustomTable columns={columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}
+        <CustomTable columns={isMobile ? columnsMobile : columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}
         onRowClick={handleRowClick}
         selectedSongId={currentSong?.id || null}
         />

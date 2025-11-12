@@ -5,12 +5,12 @@ import MiniatureCard from "./MiniatureCard"
 import MainSectionSkeleton from "./MainSectionSkeleton"
 import CustomTableSkeleton from "./CustomTableSkeleton"
 import { Skeleton } from "./ui/skeleton"
-import { columnsMin } from "@/models/Track"
 import { useNavigate } from "react-router-dom"
 import { filters, useSearchStore } from "@/store/useSearchStore"
 import MiniatureCardSkeleton from "./MiniatureCardSkeleton"
 import { getAlbumById, getArtistById, getPlayListById } from "@/services/deezer.service"
 import { usePlayerStore } from "@/store/usePlayerStore"
+import { columnsMin } from "./Columns"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -55,15 +55,15 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 
   return (
     <div className="gap-5 flex flex-col">
-			<div className="gap-2 flex">
+			<div className="md:gap-2 md:flex">
 				<section className="gap-2 flex flex-col flex-1 h-full">
 					{(!tracks.isLoading && tracks.data) ? (
 						<>
-							<h1 className="font-bold text-2xl">
+							<h1 className="text-xl font-bold md:text-2xl">
 								Resultado principal
 							</h1>
 							<MiniatureCard 
-                clasName='gap-5 w-full h-full items-start'
+                clasName='gap-5 items-start md:w-full md:h-full '
                 title={tracks.data[0].title} 
                 subtitle={tracks.data[0].artist} 
                 image={tracks.data[0].image}
@@ -81,7 +81,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 				</section>
 
 
-				<section className="gap-2 flex flex-col flex-2 h-full">
+				<section className="hidden md:gap-2 md:flex md:flex-col md:flex-2 md:h-full">
 					{(!tracks.isLoading && tracks.data) ? (
 						<>
 							<HeaderSection title={filters[1]} onClick={() => handleNavigate(filters[1])}/>

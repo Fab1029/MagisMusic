@@ -1,17 +1,17 @@
-import type { Song } from "@/models/Track";
+import type { Track } from "@/models/Track";
 import { create } from "zustand";
 
 interface PlayerState {
-  currentSong: Song | null;
+  currentSong: Track | null;
   isPlaying: boolean;
   progressSeconds: number; 
   volume: number;
 
-  songs: Song[];
+  songs: Track[];
   currentSongIndex: number;
 
   playPause: () => void;
-  setSongs: (songs: Song[], index?: number) => void;
+  setSongs: (songs: Track[], index?: number) => void;
   setProgress: (seconds: number) => void;
   setVolume: (newVolume: number) => void;
   nextSong: () => void;
