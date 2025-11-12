@@ -62,13 +62,9 @@ const Aside: React.FC<AsideProps> = ({
       className={`
         fixed top-0 left-0 z-50 h-full overflow-y-auto custom-scrollbar pb-20 
         bg-background transition-transform duration-300 ease-in-out transform
-        w-full max-w-[85%] sm:max-w-xs ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        w-full ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         md:relative md:translate-x-0 md:flex md:flex-col md:m-2 md:p-2 md:rounded-md md:bg-card
-        md:shrink-0 md:gap-5
-        
-        
-        
-        ${isAsideMinimized ? 'md:w-20' : 'md:w-[24rem]'} 
+        md:w-[28rem] md:shrink-0 md:gap-5 
         ${className || ''} 
       `}
     >
@@ -80,7 +76,7 @@ const Aside: React.FC<AsideProps> = ({
             <h1 
                 className={`
                 font-bold transition-opacity duration-300 text-lg 
-                ${isAsideMinimized ? 'opacity-0 hidden md:inline' : 'opacity-100'}
+                opacity-100 md:inline
                 `}
             >
               Tu biblioteca
@@ -102,7 +98,7 @@ const Aside: React.FC<AsideProps> = ({
         </div>
     </div>
 
-    <div className={`hidden md:block ${isAsideMinimized ? 'hidden' : ''}`}>
+    <div className={`hidden md:block`}>
       <TooltipDropdownButton
         trigger={
           <Button 
@@ -124,7 +120,7 @@ const Aside: React.FC<AsideProps> = ({
    <div 
             className={`
                 flex flex-col gap-3 md:gap-8 transition-opacity duration-300 px-3
-                ${isAsideMinimized ? 'opacity-0 hidden' : 'opacity-100'} 
+                'opacity-100'
                 md:block
             `}
         >
