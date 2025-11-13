@@ -76,7 +76,8 @@ export const FloatingPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [previewDuration, setPreviewDuration] = useState(0);
   const { 
-    currentSong, 
+    currentSongIndex,
+    songs,
     isPlaying, 
     progressSeconds, 
     volume, 
@@ -87,9 +88,12 @@ export const FloatingPlayer: React.FC = () => {
     prevSong,
   } = usePlayerStore();
 
+  const currentSong = songs.length > 0 ? songs[currentSongIndex] : null;
+
   if (!currentSong) {
     return null;
   }
+  
 
   const [volumeIndicator, setVolumeIndicator] = useState({ 
     value: volume, 
@@ -185,7 +189,7 @@ export const FloatingPlayer: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
-      <audio ref={audioRef} src={songs[curentIndex].preview} key={currentSong.id}/>
+      <audio ref={audioRef} src={songs[currentSongIndex].preview} key={currentSong.id}/>
       <div className="flex items-center justify-between h-16 md:h-full">
         <SongInfo 
           image={currentSong.image}
