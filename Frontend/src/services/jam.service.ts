@@ -20,17 +20,3 @@ export const createJam = async() => {
     }
 };
 
-export const getMostPopularAlbums = async(limit = 10) => {
-    try{
-        const response = await fetch(`${BASE_URL}/albumns?limit=${limit}`);
-
-        if (!response.ok) {
-            throw new Error('Error al obtener albumes populares');            
-        }
-
-        return await response.json();
-
-    }catch(error) {
-        throw new Error('Error al obtener albumes populares');
-    }
-};

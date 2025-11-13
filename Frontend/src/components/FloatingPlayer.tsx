@@ -92,9 +92,9 @@ export const FloatingPlayer: React.FC = () => {
   }
 
   const [volumeIndicator, setVolumeIndicator] = useState({ 
-        value: volume, 
-        visible: false 
-    });
+    value: volume, 
+    visible: false 
+  });
   
   const volumeTimerRef = useRef<number | null>(null);
 
@@ -185,7 +185,7 @@ export const FloatingPlayer: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
-      <audio ref={audioRef} src={currentSong.preview} key={currentSong.id}/>
+      <audio ref={audioRef} src={songs[curentIndex].preview} key={currentSong.id}/>
       <div className="flex items-center justify-between h-16 md:h-full">
         <SongInfo 
           image={currentSong.image}
