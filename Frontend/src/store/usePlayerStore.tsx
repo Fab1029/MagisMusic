@@ -2,7 +2,7 @@ import type { Track } from "@/models/Track";
 import { create } from "zustand";
 
 interface PlayerState {
-  currentSong: Track | null;
+  currentSong: Track | null; /* ESTO QUITAR */
   isPlaying: boolean;
   progressSeconds: number; 
   volume: number;
@@ -19,30 +19,38 @@ interface PlayerState {
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
-  currentSong: null,
+  currentSong: null,/* Este quitale bro :)*/
   isPlaying: false,
   progressSeconds: 0,
   volume: 50,
   songs: [],
-  currentSongIndex: -1,
+  currentSongIndex: 0,
   playPause: () => set((state) => ({ isPlaying: !state.isPlaying })),
   
-  setSongs: (songs, index = 0) => {
+  const player = get().;
+
+  setSongs: (newSongs, /*index = 0*/) => {
     
     if (songs.length === 0) return;
-
+    // ELIAN
+    /* Obtener indice actual del array lenght*/
+    /* PLAY LIST Y ARTISTAS AGREGAR VARIOS*/
     set({ 
-        songs: songs,
-        currentSongIndex: index,
-        currentSong: songs[index], 
-        progressSeconds: 0, 
-        isPlaying: true,
+      songs: [...songs, newSongs],/* Agregar al array [] push */ 
+      currentSongIndex: index, /* lenght */
+      currentSong: songs[index], /* YA no es necesario */ 
+      progressSeconds: 0, 
+      isPlaying: true,
     });
   },
   
+  /* ADD SONG */
+  /*NUEVO METODO PARA AGREGAR SOLO UNA CANCION*/
+  /* Setaer indice a lenght */
+
   setProgress: (seconds) => set({ progressSeconds: seconds }),
   setVolume: (newVolume) => set({ volume: newVolume }),
-
+  /* REVISAR CON LOS CAMBIOS APLICADOS */
   nextSong: () => set((state) =>{
     const { songs,currentSongIndex} = state;
     if (songs.length === 0) return {};

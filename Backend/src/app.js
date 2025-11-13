@@ -1,5 +1,5 @@
 import express from "express";
-import deezerRoutes from "./routes/deezer.routes.js";
+import deezerRoutes from "./routes/deezer.router.js";
 import jamRoutes from "./routes/jam.router.js";
 
 const app = express();

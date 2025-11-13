@@ -11,7 +11,6 @@ import JamView from "@/components/JamView";
 function AppRoutes() {
   return (
     <Router>
-      <ScrollToTop/>
       <Toaster position="top-center"/>
       <Routes>
         <Route path="/" element={<Home />}>
@@ -22,7 +21,7 @@ function AppRoutes() {
           <Route path="/jam/:jamId" element={<JamView />} />
         </Route>
       </Routes>
-
+      <ScrollToTop/>
     </Router>
   );
 }
