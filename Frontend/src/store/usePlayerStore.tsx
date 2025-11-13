@@ -10,7 +10,7 @@ interface PlayerState {
   currentSongIndex: number;
 
   playPause: () => void;
-  setSongs: (newSongs: Track[], startindex?: number) => void;
+  setSongs: (newSongs: Track[]) => void;
   replaceQueue: (songs: Track[], index?: number) => void;
   setProgress: (seconds: number) => void;
   setVolume: (newVolume: number) => void;
@@ -30,19 +30,18 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   setSongs: (newSongs: Track[]) => {
     set((state) => {
-        
-        const startNewIndex = state.songs.length;
-        const updatedSongs = [...state.songs, ...newSongs];
-        const finalCurrentIndex = startNewIndex;
-        
-        if (newSongs.length === 0 || updatedSongs.length === 0) return {};
+      const startNewIndex = state.songs.length;
+      const updatedSongs = [...state.songs, ...newSongs];
+      const finalCurrentIndex = startNewIndex;
+      
+      if (newSongs.length === 0 || updatedSongs.length === 0) return {};
 
-        return { 
-            songs: updatedSongs, 
-            currentSongIndex: finalCurrentIndex,
-            progressSeconds: 0, 
-            isPlaying: true,
-        };
+      return { 
+          songs: updatedSongs, 
+          currentSongIndex: finalCurrentIndex,
+          progressSeconds: 0, 
+          isPlaying: true,
+      };
     });
   },
 
@@ -59,14 +58,16 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   
   addSong: (song: Track) => {
     set((state) => {
-        const newSongs = [...state.songs, song];
-        const newIndex = state.songs.length === 0 ? 0 : state.currentSongIndex;
-        
-        return {
-            songs: newSongs,
-            currentSongIndex: newIndex,
-            isPlaying: state.songs.length === 0 ? true : state.isPlaying,
-        };
+      console.log(song);
+      const newSongs = [...state.songs, song];
+      const newIndex = state.songs.length;
+      
+      return {
+          songs: newSongs,
+          currentSongIndex: newIndex,
+          progressSeconds: 0,
+          isPlaying: true,
+      };
     });
   },
   
@@ -77,9 +78,9 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
     const { songs,currentSongIndex} = state;
     if (songs.length === 0) return {};
     const nextIndex = (currentSongIndex + 1) % songs.length;
+
     return{
       currentSongIndex:nextIndex,
-      currentSong: songs[nextIndex],
       progressSeconds: 0,
       isPlaying: true,
     };
@@ -93,7 +94,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
     return {
       currentSongIndex: prevIndex,
-      currentSong: songs[prevIndex],
       progressSeconds: 0,
       isPlaying: true, 
     };

@@ -19,7 +19,7 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 
 function MainView() {
   const navigate = useNavigate();
-  const { setSongs } = usePlayerStore();
+  const { replaceQueue } = usePlayerStore();
 
   const handleNavigate = (filter: string) => navigate(`/section/${filter}`);
   const handleOnCardClick = (id:number, filter:string) => navigate(`/content/${id}/${filter}`);
@@ -115,7 +115,7 @@ function MainView() {
       default: return;
     }
     const tracks = response.tracks?.map((item:any) => ({...item})) || [response];
-    setSongs(tracks, 0); 
+    replaceQueue(tracks); 
   };
 
   return (
@@ -131,7 +131,7 @@ function MainView() {
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
-                onPlayClick={() => setSongs([item])}
+                onPlayClick={() => replaceQueue([item])}
                 onCardClick={() => handleOnCardClick(item.id, filters[1])}
               />
             ))}

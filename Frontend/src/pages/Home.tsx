@@ -7,7 +7,7 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 import { useState } from "react";
 
 function Home() {
-  const { currentSong } = usePlayerStore();
+  const { songs } = usePlayerStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
 
@@ -41,7 +41,7 @@ function Home() {
             <AppFooter />
           </footer>
         </div>
-        {currentSong && (
+        {songs.length > 0 && (
           <FloatingPlayer />
         )}
 

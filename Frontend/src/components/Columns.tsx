@@ -50,7 +50,7 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
 
 const TruncatedText = ({
   value,
-  maxWidths = "max-w-[120px] sm:max-w-[220px] md:max-w-[300px]",
+  maxWidths ="max-w-[100px]",
 }: {
   value: string;
   maxWidths?: string;
@@ -62,7 +62,6 @@ const TruncatedText = ({
     {value}
   </span>
 );
-
 
 export const columns: ColumnDef<Track>[] = [
   {
@@ -87,9 +86,7 @@ export const columns: ColumnDef<Track>[] = [
     accessorKey: "artist",
     header: "Artista",
     cell: ({ getValue }) => (
-      <TruncatedText
-        value={getValue() as string}
-        maxWidths="max-w-[160px] sm:max-w-[200px]"
+      <TruncatedText value={getValue() as string}
       />
     ),
   },
@@ -97,9 +94,7 @@ export const columns: ColumnDef<Track>[] = [
     accessorKey: "album",
     header: "Álbum",
     cell: ({ getValue }) => (
-      <TruncatedText
-        value={getValue() as string}
-        maxWidths="max-w-[200px] sm:max-w-[260px]"
+      <TruncatedText value={getValue() as string}
       />
     ),
   },
@@ -123,7 +118,6 @@ export const columnsMin: ColumnDef<Track>[] = [
     cell: ({ getValue }) => (
       <TruncatedText
         value={getValue() as string}
-        maxWidths="max-w-[160px] sm:max-w-[200px]"
       />
     ),
   },
@@ -133,7 +127,6 @@ export const columnsMin: ColumnDef<Track>[] = [
     cell: ({ getValue }) => (
       <TruncatedText
         value={getValue() as string}
-        maxWidths="max-w-[140px] sm:max-w-[180px]"
       />
     ),
   },
@@ -157,7 +150,6 @@ export const columnsMobile: ColumnDef<Track>[] = [
     cell: ({ getValue }) => (
       <TruncatedText
         value={getValue() as string}
-        maxWidths="max-w-[120px] sm:max-w-[160px]"
       />
     ),
   },

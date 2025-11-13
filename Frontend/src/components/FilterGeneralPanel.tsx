@@ -11,6 +11,7 @@ import MiniatureCardSkeleton from "./MiniatureCardSkeleton"
 import { getAlbumById, getArtistById, getPlayListById } from "@/services/deezer.service"
 import { usePlayerStore } from "@/store/usePlayerStore"
 import { columnsMin } from "./Columns"
+import type { Track } from "@/models/Track"
 
 interface FilterGeneralPanelProps {
 	tracks:any;
@@ -22,7 +23,7 @@ interface FilterGeneralPanelProps {
 function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralPanelProps) {
   const navigate = useNavigate();
   const { query } = useSearchStore();
-  const { setSongs, currentSong } = usePlayerStore();
+  const { replaceQueue } = usePlayerStore();
 
   const handleNavigate = (filter:string) => {
     navigate(`/search/${query.trim()}/${filter}`);
@@ -50,7 +51,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
     }
     
     const tracks = response.tracks?.map((item:any) => ({...item})) || [response];
-    setSongs(tracks, 0); 
+    replaceQueue(tracks); 
   };
 
   return (
@@ -63,11 +64,11 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
 								Resultado principal
 							</h1>
 							<MiniatureCard 
-                clasName='gap-5 items-start md:w-full md:h-full '
+                clasName='gap-5 items-start md:w-100 md:h-full '
                 title={tracks.data[0].title} 
                 subtitle={tracks.data[0].artist} 
                 image={tracks.data[0].image}
-                onPlayClick={() => setSongs([tracks.data[0]])}
+                onPlayClick={() => replaceQueue([tracks.data[0]])}
                 onCardClick={() => handleOnCardClick(tracks.data[0].id, filters[1])}
               />
 						</>
@@ -89,8 +90,6 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 columns={columnsMin} 
                 data={tracks.data.slice(0, 4)} 
                 showHeaders={false}
-                onRowClick={(_, index) => setSongs(tracks.data.slice(0, 4), index)}
-                selectedSongId={currentSong?.id || null}
               />
 						</>
 						
@@ -120,7 +119,7 @@ function FilterGeneralPanel({tracks, artists, albums, playlists}: FilterGeneralP
                 title={item.title}
                 subtitle={item.artist}
                 image={item.image}
-                onPlayClick={() => setSongs([item])}
+                onPlayClick={() => replaceQueue([item])}
                 onCardClick={() => handleOnCardClick(item.id, filters[1])} 
               />
             ))}

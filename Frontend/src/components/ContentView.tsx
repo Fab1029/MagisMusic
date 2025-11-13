@@ -21,7 +21,7 @@ function ContentView() {
   
   const filter = pathName.split('/')[3];
   const id = Number(pathName.split('/')[2]);
-  const { setSongs, currentSong } = usePlayerStore();
+  const { replaceQueue } = usePlayerStore();
 
   const handleQuery = () => {
     switch (filter) {
@@ -43,11 +43,7 @@ function ContentView() {
     queryFn: () => handleQuery(),
   });
 
-  const handleRowClick = (song: any, index: number) => {
-    const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
-    setSongs(tracks, index);
-  };
-
+ 
   const handlePlayButton = () => {
     if (idJam)
       errorToast(
@@ -56,7 +52,7 @@ function ContentView() {
       );
     else {
       const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
-      setSongs(tracks, 0); 
+      replaceQueue(tracks); 
     }
     
   };
@@ -130,8 +126,6 @@ function ContentView() {
       </div>
       {(!data.isLoading && data.data) ? (
         <CustomTable columns={isMobile ? columnsMobile : columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}
-        onRowClick={handleRowClick}
-        selectedSongId={currentSong?.id || null}
         />
       ): (
         <CustomTableSkeleton rowsNumber={3}/>
