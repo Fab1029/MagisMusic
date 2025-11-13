@@ -24,7 +24,7 @@ export const useJamStore = create<JamState>((set, get) => ({
     // Desconecta si hay otro socket
     existingSocket?.disconnect();
 
-    const socket = io("http://localhost:4000", {
+    const socket = io("http://10.26.23.88:4000", {
       transports: ["websocket"],
     });
 

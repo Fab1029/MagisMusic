@@ -45,16 +45,19 @@ export function CustomTable({ data, columns, showHeaders = true }: CustomTablePr
   });
 
   const handleOnClickRow = (index: number) => {
-    if (idJam && socket) {
+    /*
+    if (idJam && socket?.connected) {
       socket.emit("jamEvent", {
         jamId: idJam,
         event: { type: "PLAY_SONG", index: index },
       });
 
-      return; //VERIFICAR ESTA PARTE
+      
     }
+    else {
+      replaceQueue(data, index);
+    }*/
 
-    replaceQueue(data, index);
   };
 
 

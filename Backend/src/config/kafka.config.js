@@ -4,7 +4,7 @@ const kafka = new Kafka({
   clientId: "magis-music",
   //brokers: ["localhost:9092"], 
   //brokers: ["host.docker.internal:39092"],
-  brokers: ["localhost:39092"],
+  brokers: ["10.26.23.88:39092"],
 });
 
 export const kafkaAdmin = kafka.admin();

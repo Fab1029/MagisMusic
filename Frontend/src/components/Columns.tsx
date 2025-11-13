@@ -17,7 +17,7 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
     { label: 'Ver Artista', onClick: () => console.log('Ver Artista') },
   ];
     
-  if (idJam && socket?.connected) {
+  if (idJam && socket?.connect) {
     baseMenuItems.unshift({ 
       label: 'Agregar al Jam', 
       onClick: () => {
@@ -159,22 +159,6 @@ export const columnsMobile: ColumnDef<Track>[] = [
   {
     accessorKey: "options",
     header: "",
-    cell: () => (
-      <CustomDropdownMenu
-        trigger={
-          <Button
-            variant="pill"
-            className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
-          >
-            <img
-              src={icons.moreIcon}
-              className="w-6 h-6 object-contain"
-              alt="More option"
-            />
-          </Button>
-        }
-        menuItems={[{ label: "Opción 1" }]}
-      />
-    ),
+    cell: OptionCell
   },
 ];
