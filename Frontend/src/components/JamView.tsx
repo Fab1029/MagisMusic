@@ -15,25 +15,11 @@ export default function JamView() {
   const idJamRoute = pathName.split("/")[2];
   const {
     idJam,
-    jamQueue,
-    currentSong,
     connectToJam,
     leaveJam,
-    socket,
   } = useJamStore();
 
-  const { songs , setSongs } = usePlayerStore();
-  
-  const handleRowClick = (song: Track, index:number) => {
-    if (!socket || !idJam) return;
-
-    socket.emit("jamEvent", {
-      jamId: idJam,
-      event: { type: "PLAY_SONG", index: index },
-    });
-
-    //setSongs(songs, index);
-  };
+  const { songs } = usePlayerStore();
 
   return (
     <div>
@@ -78,8 +64,6 @@ export default function JamView() {
       <CustomTable
         columns={isMobile ? columnsMobile : columns}
         data={songs}
-        onRowClick={handleRowClick}
-        selectedSongId={currentSong?.id || null}
       />
     </div>
   );

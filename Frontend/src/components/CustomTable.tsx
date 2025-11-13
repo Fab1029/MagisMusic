@@ -16,31 +16,21 @@ import {
 import { useMemo } from "react";
 import { useJamStore } from "@/store/useJamStore";
 import { errorToast } from "./CustomSonner";
+import type { Track } from "@/models/Track";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
-interface Identifiable {
-    id: string;
-}
-
-interface DataTableProps<TData extends Identifiable, TValue> {
-  data: TData[];
-  columns: ColumnDef<TData, TValue>[];
+interface CustomTableProps {
+  data: Track[];
+  columns: ColumnDef<Track, any>[];
   showHeaders?: boolean;
-  onRowClick: (row: TData, index: number) => void;
-  selectedSongId?: string | null;
 }
 
-export function CustomTable<TData extends Identifiable, TValue>({
-  data,
-  columns,
-  showHeaders = true,
-  onRowClick,
-  selectedSongId = null,
-}: DataTableProps<TData, TValue>) {
-  
-  const { idJam } = useJamStore();
+export function CustomTable({ data, columns, showHeaders = true }: CustomTableProps) {
+  const { idJam, socket} = useJamStore();
+  const { songs, currentSongIndex, replaceQueue } = usePlayerStore();
 
-  const columnsWithId = useMemo<ColumnDef<TData, any>[]>(() => {
-    const idColumn: ColumnDef<TData, any> = {
+  const columnsWithId = useMemo<ColumnDef<Track, any>[]>(() => {
+    const idColumn: ColumnDef<Track, any> = {
       id: "id_column",
       header: "#",
       cell: ({ row }) => row.index + 1,
@@ -54,6 +44,23 @@ export function CustomTable<TData extends Identifiable, TValue>({
     getCoreRowModel: getCoreRowModel(),
   });
 
+  const handleOnClickRow = (index: number) => {
+    /*
+    if (idJam && socket?.connected) {
+      socket.emit("jamEvent", {
+        jamId: idJam,
+        event: { type: "PLAY_SONG", index: index },
+      });
+
+      
+    }
+    else {
+      replaceQueue(data, index);
+    }*/
+
+  };
+
+
   return (
     <div className="overflow-hidden rounded-md">
       <Table>
@@ -65,10 +72,7 @@ export function CustomTable<TData extends Identifiable, TValue>({
                   <TableHead key={header.id}>
                     {header.isPlaceholder
                       ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                      : flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
                 ))}
               </TableRow>
@@ -78,34 +82,25 @@ export function CustomTable<TData extends Identifiable, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => {
-              const song = row.original; 
-              const isSelected = song.id === selectedSongId;
+              const song = row.original;
+              const isSelected = song.id === songs[currentSongIndex]?.id;
+
               return (
-                  <TableRow
-                    key={row.id}
-                    onClick={() => {
-                      /*if (idJam)
-                        errorToast(
-                          'No se puede reproducir en este momento',
-                          'Cierra el Jam actual para reproducir tus canciones'
-                        );
-                      else*/
-                        onRowClick(song, index)
-                    }}
-                    className={`border-0 cursor-pointer transition-all duration-200 ease-in-out ${
-                    isSelected
-                    ? "bg-card-foreground"
-                    : "hover:bg-muted"
-                    }`}
-                    >
-                    {row.getVisibleCells().map((cell) => (
+                <TableRow
+                  key={row.id}
+                  onClick={() => handleOnClickRow(index)}
+                  className={`border-0 cursor-pointer transition-all duration-200 ease-in-out ${
+                    isSelected ? "bg-card-foreground" : "hover:bg-muted"
+                  }`}
+                >
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-4">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })
+                  ))}
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
               <TableCell colSpan={columnsWithId.length} className="h-24 text-center">

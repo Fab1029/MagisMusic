@@ -31,17 +31,17 @@ const VolumeIndicator: React.FC<VolumeIndicatorProps> = ({ volume, isVisible }) 
         : 'opacity-0 translate-y-5';
 
     return (
-        <div 
-            className={`
-                fixed bottom-24 right-5 bg-background/90 backdrop-blur 
-                p-3 rounded-lg shadow-xl text-white transition-all duration-300 
-                flex items-center space-x-3 z-[60] 
-                ${visibilityClass}
-            `}
-        >
-            <Icon className="h-6 w-6 text-primary" />
-            <span className="font-semibold text-lg">{volume}%</span>
-        </div>
+      <div 
+        className={`
+          fixed bottom-24 right-5 bg-background/90 backdrop-blur 
+          p-3 rounded-lg shadow-xl text-white transition-all duration-300 
+          flex items-center space-x-3 z-[60] 
+          ${visibilityClass}
+        `}
+      >
+        <Icon className="h-6 w-6 text-primary" />
+        <span className="font-semibold text-lg">{volume}%</span>
+      </div>
     );
 };
 
@@ -87,14 +87,13 @@ export const FloatingPlayer: React.FC = () => {
     nextSong,
     prevSong,
   } = usePlayerStore();
-
+  
   const currentSong = songs.length > 0 ? songs[currentSongIndex] : null;
 
   if (!currentSong) {
     return null;
   }
   
-
   const [volumeIndicator, setVolumeIndicator] = useState({ 
     value: volume, 
     visible: false 
@@ -118,6 +117,7 @@ export const FloatingPlayer: React.FC = () => {
   const totalDuration = previewDuration > 0 ? previewDuration : Number(currentSong.duration);
  
   useEffect(() => {
+    console.log('Entro');
     const audio = audioRef.current;
     if (!audio) return;
     if (isPlaying){
@@ -189,7 +189,8 @@ export const FloatingPlayer: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
-      <audio ref={audioRef} src={songs[currentSongIndex].preview} key={currentSong.id}/>
+      
+      <audio ref={audioRef} src={currentSong.preview} key={currentSong.id}/>
       <div className="flex items-center justify-between h-16 md:h-full">
         <SongInfo 
           image={currentSong.image}
