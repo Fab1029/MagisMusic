@@ -8,6 +8,8 @@ interface JamState {
 
   leaveJam: () => void;
   connectToJam: (idJam: string) => void;
+  requestControlEvent: (eventType: 'PLAY_SONG' | 'PAUSE_SONG', index?: number) => void;
+  requestAddSong: (songData: any) => void;
 }
 
 export const useJamStore = create<JamState>((set, get) => ({
@@ -24,7 +26,7 @@ export const useJamStore = create<JamState>((set, get) => ({
     // Desconecta si hay otro socket
     existingSocket?.disconnect();
 
-    const socket = io("http://10.26.23.88:4000", {
+    const socket = io(import.meta.env.VITE_BACKEND_URL, {
       transports: ["websocket"],
     });
 
@@ -32,7 +34,7 @@ export const useJamStore = create<JamState>((set, get) => ({
 
     socket.emit("joinJam", idJam );
 
-    // Centralizacion de eventos
+    // Centralizacion de eventos de escucha
     socket.on("jamEvent", (event) => {
       const player = usePlayerStore.getState();
       console.log("Evento de Jam recibido:", event);
@@ -46,13 +48,19 @@ export const useJamStore = create<JamState>((set, get) => ({
           break;
 
         case "PLAY_SONG":
-          if (event.index) {
-            player.replaceQueue(player.songs, event.index);
+          if (event.index !== undefined && event.index !== null) {
+            player.replaceQueue(player.songs, event.index);            
+          } else {
+            player.togglePlaying();
           }
           break;
 
         case "PAUSE_SONG":
-          player.playPause();
+          player.togglePlaying();
+          break;
+
+        case "NEXT_SONG":
+          player.togglePlaying();
           break;
 
         default:
@@ -64,6 +72,28 @@ export const useJamStore = create<JamState>((set, get) => ({
       console.log("Desconectado del Jam.");
       set({ idJam: "", socket: null });
     });
+  },
+
+  requestControlEvent: (eventType, index) => {
+    const { idJam, socket } = get();
+    if (idJam && socket?.connected) {
+      console.log(`[JamRequest] Enviando evento ${eventType}`);
+      socket.emit("jamEvent", {
+        jamId: idJam,
+        event: { type: eventType, index },
+      });
+    }
+  },
+
+  requestAddSong: (songData) => {
+    const { idJam, socket } = get();
+    if (idJam && socket?.connected) {
+      console.log(`[JamRequest] Añadiendo canción: ${songData.title}`);
+      socket.emit("jamEvent", {
+        jamId: idJam,
+        event: { type: "ADD_SONG", data: songData },
+      });
+    }
   },
 
   leaveJam: () => {
@@ -80,5 +110,4 @@ export const useJamStore = create<JamState>((set, get) => ({
       }
     })
   },
-
 }));
