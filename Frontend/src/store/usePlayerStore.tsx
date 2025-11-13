@@ -19,7 +19,7 @@ interface PlayerState {
   addSong: (song: Track) => void; 
 }
 
-export const usePlayerStore = create<PlayerState>((set, get) => ({
+export const usePlayerStore = create<PlayerState>((set) => ({
   
   isPlaying: false,
   progressSeconds: 0,
@@ -58,7 +58,6 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
   
   addSong: (song: Track) => {
     set((state) => {
-      console.log(song);
       const newSongs = [...state.songs, song];
       const newIndex = state.songs.length;
       

@@ -9,9 +9,9 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 
 
 const OptionCell = ({ row }: { row: { original: Track } }) => {
-  const { setSongs } = usePlayerStore();
   const { idJam, socket } = useJamStore();
   
+  /* TEMPORRAL PENSAR DONDE PONER ESTAR LOGICA */
   const baseMenuItems = [
     { label: 'Añadir a Playlist', onClick: () => console.log('Añadir a Playlist') },
     { label: 'Ver Artista', onClick: () => console.log('Ver Artista') },
@@ -25,10 +25,8 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
   
         socket.emit("jamEvent", { 
           jamId: idJam, 
-          event: { type: "ADD_SONG", data: [row.original] } 
+          event: { type: "ADD_SONG", data: row.original } 
         });
-
-        //setSongs([row.original]);
       } 
     });
   }

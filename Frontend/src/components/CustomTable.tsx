@@ -26,7 +26,7 @@ interface CustomTableProps {
 }
 
 export function CustomTable({ data, columns, showHeaders = true }: CustomTableProps) {
-  const { idJam } = useJamStore();
+  const { idJam, socket} = useJamStore();
   const { songs, currentSongIndex, replaceQueue } = usePlayerStore();
 
   const columnsWithId = useMemo<ColumnDef<Track, any>[]>(() => {
@@ -45,8 +45,18 @@ export function CustomTable({ data, columns, showHeaders = true }: CustomTablePr
   });
 
   const handleOnClickRow = (index: number) => {
+    if (idJam && socket) {
+      socket.emit("jamEvent", {
+        jamId: idJam,
+        event: { type: "PLAY_SONG", index: index },
+      });
+
+      return; //VERIFICAR ESTA PARTE
+    }
+
     replaceQueue(data, index);
   };
+
 
   return (
     <div className="overflow-hidden rounded-md">
