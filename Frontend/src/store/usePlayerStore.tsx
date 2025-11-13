@@ -1,5 +1,6 @@
 import type { Track } from "@/models/Track";
 import { create } from "zustand";
+import { useJamStore } from "@/store/useJamStore";
 
 interface PlayerState {
   isPlaying: boolean;
@@ -10,23 +11,42 @@ interface PlayerState {
   currentSongIndex: number;
 
   playPause: () => void;
+  togglePlaying: () => void;
   setSongs: (newSongs: Track[]) => void;
   replaceQueue: (songs: Track[], index?: number) => void;
   setProgress: (seconds: number) => void;
   setVolume: (newVolume: number) => void;
   nextSong: () => void;
   prevSong: () => void;
+  goNextSong: () => void;
+  goPrevSong: () => void;
   addSong: (song: Track) => void; 
 }
 
-export const usePlayerStore = create<PlayerState>((set) => ({
+export const usePlayerStore = create<PlayerState>((set, get) => ({
   
   isPlaying: false,
   progressSeconds: 0,
   volume: 50,
   songs: [],
   currentSongIndex: 0,
-  playPause: () => set((state) => ({ isPlaying: !state.isPlaying })),
+
+  togglePlaying: () => {
+    set((state) => ({ isPlaying: !state.isPlaying }))
+  },
+
+  playPause: () => {
+    const { isPlaying } = get();
+    const jamStore = useJamStore.getState();
+    
+    if (jamStore.idJam) {
+        const eventType = isPlaying ? "PAUSE_SONG" : "PLAY_SONG";
+        jamStore.requestControlEvent(eventType, undefined);
+        return;
+    }
+    
+    get().togglePlaying();
+  },
 
   setSongs: (newSongs: Track[]) => {
     set((state) => {
@@ -72,8 +92,8 @@ export const usePlayerStore = create<PlayerState>((set) => ({
   
   setProgress: (seconds) => set({ progressSeconds: seconds }),
   setVolume: (newVolume) => set({ volume: newVolume }),
- 
-  nextSong: () => set((state) =>{
+
+  goNextSong: () => set((state) =>{
     const { songs,currentSongIndex} = state;
     if (songs.length === 0) return {};
     const nextIndex = (currentSongIndex + 1) % songs.length;
@@ -85,7 +105,7 @@ export const usePlayerStore = create<PlayerState>((set) => ({
     };
   }),
 
-  prevSong: () => set((state) => {
+  goPrevSong: () => set((state) => {
     const { songs, currentSongIndex } = state;
     if (songs.length === 0) return {};
     
@@ -97,5 +117,33 @@ export const usePlayerStore = create<PlayerState>((set) => ({
       isPlaying: true, 
     };
   }),
+
+  nextSong: () => {
+    const jamStore = useJamStore.getState();
+    const { songs, currentSongIndex } = get();
+    const nextIndex = (currentSongIndex + 1) % songs.length;
+
+    if (jamStore.idJam) {
+        const eventType = "PLAY_SONG";
+        jamStore.requestControlEvent(eventType, nextIndex);
+        return;
+    }
+    
+    get().goNextSong();
+  },
+
+  prevSong: () => {
+    const jamStore = useJamStore.getState();
+    const { songs, currentSongIndex } = get();
+    const prevIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+
+    if (jamStore.idJam) {
+        const eventType = "PLAY_SONG";
+        jamStore.requestControlEvent(eventType, prevIndex);
+        return;
+    }
+    
+    get().goPrevSong();
+  },
 
 }));
