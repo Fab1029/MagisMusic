@@ -23,24 +23,28 @@ export default function JamView() {
 
   return (
     <div>
-      <div className="p-5 relative">
+      <div className="p-4 sm:p-5 relative">
         <div className="bg-primary mask-b-from-gray-50 absolute inset-0 z-0 rounded-tl-md" />
 
-        <div className="gap-10 flex items-end-safe relative z-1">
-          <img className="w-64 h-64 rounded-md" src={icons.jamIcon} />
-          <div className="gap-5 flex flex-col">
-            <h1 className="font-bold text-7xl text-white truncate max-w-xl">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 items-start sm:items-end-safe relative z-1">
+
+          <img className="w-24 h-24 sm:w-64 sm:h-64 rounded-md" src={icons.jamIcon} alt="Jam Icon" />
+          <div className="gap-2 sm:gap-5 flex flex-col min-w-0 flex-1">
+            <h1 className="font-bold text-3xl sm:text-7xl text-white truncate max-w-full">
               Jam
             </h1>
-            <h3 className="font-bold text-2xl text-accent-foreground truncate max-w-xl">
+            <h3 className="font-bold text-lg sm:text-2xl text-accent-foreground truncate max-w-full">
               {idJamRoute}
             </h3>
           </div>
         </div>
 
-        <div className="mt-6 flex gap-4 relative z-1 items-center">
+        <div className="mt-4 sm:mt-6 flex gap-3 sm:gap-4 relative z-1 items-center">
           {idJam === "" ? (
-            <Button variant="pillHover" onClick={() => connectToJam(idJamRoute)}>
+            <Button variant="pillHover" 
+              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-lg transition duration-200"
+              onClick={() => connectToJam(idJamRoute)}
+              >
               Unirse
             </Button>
           ) : (
@@ -52,7 +56,7 @@ export default function JamView() {
           <TooltipDropdownButton
             trigger={
               <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-105">
-                <img src={icons.moreIcon} className="w-10 h-10 object-contain" alt="Más opciones"/>
+                <img src={icons.moreIcon} className="w-8 h-8 sm:w-10 sm:h-10 object-contain" alt="Más opciones"/>
               </Button>
             }
             infoHover="Más opciones"
