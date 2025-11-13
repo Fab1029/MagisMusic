@@ -2,7 +2,6 @@ import type { Track } from "@/models/Track";
 import { create } from "zustand";
 
 interface PlayerState {
-  currentSong: Track | null; /* ESTO QUITAR */
   isPlaying: boolean;
   progressSeconds: number; 
   volume: number;
@@ -11,46 +10,69 @@ interface PlayerState {
   currentSongIndex: number;
 
   playPause: () => void;
-  setSongs: (songs: Track[], index?: number) => void;
+  setSongs: (newSongs: Track[], startindex?: number) => void;
+  replaceQueue: (songs: Track[], index?: number) => void;
   setProgress: (seconds: number) => void;
   setVolume: (newVolume: number) => void;
   nextSong: () => void;
   prevSong: () => void;
+  addSong: (song: Track) => void; 
 }
 
 export const usePlayerStore = create<PlayerState>((set, get) => ({
-  currentSong: null,/* Este quitale bro :)*/
+  
   isPlaying: false,
   progressSeconds: 0,
   volume: 50,
   songs: [],
   currentSongIndex: 0,
   playPause: () => set((state) => ({ isPlaying: !state.isPlaying })),
-  
-  const player = get().;
 
-  setSongs: (newSongs, /*index = 0*/) => {
+  setSongs: (newSongs: Track[]) => {
+    set((state) => {
+        
+        const startNewIndex = state.songs.length;
+        const updatedSongs = [...state.songs, ...newSongs];
+        const finalCurrentIndex = startNewIndex;
+        
+        if (newSongs.length === 0 || updatedSongs.length === 0) return {};
+
+        return { 
+            songs: updatedSongs, 
+            currentSongIndex: finalCurrentIndex,
+            progressSeconds: 0, 
+            isPlaying: true,
+        };
+    });
+  },
+
+  replaceQueue: (newSongs: Track[], index = 0) => {
+    if (newSongs.length === 0) return;
     
-    if (songs.length === 0) return;
-    // ELIAN
-    /* Obtener indice actual del array lenght*/
-    /* PLAY LIST Y ARTISTAS AGREGAR VARIOS*/
-    set({ 
-      songs: [...songs, newSongs],/* Agregar al array [] push */ 
-      currentSongIndex: index, /* lenght */
-      currentSong: songs[index], /* YA no es necesario */ 
-      progressSeconds: 0, 
-      isPlaying: true,
+    set({
+        songs: newSongs,
+        currentSongIndex: index,
+        progressSeconds: 0,
+        isPlaying: true,
     });
   },
   
-  /* ADD SONG */
-  /*NUEVO METODO PARA AGREGAR SOLO UNA CANCION*/
-  /* Setaer indice a lenght */
-
+  addSong: (song: Track) => {
+    set((state) => {
+        const newSongs = [...state.songs, song];
+        const newIndex = state.songs.length === 0 ? 0 : state.currentSongIndex;
+        
+        return {
+            songs: newSongs,
+            currentSongIndex: newIndex,
+            isPlaying: state.songs.length === 0 ? true : state.isPlaying,
+        };
+    });
+  },
+  
   setProgress: (seconds) => set({ progressSeconds: seconds }),
   setVolume: (newVolume) => set({ volume: newVolume }),
-  /* REVISAR CON LOS CAMBIOS APLICADOS */
+ 
   nextSong: () => set((state) =>{
     const { songs,currentSongIndex} = state;
     if (songs.length === 0) return {};
