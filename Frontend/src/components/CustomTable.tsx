@@ -18,6 +18,7 @@ import { useJamStore } from "@/store/useJamStore";
 import { errorToast } from "./CustomSonner";
 import type { Track } from "@/models/Track";
 import { usePlayerStore } from "@/store/usePlayerStore";
+import { useLocation } from "react-router-dom";
 
 interface CustomTableProps {
   data: Track[];
@@ -28,6 +29,7 @@ interface CustomTableProps {
 export function CustomTable({ data, columns, showHeaders = true }: CustomTableProps) {
   const { idJam, socket} = useJamStore();
   const { songs, currentSongIndex, replaceQueue } = usePlayerStore();
+  const isJamPath = useLocation().pathname.split('/')[1] === 'jam' ? true : false
 
   const columnsWithId = useMemo<ColumnDef<Track, any>[]>(() => {
     const idColumn: ColumnDef<Track, any> = {
@@ -45,19 +47,24 @@ export function CustomTable({ data, columns, showHeaders = true }: CustomTablePr
   });
 
   const handleOnClickRow = (index: number) => {
-    /*
-    if (idJam && socket?.connected) {
-      socket.emit("jamEvent", {
-        jamId: idJam,
-        event: { type: "PLAY_SONG", index: index },
-      });
 
-      
+    if (isJamPath) {
+      if (idJam && socket?.connected) 
+        socket.emit("jamEvent", {
+          jamId: idJam,
+          event: { type: "PLAY_SONG", index: index },
+        });
     }
     else {
-      replaceQueue(data, index);
-    }*/
-
+      if (idJam && socket?.connected) 
+        errorToast(
+          "Error en reproducción",
+          "Desvincúlate del jam para reproducir localmente"
+        )
+      else
+        replaceQueue(data, index);
+    }
+    
   };
 
 

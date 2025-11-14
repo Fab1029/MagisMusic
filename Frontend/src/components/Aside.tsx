@@ -10,6 +10,7 @@ import { X } from "lucide-react";
 import type React from "react";
 import { useJamStore } from "@/store/useJamStore";
 import { useNavigate } from "react-router-dom";
+import { usePlayerStore } from "@/store/usePlayerStore";
 
 interface AsideProps {
   isAsideMinimized: boolean;
@@ -39,8 +40,10 @@ const Aside: React.FC<AsideProps> = ({
     { label: "Alfabético" },
   ];
 
-  const { idJam, connectToJam } = useJamStore();
   const navigate = useNavigate();
+  const { replaceQueue } = usePlayerStore();
+  const { idJam, connectToJam, setIsDialogOpen, setURI } = useJamStore();
+  
 
   const baseOptions = ["Playlist", "Artistas"];
   const optionsButtonPill = idJam ? [...baseOptions, "Jam"] : baseOptions;
@@ -57,6 +60,13 @@ const Aside: React.FC<AsideProps> = ({
       console.log("Jam creado:", jamId);
 
       connectToJam(jamId);
+      
+      /* Determinar URI */
+      setURI(res.link);
+      /* Limpiar cola de reproducción */
+      replaceQueue([]);
+      /* Mostrar dialogo */
+      setIsDialogOpen(true);
 
       navigate(`/jam/${jamId}`);
     } catch (error) {

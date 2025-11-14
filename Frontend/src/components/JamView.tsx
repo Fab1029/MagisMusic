@@ -7,7 +7,8 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { columns, columnsMobile } from "./Columns";
 import icons from "@/constants/icons";
-import type { Track } from "@/models/Track";
+import ShareDialog from "./ShareDialog";
+
 
 export default function JamView() {
   const isMobile = useIsMobile();
@@ -17,12 +18,16 @@ export default function JamView() {
     idJam,
     connectToJam,
     leaveJam,
+    isDialogOpen,
+    setIsDialogOpen,
+    uri
   } = useJamStore();
 
   const { songs } = usePlayerStore();
-
+  
   return (
     <div>
+      <ShareDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} url={uri}/>
       <div className="p-4 sm:p-5 relative">
         <div className="bg-primary mask-b-from-gray-50 absolute inset-0 z-0 rounded-tl-md" />
 
@@ -30,10 +35,11 @@ export default function JamView() {
 
           <img className="w-24 h-24 sm:w-64 sm:h-64 rounded-md" src={icons.jamIcon} alt="Jam Icon" />
           <div className="gap-2 sm:gap-5 flex flex-col min-w-0 flex-1">
-            <h1 className="font-bold text-3xl sm:text-7xl text-white truncate max-w-full">
+            
+            <h1 className="font-bold text-white truncate text-4xl max-w-70 md:text-7xl md:max-w-xl">
               Jam
             </h1>
-            <h3 className="font-bold text-lg sm:text-2xl text-accent-foreground truncate max-w-full">
+            <h3 className="font-bold text-accent-foreground text-xl truncate max-w-70 md:text-2xl md:max-w-xl">
               {idJamRoute}
             </h3>
           </div>
@@ -41,8 +47,8 @@ export default function JamView() {
 
         <div className="mt-4 sm:mt-6 flex gap-3 sm:gap-4 relative z-1 items-center">
           {idJam === "" ? (
-            <Button variant="pillHover" 
-              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-lg transition duration-200"
+            <Button variant="play" 
+              className="hover:scale-105"
               onClick={() => connectToJam(idJamRoute)}
               >
               Unirse
