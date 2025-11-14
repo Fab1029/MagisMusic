@@ -1,10 +1,13 @@
 import { Kafka } from "kafkajs";
+import dotenv from 'dotenv';
+// Carga las variables de entorno desde el .env
+dotenv.config();
 
 const kafka = new Kafka({
   clientId: "magis-music",
   //brokers: ["localhost:9092"], 
   //brokers: ["host.docker.internal:39092"],
-  brokers: ["localhost:39092"],
+  brokers: [process.env.KAFKA_URL],
 });
 
 export const kafkaAdmin = kafka.admin();

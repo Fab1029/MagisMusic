@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { CustomTable } from "./CustomTable";
@@ -12,6 +12,7 @@ import ShareDialog from "./ShareDialog";
 
 export default function JamView() {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const pathName = useLocation().pathname;
   const idJamRoute = pathName.split("/")[2];
   const {
@@ -25,6 +26,11 @@ export default function JamView() {
 
   const { songs } = usePlayerStore();
   
+  const handleLeaveJam = () => {
+    leaveJam();
+    navigate('/');
+  };
+
   return (
     <div>
       <ShareDialog isOpen={isDialogOpen} setIsOpen={setIsDialogOpen} url={uri}/>
@@ -54,7 +60,9 @@ export default function JamView() {
               Unirse
             </Button>
           ) : (
-            <Button variant="pillHover" onClick={leaveJam}>
+            <Button 
+              variant="pillHover" 
+              onClick={handleLeaveJam}>
               Abandonar
             </Button>
           )}

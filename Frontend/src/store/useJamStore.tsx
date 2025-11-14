@@ -121,9 +121,11 @@ export const useJamStore = create<JamState>((set, get) => ({
       if (state.socket && state.idJam){
         state.socket.emit("leave_jam", state.idJam);
         state.socket.disconnect();
+        usePlayerStore.getState().replaceQueue([]);
       }
 
       return {
+        uri: '',
         idJam: '',
         socket: null,
         isDialogOpen: false
