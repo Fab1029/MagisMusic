@@ -7,14 +7,12 @@ import { useQueries } from "@tanstack/react-query";
 import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQuery, getSearchTracksByQuery } from "@/services/deezer.service";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { useLocation } from "react-router-dom";
-import { usePlayerStore } from "@/store/usePlayerStore";
 import { columns, columnsMobile } from "./Columns";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 function FilterView() {
   const isMobile = useIsMobile();
   const { query } = useSearchStore();
-  const { setSongs, currentSong } = usePlayerStore();
   const filter  = useLocation().pathname.split('/')[3];
 
   const results = useQueries({
@@ -48,8 +46,6 @@ function FilterView() {
             <CustomTable 
               columns={isMobile ? columnsMobile : columns} 
               data={tracks.data.map((item:any) => ({...item}) )} 
-              onRowClick={(_, index) => setSongs(tracks.data, index)} 
-              selectedSongId={currentSong?.id || null}
             />
         )
         else
