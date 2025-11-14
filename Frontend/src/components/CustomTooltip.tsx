@@ -1,9 +1,9 @@
-import { ReactNode } from "react"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import type { ReactNode } from "react"
 
 export interface CustomTooltipProps {
   infoHover: string,
