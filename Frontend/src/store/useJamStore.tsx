@@ -3,19 +3,38 @@ import { io, Socket } from "socket.io-client";
 import { usePlayerStore } from "@/store/usePlayerStore";
 
 interface JamState {
+  uri: string;
   idJam: string;
+  isDialogOpen: boolean;
   socket: Socket | null;
 
   leaveJam: () => void;
+  setURI: (uri: string) => void;
   connectToJam: (idJam: string) => void;
+  setIsDialogOpen: (value: boolean) => void;
   requestControlEvent: (eventType: 'PLAY_SONG' | 'PAUSE_SONG', index?: number) => void;
   requestAddSong: (songData: any) => void;
 }
 
 export const useJamStore = create<JamState>((set, get) => ({
+  uri: "",
   idJam: "",
   socket: null,
+  isDialogOpen: false,
  
+  
+  setIsDialogOpen: (value) => {
+    set({
+      isDialogOpen: value
+    })
+  },
+
+  setURI: (uri) => {
+    set({
+      uri: uri
+    })
+  },
+
   connectToJam: (idJam) => {
     const existingSocket = get().socket;
 
@@ -106,7 +125,8 @@ export const useJamStore = create<JamState>((set, get) => ({
 
       return {
         idJam: '',
-        socket: null
+        socket: null,
+        isDialogOpen: false
       }
     })
   },

@@ -5,8 +5,6 @@ import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { Button } from "./ui/button";
 import icons from "@/constants/icons";
 import { useJamStore } from "@/store/useJamStore";
-import { usePlayerStore } from "@/store/usePlayerStore";
-
 
 const OptionCell = ({ row }: { row: { original: Track } }) => {
   const { idJam, socket } = useJamStore();
@@ -32,23 +30,28 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
   }
 
   return (
-    <CustomDropdownMenu
-      trigger={
-        <Button 
-          variant="pill" 
-          className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
-        >
-          <img src={icons.moreIcon} className="w-6 h-6 object-contain" alt="More option"/>
-        </Button>
-      }
-      menuItems={baseMenuItems}
-    />
+    <div
+      onClick={(e) => e.stopPropagation()}
+    >
+      <CustomDropdownMenu
+        trigger={
+          <Button 
+            variant="pill" 
+            className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
+          >
+            <img src={icons.moreIcon} className="w-6 h-6 object-contain" alt="More option"/>
+          </Button>
+        }
+        menuItems={baseMenuItems}
+      />
+    </div>
+    
   );
 }
 
 const TruncatedText = ({
   value,
-  maxWidths ="max-w-[100px]",
+  maxWidths ="max-w-[80px]",
 }: {
   value: string;
   maxWidths?: string;

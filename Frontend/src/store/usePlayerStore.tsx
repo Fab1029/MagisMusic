@@ -50,29 +50,26 @@ export const usePlayerStore = create<PlayerState>((set, get) => ({
 
   setSongs: (newSongs: Track[]) => {
     set((state) => {
-      const startNewIndex = state.songs.length;
       const updatedSongs = [...state.songs, ...newSongs];
-      const finalCurrentIndex = startNewIndex;
+      const finalCurrentIndex = state.songs.length;
       
       if (newSongs.length === 0 || updatedSongs.length === 0) return {};
 
       return { 
-          songs: updatedSongs, 
-          currentSongIndex: finalCurrentIndex,
-          progressSeconds: 0, 
-          isPlaying: true,
+        songs: updatedSongs, 
+        currentSongIndex: finalCurrentIndex,
+        progressSeconds: 0, 
+        isPlaying: true,
       };
     });
   },
 
   replaceQueue: (newSongs: Track[], index = 0) => {
-    if (newSongs.length === 0) return;
-    
     set({
-        songs: newSongs,
-        currentSongIndex: index,
-        progressSeconds: 0,
-        isPlaying: true,
+      songs: newSongs,
+      currentSongIndex: index,
+      progressSeconds: 0,
+      isPlaying: true,
     });
   },
   
