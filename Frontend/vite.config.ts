@@ -12,6 +12,8 @@ export default defineConfig({
     },
   },
   server: {
+    host: true,
+    allowedHosts: ['tfabian.mocki.work'],
     proxy: {
       '/api': {
         target: 'http://localhost:4000',

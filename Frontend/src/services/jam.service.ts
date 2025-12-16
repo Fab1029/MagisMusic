@@ -2,6 +2,7 @@ const BASE_URL = "/api/jam"
 
 export const createJam = async() => {
     try{
+        const pathName = window.location.origin
         const response = await fetch(`${BASE_URL}/create`, {
           method: "POST",
           headers: {
@@ -13,7 +14,10 @@ export const createJam = async() => {
             throw new Error('Error al obtener crear Jam');            
         }
 
-        return await response.json();
+        let data =  await response.json();
+        console.log(data);
+        data.link = `${pathName}/jam/${data.jamId}`;
+        return data;
 
     }catch(error) {
         throw new Error('Error al crear el Jam');
