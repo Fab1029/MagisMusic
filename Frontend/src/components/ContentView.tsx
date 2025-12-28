@@ -2,8 +2,8 @@ import icons from "@/constants/icons";
 import { CustomTable } from "./CustomTable";
 import { useLocation } from "react-router-dom";
 import { filters } from "@/store/useSearchStore";
-import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer.service";
-import { useQuery } from "@tanstack/react-query";
+import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
@@ -13,6 +13,8 @@ import { useJamStore } from "@/store/useJamStore";
 import { errorToast } from "./CustomSonner";
 import { columns, columnsMobile } from "./Columns";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { getIsLikeResource, toogleResourceLike } from "@/services/resources";
+import { useAuth } from "@/providers/authProvider";
 
 function ContentView() {
   const isMobile = useIsMobile();
@@ -22,6 +24,25 @@ function ContentView() {
   const filter = pathName.split('/')[3];
   const id = Number(pathName.split('/')[2]);
   const { replaceQueue } = usePlayerStore();
+  
+  const queryClient = useQueryClient();
+  const { isLoggedIn, accessToken } = useAuth();
+  
+
+  const filterToSourceType = () => {
+    switch (filter) {
+      case filters[1]:
+        return 'track';
+      case filters[2]:
+        return 'artist';
+      case filters[3]:
+        return 'album';
+      case filters[4]:
+        return 'playlist';
+      default:
+        return '';
+    }
+  }
 
   const handleQuery = () => {
     switch (filter) {
@@ -38,12 +59,39 @@ function ContentView() {
     }
   };
 
-  const data = useQuery({
+  const {data: content, isLoading: isLoadingContent} = useQuery({
     queryKey: ["dataContentView", filter, id],
     queryFn: () => handleQuery(),
+    refetchOnReconnect: true,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
 
- 
+  const {data: likedStatus} = useQuery({
+    queryKey: ['likedStatus', filter, id],
+    queryFn: () => getIsLikeResource(filterToSourceType() as "track" | "album" | "artist" | "playlist", id, accessToken || ''),
+    enabled: !!content && !!accessToken,
+    refetchOnReconnect: true,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
+  });
+
+  const likeMutation = useMutation({
+    mutationFn: () =>
+      toogleResourceLike(
+        filterToSourceType() as "track" | "album" | "artist" | "playlist",
+        id,
+        accessToken!
+      ),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['likedStatus', filter, id],
+      });
+    },
+  });
+
   const handlePlayButton = () => {
     if (idJam)
       errorToast(
@@ -51,11 +99,24 @@ function ContentView() {
         'Cierra el Jam actual para reproducir tus canciones'
       );
     else {
-      const tracks = data.data.tracks?.map((item:any) => ({...item})) || [data.data];
+      const tracks = content.tracks?.map((item:any) => ({...item})) || [content];
       replaceQueue(tracks); 
     }
     
   };
+
+  const handleLikeStatus = () => {
+    if (!isLoggedIn) {
+      errorToast(
+        'Acción no permitida',
+        'Debes iniciar sesión para dar me gusta'
+      );
+      return;
+    };
+    likeMutation.mutate();
+  };
+
+  const isLiked = (isLoggedIn && likedStatus);
 
   return (
     <div>
@@ -64,20 +125,20 @@ function ContentView() {
         <div className="bg-primary mask-b-from-gray-50 absolute inset-0 z-0 rounded-t-md" />
 
         <div className="gap-2 flex flex-col relative z-1 items-start md:flex-row md:items-end-safe md:gap-10">
-          {(!data.isLoading && data.data) ? (
+          {(!isLoadingContent && content) ? (
             <img
               className="w-64 h-64 rounded-md"
-              src={data.data.image}
+              src={content.image}
             />
           ): (
             <Skeleton className="w-64 h-64 rounded-md"/>
           )}
           
           <div className="gap-2 flex flex-col md:gap-5">
-            {(!data.isLoading && data.data) ? (
+            {(!isLoadingContent && content) ? (
               <>
-                <h1 className="font-bold text-white truncate text-4xl max-w-70 md:text-7xl md:max-w-xl">{data.data.title || data.data.name}</h1>
-                <h3 className="font-bold text-accent-foreground text-xl truncate max-w-70 md:text-2xl md:max-w-xl">{data.data.artist || data.data.description || 'Artista'}</h3>
+                <h1 className="font-bold text-white truncate text-4xl max-w-70 md:text-7xl md:max-w-xl">{content.title || content.name}</h1>
+                <h3 className="font-bold text-accent-foreground text-xl truncate max-w-70 md:text-2xl md:max-w-xl">{content.artist || content.description || 'Artista'}</h3>
               </>
             ): (
               <>
@@ -107,9 +168,14 @@ function ContentView() {
           </Button>
           
           <Button
+            onClick={handleLikeStatus}
+            disabled={likeMutation.isPending}
             variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
           >
-            <img src={icons.unlikeIcon} className="w-8 h-8 object-contain" alt="Like item"/>
+            <img 
+              src={isLiked ? icons.likeIcon : icons.unlikeIcon} 
+              className="w-8 h-8 object-contain" alt="Like item"
+            />
           </Button>
           
           <TooltipDropdownButton
@@ -124,8 +190,8 @@ function ContentView() {
           
         </div>
       </div>
-      {(!data.isLoading && data.data) ? (
-        <CustomTable columns={isMobile ? columnsMobile : columns} data={data.data.tracks?.map((item:any) => ({...item})) || [data.data]}
+      {(!isLoadingContent && content) ? (
+        <CustomTable columns={isMobile ? columnsMobile : columns} data={content.tracks?.map((item:any) => ({...item})) || [content]}
         />
       ): (
         <CustomTableSkeleton rowsNumber={3}/>

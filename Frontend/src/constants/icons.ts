@@ -11,6 +11,7 @@ import likeIcon from "@/assets/icons/like.png";
 import moreIcon from "@/assets/icons/more.png";
 import menuIcon from "@/assets/icons/menu.png";
 import jamIcon from "@/assets/icons/jam.png";
+import googleIcon from "@/assets/icons/google.png";
 
 export default {
   magisMusicIcon,
@@ -26,4 +27,5 @@ export default {
   moreIcon,
   menuIcon,
   jamIcon,
+  googleIcon
 };

@@ -1,25 +1,22 @@
 {
   "name": "backend",
   "version": "1.0.0",
+  "main": "src/server.js",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:dev": "pm2 start ecosystem.config.cjs --env development",
+    "stop:dev": "pm2 stop backend --env development",
+    "restart:dev": "pm2 restart backend --env development",
+    "start:prod": "pm2 start ecosystem.config.cjs --env production",
+    "stop:prod": "pm2 stop backend --env production",
+    "restart:prod": "pm2 restart backend --env production"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
-    "kafkajs": "^2.2.4",
-    "socket.io": "^4.8.1",
-    "uuid": "^13.0.0"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^6.1.1",
-    "@types/express": "^5.0.5",
-    "typescript": "^5.9.3"
+    "@supabase/supabase-js": "^2.89.0",
+    "express": "^5.1.0"
   }
 }

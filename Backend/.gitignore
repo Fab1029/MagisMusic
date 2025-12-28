@@ -44,3 +44,6 @@ coverage/
 
 # Misc
 .env.test
+
+# Ecosystem files
+ecosystem.*

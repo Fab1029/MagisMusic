@@ -1,148 +1,108 @@
-import { DeezerService } from "../services/deezer.service.js";
+import { Router } from "express";
+import  DeezerService  from "../services/deezer.service.js";
 
-export const DeezerController  = {
-    async getMostPopularTracks(req , res) {
-        try {
-            const limit = Number(req.query.limit) || 10;
-            const tracks = await DeezerService.getMostPopularTracks(limit);
-            
-            res.json(tracks);
+const router = Router();
+const service = new DeezerService();
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
 
-    async getMostPopularAlbumns(req , res) {
-        try {
-            const limit = Number(req.query.limit) || 10;
-            const albumns = await DeezerService.getMostPopularAlbumns(limit);
-            
-            res.json(albumns);
+router.get("/tracks", async (req , res, next) => {
+    try {
+        const { q, limit = 10 } = req.query;
+        
+        const data = q
+        ? await service.getSearchTracksByQuery(String(q))
+        : await service.getMostPopularTracks(Number(limit));
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
 
-    async getMostPopularArtists(req , res) {
-        try {
-            const limit = Number(req.query.limit) || 10;
-            const artists = await DeezerService.getMostPopularArtists(limit);
-            
-            res.json(artists);
+router.get("/albums", async (req , res, next) => {
+    try {
+        const { q, limit = 10 } = req.query;
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
+        const data = q
+        ? await service.getSearchAlbumsByQuery(q)
+        : await service.getMostPopularAlbumns(Number(limit));
 
-    async getMostPopularPlayLists(req , res) {
-        try {
-            const limit = Number(req.query.limit) || 10;
-            const playLists = await DeezerService.getMostPopularPlayLists(limit);
-            
-            res.json(playLists);
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
+router.get("/artists", async (req , res, next) => {
+    try {
+        const { q, limit = 10 } = req.query;
 
-    async getSearchTracksByQuery(req , res) {
-        try {
-            const query = String(req.query.q);
-            const tracks = await DeezerService.getSearchTracksByQuery(query);
-            
-            res.json(tracks);
+        const data = q
+        ? await service.getSearchArtistsByQuery(q)
+        : await service.getMostPopularArtists(Number(limit));
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
 
-    async getSearchAlbumsByQuery(req , res) {
-        try {
-            const query = String(req.query.q);
-            const albums = await DeezerService.getSearchAlbumsByQuery(query);
-            
-            res.json(albums);
+router.get("/playlists", async (req , res, next) => {
+    try {
+        const { q, limit = 10 } = req.query;
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
+        const data = q
+        ? await service.getSearchPlayListsByQuery(q)
+        : await service.getMostPopularPlayLists(Number(limit));
 
-    async getSearchArtistsByQuery(req , res) {
-        try {
-            const query = String(req.query.q);
-            const artists = await DeezerService.getSearchArtistsByQuery(query);
-            
-            res.json(artists);
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
 
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
-
-    async getSearchPlayListsByQuery(req , res) {
-        try {
-            const query = String(req.query.q);
-            const playLists = await DeezerService.getSearchPlayListsByQuery(query);
-            
-            res.json(playLists);
-
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
-
-    async getTrackById(req , res) {
-        try {
-            const id = Number(req.params.id);
-            const track = await DeezerService.getTrackById(id);
-            
-            res.json(track);
-
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
-
-    async getAlbumById(req , res) {
-        try {
-            const id = Number(req.params.id);
-            const album = await DeezerService.getAlbumById(id);
-            
-            res.json(album);
-
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
-
-    async getPlayListById(req , res) {
-        try {
-            const id = Number(req.params.id);
-            const playlist = await DeezerService.getPlayListById(id);
-            
-            res.json(playlist);
-
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
-
-    async getArtistById(req , res) {
-        try {
-            const id = Number(req.params.id);
-            const artist = await DeezerService.getArtistById(id);
-            
-            res.json(artist);
-
-        } catch (error) {
-            throw new Error(`Deezer Controller Error: ${error}`);
-        }
-    },
+router.get("/tracks/:id", async (req , res, next) => {
+    try {
+        const id = Number(req.params.id);
+        const data = await service.getTrackById(id);
     
-}
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/albums/:id", async (req , res, next) => {
+    try {
+        const id = Number(req.params.id);
+        const data = await service.getAlbumById(id);
+
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/artists/:id", async (req , res, next) => {
+    try {
+        const id = Number(req.params.id);
+        const data = await service.getArtistById(id);
+
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.get("/playlists/:id", async (req , res, next) => {
+    try {
+        const id = Number(req.params.id);
+        const data = await service.getPlayListById(id);
+
+        res.status(200).json(data);
+    } catch (error) {
+        next(error);
+    }
+});
+
+export default router;

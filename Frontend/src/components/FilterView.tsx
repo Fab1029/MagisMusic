@@ -4,7 +4,7 @@ import { CustomTable } from "./CustomTable";
 import GridPanel from "./GridPanel";
 import FilterGeneralPanel from "./FilterGeneralPanel";
 import { useQueries } from "@tanstack/react-query";
-import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQuery, getSearchTracksByQuery } from "@/services/deezer.service";
+import { getSearchAlbumnsByQuery, getSearchArtistsByQuery, getSearchPlayListsByQuery, getSearchTracksByQuery } from "@/services/deezer";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { useLocation } from "react-router-dom";
 import { columns, columnsMobile } from "./Columns";

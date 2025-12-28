@@ -3,7 +3,7 @@ import {
   getMostPopularArtists,
   getMostPopularPlayLists,
   getMostPopularTracks
-} from "@/services/deezer.service";
+} from "@/services/deezer";
 import { filters } from "@/store/useSearchStore";
 import { useQuery } from "@tanstack/react-query";
 import GridPanel from "./GridPanel";
@@ -30,6 +30,10 @@ const SectionView = () => {
   const data = useQuery({
     queryKey: ["dataSectionView", filter],
     queryFn: () => handleQuery(),
+    refetchOnReconnect: true,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
   });
 
   return (

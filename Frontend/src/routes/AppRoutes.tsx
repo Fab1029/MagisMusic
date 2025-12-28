@@ -7,6 +7,8 @@ import ContentView from "@/components/ContentView";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Toaster } from "sonner";
 import JamView from "@/components/JamView";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 
 function AppRoutes() {
   return (
@@ -20,6 +22,9 @@ function AppRoutes() {
           <Route path="content/:id/:filter" element={<ContentView />} />
           <Route path="/jam/:jamId" element={<JamView />} />
         </Route>
+
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
       </Routes>
       <ScrollToTop/>
     </Router>

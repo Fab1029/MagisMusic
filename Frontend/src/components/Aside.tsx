@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { InlineSearch } from "./InlineSearch";
-import { createJam } from "../services/jam.service";
+import { createJam } from "../services/jam";
 import { X } from "lucide-react";
 import type React from "react";
 import { useJamStore } from "@/store/useJamStore";

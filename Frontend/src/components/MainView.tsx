@@ -10,7 +10,7 @@ import {
   getArtistById,
   getAlbumById,
   getPlayListById
-} from "@/services/deezer.service";
+} from "@/services/deezer";
 
 import MainSectionSkeleton from "./MainSectionSkeleton";
 import { useNavigate } from "react-router-dom";
@@ -24,82 +24,39 @@ function MainView() {
   const handleNavigate = (filter: string) => navigate(`/section/${filter}`);
   const handleOnCardClick = (id:number, filter:string) => navigate(`/content/${id}/${filter}`);
 
-  const cacheData = (key: string, data: any) => {
-    localStorage.setItem(key, JSON.stringify({
-      data,
-      timestamp: Date.now()
-    }));
-  };
-
-
-  const getCachedData = (key: string) => {
-    const cached = localStorage.getItem(key);
-    if (!cached) return null;
-    try {
-      const parsed = JSON.parse(cached);
-      return parsed.data;
-    } catch {
-      return null;
-    }
-  };
-
   const results = useQueries({
     queries: [
       {
         queryKey: ["mostPopularTracks"],
-        queryFn: async () => {
-          try {
-            const data = await getMostPopularTracks();
-            cacheData("mostPopularTracks", data);
-            return data;
-          } catch (err) {
-            const cached = getCachedData("mostPopularTracks");
-            if (cached) return cached; // fallback offline
-            throw err;
-          }
-        },
+        queryFn: () => getMostPopularTracks(),
+        refetchOnReconnect: true,
+        staleTime: 1000 * 60 * 10,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false    
       },
       {
         queryKey: ["popularArtists"],
-        queryFn: async () => {
-          try {
-            const data = await getMostPopularArtists();
-            cacheData("popularArtists", data);
-            return data;
-          } catch (err) {
-            const cached = getCachedData("popularArtists");
-            if (cached) return cached;
-            throw err;
-          }
-        },
+        queryFn: () => getMostPopularArtists(),
+        refetchOnReconnect: true,
+        staleTime: 1000 * 60 * 10,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false 
       },
       {
         queryKey: ["popularAlbums"],
-        queryFn: async () => {
-          try {
-            const data = await getMostPopularAlbums();
-            cacheData("popularAlbums", data);
-            return data;
-          } catch (err) {
-            const cached = getCachedData("popularAlbums");
-            if (cached) return cached;
-            throw err;
-          }
-        },
+        queryFn: () => getMostPopularAlbums(),
+        refetchOnReconnect: true,
+        staleTime: 1000 * 60 * 10,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false 
       },
       {
         queryKey: ["popularPlaylists"],
-        queryFn: async () => {
-          try {
-            const data = await getMostPopularPlayLists();
-            cacheData("popularPlaylists", data);
-            return data;
-          } catch (err) {
-            const cached = getCachedData("popularPlaylists");
-            if (cached) return cached;
-            throw err;
-          }
-        },
+        queryFn: () => getMostPopularPlayLists(),
+        refetchOnReconnect: true,
+        staleTime: 1000 * 60 * 10,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false 
       },
     ],
   });
