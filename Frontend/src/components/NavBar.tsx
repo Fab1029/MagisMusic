@@ -3,6 +3,9 @@ import { filters, useSearchStore } from "@/store/useSearchStore";
 import { useEffect, useRef } from "react"
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
+import { useAuth } from "@/providers/authProvider";
+import { DropdownMenu } from "./ui/dropdown-menu";
+import { CustomDropdownMenu } from "./CustomDropdownMenu";
 
 interface NavBarProps {
     toggleMobileMenu: () => void;
@@ -14,6 +17,7 @@ const NavBar: React.FC<NavBarProps> = ({ toggleMobileMenu, isAsideMinimized }) =
   const navigate = useNavigate();
   const { query, setQuery } = useSearchStore();
   const filter = useLocation().pathname.split('/')[3] || filters[0];
+  const {isLoggedIn, user, logout} = useAuth();
 
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -29,9 +33,6 @@ const NavBar: React.FC<NavBarProps> = ({ toggleMobileMenu, isAsideMinimized }) =
 
     return () => clearTimeout(handler);
   }, [query]);
-
-
-
  
   const handleBackToMain = () => {
     navigate('/');
@@ -84,11 +85,36 @@ const NavBar: React.FC<NavBarProps> = ({ toggleMobileMenu, isAsideMinimized }) =
       >
         <img className="w-full h-full object-contain" src={icons.menuIcon} alt="Icon Menu"/>
       </Button>
-
-      <div className="hidden md:flex gap-5">
-        <Button variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
-        <Button variant="pillHover" className="text-md py-6">Inicia sesión</Button>
-      </div>
+      {(isLoggedIn && user) ? (
+        <div>
+          <CustomDropdownMenu
+            trigger={
+              <div className="gap-1 flex items-center justify-center cursor-pointer">
+                <span className="text-sm text-secondary">
+                  Hola,
+                </span>
+                <span className="text-sm text-secondary"> 
+                  {user.user_metadata?.full_name?.split(' ')[0] || user.email}
+                </span>
+                {user?.user_metadata?.avatar_url && (
+                  <img
+                    className="w-10 h-10 rounded-full object-contain"
+                    src={user?.user_metadata?.avatar_url}
+                  />
+                )}
+                
+              </div>
+            }
+            menuItems={[{label: 'Cerrar sesion', onClick: async() => {await logout()}}]}
+          />
+        </div>
+      ): (
+        <div className="hidden md:flex gap-5">
+          <Button onClick={() => navigate('/register')} variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
+          <Button onClick={() => navigate('/login')} variant="pillHover" className="text-md py-6">Inicia sesión</Button>
+        </div>
+      )}
+      
 
     </nav>
   )

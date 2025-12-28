@@ -117,7 +117,7 @@ export const FloatingPlayer: React.FC = () => {
   const totalDuration = previewDuration > 0 ? previewDuration : Number(currentSong.duration);
  
   useEffect(() => {
-    console.log('Entro');
+
     const audio = audioRef.current;
     if (!audio) return;
     if (isPlaying){

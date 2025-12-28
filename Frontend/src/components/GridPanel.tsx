@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import GridPanelSkeleton from "./GridPanelSkeleton";
 import MiniatureCard from "./MiniatureCard";
-import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer.service";
+import { getAlbumById, getArtistById, getPlayListById, getTrackById } from "@/services/deezer";
 import { filters } from "@/store/useSearchStore";
 import { usePlayerStore } from "@/store/usePlayerStore";
 

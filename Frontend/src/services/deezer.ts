@@ -1,4 +1,4 @@
-const BASE_URL = "/api/deezer"
+const BASE_URL = "/api/v1/deezer"
 
 export const getMostPopularTracks = async(limit = 10) => {
     try{
@@ -17,7 +17,7 @@ export const getMostPopularTracks = async(limit = 10) => {
 
 export const getMostPopularAlbums = async(limit = 10) => {
     try{
-        const response = await fetch(`${BASE_URL}/albumns?limit=${limit}`);
+        const response = await fetch(`${BASE_URL}/albums?limit=${limit}`);
 
         if (!response.ok) {
             throw new Error('Error al obtener albumes populares');            
@@ -62,7 +62,7 @@ export const getMostPopularArtists = async(limit = 10) => {
 
 export const getSearchTracksByQuery = async(query: any) => {
     try{
-        const response = await fetch(`${BASE_URL}/search/tracks?q=${query}`);
+        const response = await fetch(`${BASE_URL}/tracks?q=${query}`);
 
         if (!response.ok) {
             throw new Error('Error al obtener canciones por busqueda');            
@@ -77,7 +77,7 @@ export const getSearchTracksByQuery = async(query: any) => {
 
 export const getSearchAlbumnsByQuery = async(query: string) => {
     try{
-        const response = await fetch(`${BASE_URL}/search/albumns?q=${query}`);
+        const response = await fetch(`${BASE_URL}/albums?q=${query}`);
 
         if (!response.ok) {
             throw new Error('Error al obtener albumes por busqueda');            
@@ -92,7 +92,7 @@ export const getSearchAlbumnsByQuery = async(query: string) => {
 
 export const getSearchPlayListsByQuery = async(query: string) => {
     try{
-        const response = await fetch(`${BASE_URL}/search/playlists?q=${query}`);
+        const response = await fetch(`${BASE_URL}/playlists?q=${query}`);
 
         if (!response.ok) {
             throw new Error('Error al obtener play lists por busqueda');            
@@ -107,7 +107,7 @@ export const getSearchPlayListsByQuery = async(query: string) => {
 
 export const getSearchArtistsByQuery = async(query: string) => {
     try{
-        const response = await fetch(`${BASE_URL}/search/artists?q=${query}`);
+        const response = await fetch(`${BASE_URL}/artists?q=${query}`);
 
         if (!response.ok) {
             throw new Error('Error al obtener artistas por busqueda');            

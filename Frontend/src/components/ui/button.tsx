@@ -24,7 +24,8 @@ const buttonVariants = cva(
         pillHoverSecondary: "inline-flex w-auto self-start text-secondary font-semibold hover:scale-110 hover:text-primary-foreground transition-all duration-300 ease-in-out cursor-pointer",
         header: "mr-8 cursor-pointer text-secondary text-sm transition-all duration-100 ease-in-out hover:text-white",
         filter: "px-4 py-2 rounded-full transition-all duration-300 ease-in-out bg-card-foreground",
-        play: "flex items-center justify-center bg-primary rounded-full transition-all duration-200 ease-out hover:scale-115 cursor-pointer"
+        play: "flex items-center justify-center bg-primary rounded-full transition-all duration-200 ease-out hover:scale-115 cursor-pointer",
+        provider:"flex flex-row items-center justify-center gap-2 bg-white text-secondary rounded-full px-4 py-2 transition-all duration-300 ease-in-out hover:scale-102 cursor-pointer"
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
