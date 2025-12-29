@@ -7,14 +7,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import CustomTableSkeleton from "./CustomTableSkeleton";
 import { Skeleton } from "./ui/skeleton";
 import { Button } from "./ui/button";
-import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useJamStore } from "@/store/useJamStore";
-import { errorToast } from "./CustomSonner";
+import { errorToast, infoToast, successToast } from "./CustomSonner";
 import { columns, columnsMobile } from "./Columns";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { getIsLikeResource, toogleResourceLike } from "@/services/resources";
 import { useAuth } from "@/providers/authProvider";
+import { CustomDropdownMenu } from "./CustomDropdownMenu";
+import { addTracksToPlayList, getPlayLists } from "@/services/playlists";
 
 function ContentView() {
   const isMobile = useIsMobile();
@@ -59,6 +60,8 @@ function ContentView() {
     }
   };
 
+  
+
   const {data: content, isLoading: isLoadingContent} = useQuery({
     queryKey: ["dataContentView", filter, id],
     queryFn: () => handleQuery(),
@@ -77,6 +80,16 @@ function ContentView() {
     refetchOnMount: false,
     refetchOnWindowFocus: false
   });
+
+  const {data: playLists, isLoading: isPlayListsLoading} = useQuery({
+    queryKey: ['playLists'],
+    queryFn: () => getPlayLists(accessToken!),
+    enabled: isLoggedIn && !!accessToken,
+    staleTime: Infinity,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
+  })
 
   const likeMutation = useMutation({
     mutationFn: () =>
@@ -107,7 +120,7 @@ function ContentView() {
 
   const handleLikeStatus = () => {
     if (!isLoggedIn) {
-      errorToast(
+      infoToast(
         'Acción no permitida',
         'Debes iniciar sesión para dar me gusta'
       );
@@ -117,6 +130,48 @@ function ContentView() {
   };
 
   const isLiked = (isLoggedIn && likedStatus);
+
+  const menuItems = [
+    {
+      label: 'Añadir a Playlist',
+      subItems: 
+        (isPlayListsLoading || !playLists)
+        ? [{label: "Cargando..."}]
+        : playLists.map((playlist:any) => ({
+              label: playlist.name,
+              onClick: async () => {
+                try {
+                  await addTracksToPlayList(accessToken || '', playlist.id_playlist, getTracksById());
+                  successToast(
+                    'Exito',
+                    `Canciones añadida a la playlist ${playlist.name}.`
+                  )
+                } catch (error) {
+                  errorToast(
+                    'Error',
+                    `No se pudo añadir la canción a la playlist ${playlist.name}.`
+                  )
+                }
+                
+              }
+          }))
+    }
+  ];
+
+  const getTracksById = () => {
+    switch (filter) {
+      case filters[1]:
+        return [content.id];
+
+      case filters[2]: 
+      case filters[3]: 
+      case filters[4]: 
+        return content.tracks.map((track: any) => track.id);
+
+      default:
+        return [];
+    }
+  };
 
   return (
     <div>
@@ -179,14 +234,13 @@ function ContentView() {
           </Button>
           
           {isLoggedIn && (
-            <TooltipDropdownButton
+            <CustomDropdownMenu
               trigger={
                 <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-105">
                   <img src={icons.moreIcon} className="w-10 h-10 object-contain" alt="Like item"/>
                 </Button>
               }
-              infoHover="Más opciones"
-              menuItems={[{label: 'Añadir a playlist'}]}
+              menuItems={menuItems}
             />
           )}
           

@@ -45,7 +45,7 @@ router.post("/:id/tracks", async (req, res, next) => {
     try {
         const playListId = req.params.id;
         const {tracks} = req.body;
-        console.log(tracks);
+
         const response = await service.addTracksToPlayList(playListId, tracks);
         res.status(200).json(response);
     } catch (error) {

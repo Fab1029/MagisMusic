@@ -92,7 +92,7 @@ export default class PlayListRepository {
                 id_track: trackId
             })))
             .select('*');
-        console.log(data, error);
+
         if (error) {
             throw new CustomError("Internal server error", 500);
         }

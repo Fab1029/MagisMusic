@@ -20,7 +20,7 @@ function AppRoutes() {
           <Route path="search/:query/:filter" element={<FilterView />} />
           <Route path="section/:filter" element={<SectionView />} />
           <Route path="content/:id/:filter" element={<ContentView />} />
-          <Route path="/jam/:jamId" element={<JamView />} />
+          <Route path="jam/:jamId" element={<JamView />} />
         </Route>
 
         <Route path="login" element={<Login />} />

@@ -68,7 +68,8 @@ export const getPlayListByID = async (accessToken:string, playlistId: string) =>
 
 export const addTracksToPlayList = async (accessToken:string, playlistId: string, tracks: number[]) => {
     try {
-        const response = await fetch(`${BASE_URL}/${playlistId}`, {
+
+        const response = await fetch(`${BASE_URL}/${playlistId}/tracks`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
