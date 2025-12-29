@@ -5,9 +5,12 @@ import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { Button } from "./ui/button";
 import icons from "@/constants/icons";
 import { useJamStore } from "@/store/useJamStore";
+import { useLocation } from "react-router-dom";
 
 const OptionCell = ({ row }: { row: { original: Track } }) => {
   const { idJam, socket } = useJamStore();
+  const pathName = useLocation().pathname;
+  console.log("PATHNAME:",pathName);
   
   /* TEMPORRAL PENSAR DONDE PONER ESTAR LOGICA */
   const baseMenuItems = [

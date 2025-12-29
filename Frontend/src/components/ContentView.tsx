@@ -178,15 +178,18 @@ function ContentView() {
             />
           </Button>
           
-          <TooltipDropdownButton
-            trigger={
-              <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-105">
-                <img src={icons.moreIcon} className="w-10 h-10 object-contain" alt="Like item"/>
-              </Button>
-            }
-            infoHover="Más opciones"
-            menuItems={[{label: 'Opcion 1'}]}
-          />
+          {isLoggedIn && (
+            <TooltipDropdownButton
+              trigger={
+                <Button variant="pill" className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-105">
+                  <img src={icons.moreIcon} className="w-10 h-10 object-contain" alt="Like item"/>
+                </Button>
+              }
+              infoHover="Más opciones"
+              menuItems={[{label: 'Añadir a playlist'}]}
+            />
+          )}
+          
           
         </div>
       </div>
