@@ -47,7 +47,7 @@ function Register() {
 	};
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center p-10 md:gap-10 md:p-0">
+    <div className="w-screen h-screen flex items-center justify-center p-10 md:gap-10 md:p-0 overflow-hidden">
       {/* Background */}
       <div className="blur-bg">
         <div className="blur-blob blob-purple" />

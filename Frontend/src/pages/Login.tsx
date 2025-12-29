@@ -47,7 +47,7 @@ function Login() {
 	};
 
   return (
-		<div className="w-screen h-screen flex items-center justify-center">
+		<div className="w-screen h-screen flex items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="blur-bg">
         <div className="blur-blob blob-purple" />
