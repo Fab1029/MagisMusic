@@ -5,52 +5,130 @@ import { CustomDropdownMenu } from "./CustomDropdownMenu";
 import { Button } from "./ui/button";
 import icons from "@/constants/icons";
 import { useJamStore } from "@/store/useJamStore";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { filters } from "@/store/useSearchStore";
+import { useAuth } from "@/providers/authProvider";
+import { errorToast, infoToast, successToast } from "./CustomSonner";
+import { getSearchArtistsByQuery } from "@/services/deezer";
+import { addTracksToPlayList, getPlayLists } from "@/services/playlists";
+import { useQuery } from "@tanstack/react-query";
 
 const OptionCell = ({ row }: { row: { original: Track } }) => {
   const { idJam, socket } = useJamStore();
-  const pathName = useLocation().pathname;
-  console.log("PATHNAME:",pathName);
-  
-  /* TEMPORRAL PENSAR DONDE PONER ESTAR LOGICA */
-  const baseMenuItems = [
-    { label: 'Añadir a Playlist', onClick: () => console.log('Añadir a Playlist') },
-    { label: 'Ver Artista', onClick: () => console.log('Ver Artista') },
-  ];
-    
-  if (idJam && socket?.connect) {
-    baseMenuItems.unshift({ 
-      label: 'Agregar al Jam', 
+  const { pathname } = useLocation();
+
+  const locationPath = pathname.split('/')[1];
+  const typePath = pathname.split('/')[3];
+
+  const navigate = useNavigate();
+  const { isLoggedIn, accessToken } = useAuth();
+
+  const {data: playLists, isLoading: isPlayListsLoading} = useQuery({
+    queryKey: ['playLists'],
+    queryFn: () => getPlayLists(accessToken!),
+    enabled: isLoggedIn && !!accessToken,
+    staleTime: Infinity,
+    refetchOnReconnect: true,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false
+  })
+
+  const canShowArtist =
+    locationPath === 'search' ||
+    (locationPath === 'content' && [filters[1], filters[3], filters[4]].includes(typePath));
+
+  const menuItems = [
+    {
+      key: 'playlist',
+      show: ['content', 'search', 'jam'].includes(locationPath),
+      item: 
+        isLoggedIn ? {
+          label: 'Añadir a Playlist',
+          subItems: (isPlayListsLoading || !playLists)
+          ? [{label: "Cargando..."}]
+          : playLists.map((playlist:any) => ({
+              label: playlist.name,
+              onClick: async () => {
+                try {
+                  await addTracksToPlayList(accessToken || '', playlist.id_playlist, [Number(row.original.id)]);
+                  successToast(
+                    'Exito',
+                    `Canción añadida a la playlist ${playlist.name}.`
+                  )
+                } catch (error) {
+                  errorToast(
+                    'Error',
+                    `No se pudo añadir la canción a la playlist ${playlist.name}.`
+                  )
+                }
+                
+              }
+          }))
+        } : {
+          label: 'Añadir a Playlist',
+          onClick : () => infoToast(
+            'Información',
+            'Debes iniciar sesión para añadir canciones a una playlist.',
+          )
+        }
+    },
+    {
+      key: 'artist',
+      show: canShowArtist,
+      item: {
+        label: 'Ver Artista',
+        onClick: async() => {
+          const artist = await getSearchArtistsByQuery(row.original.artist);
+          const artistID = artist[0].id;
+
+          navigate(`/content/${artistID}/${filters[2]}`);
+        },
+      },
+    },
+  ]
+    .filter(({ show }) => show)
+    .map(({ item }) => item);
+
+
+  if (idJam && socket?.connected) {
+    menuItems.unshift({
+      label: 'Agregar al Jam',
       onClick: () => {
-        console.log(`Canción ${row.original.title} agregada al Jam ${idJam}`);
-  
-        socket.emit("jamEvent", { 
-          jamId: idJam, 
-          event: { type: "ADD_SONG", data: row.original } 
+        console.log(
+          `Canción ${row.original.title} agregada al Jam ${idJam}`
+        );
+
+        socket.emit('jamEvent', {
+          jamId: idJam,
+          event: {
+            type: 'ADD_SONG',
+            data: row.original,
+          },
         });
-      } 
+      },
     });
   }
 
   return (
-    <div
-      onClick={(e) => e.stopPropagation()}
-    >
+    <div onClick={(e) => e.stopPropagation()}>
       <CustomDropdownMenu
         trigger={
-          <Button 
-            variant="pill" 
+          <Button
+            variant="pill"
             className="p-0 rounded-full bg-transparent hover:bg-transparent hover:scale-110"
           >
-            <img src={icons.moreIcon} className="w-6 h-6 object-contain" alt="More option"/>
+            <img
+              src={icons.moreIcon}
+              className="w-6 h-6 object-contain"
+              alt="More option"
+            />
           </Button>
         }
-        menuItems={baseMenuItems}
+        menuItems={menuItems}
       />
     </div>
-    
   );
-}
+};
 
 const TruncatedText = ({
   value,

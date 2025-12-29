@@ -5,15 +5,11 @@ import { FloatingPlayer } from "@/components/FloatingPlayer";
 import { AppFooter } from "@/components/AppFooter";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useState } from "react";
-import  { useAuth } from "@/providers/authProvider";
-
 
 function Home() {
   const { songs } = usePlayerStore();
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
-  const {accessToken} = useAuth();
-  console.log("Access Token:", accessToken);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(prev => !prev);

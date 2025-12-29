@@ -15,7 +15,7 @@ export const createJam = async() => {
         }
 
         let data =  await response.json();
-        console.log(data);
+     
         data.link = `${pathName}/jam/${data.jamId}`;
         return data;
 
