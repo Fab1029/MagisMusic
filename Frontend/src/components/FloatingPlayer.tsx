@@ -35,7 +35,7 @@ const VolumeIndicator: React.FC<VolumeIndicatorProps> = ({ volume, isVisible }) 
         className={`
           fixed bottom-24 right-5 bg-background/90 backdrop-blur 
           p-3 rounded-lg shadow-xl text-white transition-all duration-300 
-          flex items-center space-x-3 z-[60] 
+          flex items-center space-x-3 z-60
           ${visibilityClass}
         `}
       >
@@ -119,7 +119,28 @@ export const FloatingPlayer: React.FC = () => {
   useEffect(() => {
 
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !currentSong) return;
+
+    const playAudio = async () => {
+      try {
+        if (isPlaying) {
+          await audio.play();
+        } else {
+          audio.pause();
+        }
+      } catch (e: any) {
+        if (e.name === 'NotAllowedError' || e.name === 'NotSupportedError') {
+          console.warn("Reintentando carga de audio para modo offline...");
+          audio.load(); 
+          if (isPlaying) {
+            audio.play().catch(err => console.error("Error definitivo:", err));
+          }
+        }
+      }
+    };
+
+    playAudio();
+
     if (isPlaying){
       audio.play().catch(e => console.error("Error al reproducir audio:", e));
     }else{
@@ -144,6 +165,8 @@ export const FloatingPlayer: React.FC = () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
     };
   }, [isPlaying, volume, currentSong, setProgress, nextSong]);
+
+  if (!currentSong) return null;
 
   const progressPercentage = useMemo(() => {
     return (progressSeconds / totalDuration) * 100;
@@ -190,7 +213,7 @@ export const FloatingPlayer: React.FC = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-black/90 backdrop-blur-sm border-t border-gray-800 p-2 z-50 shadow-2xl">
       
-      <audio ref={audioRef} src={currentSong.preview} key={currentSong.id}/>
+      <audio ref={audioRef} src={currentSong.preview} key={currentSong.id} crossOrigin="anonymous" preload="auto"/>
       <div className="flex items-center justify-between h-16 md:h-full">
         <SongInfo 
           image={currentSong.image}

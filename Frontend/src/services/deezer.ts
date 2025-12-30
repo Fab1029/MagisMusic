@@ -1,4 +1,6 @@
 const BASE_URL = "/api/v1/deezer"
+import { saveTrackOffline } from "@/lib/offlineDb";
+import type{ Track } from "@/models/Track";
 
 export const getMostPopularTracks = async(limit = 10) => {
     try{
@@ -178,4 +180,24 @@ export const getPlayListById = async(id: number) => {
     }catch(error) {
         throw new Error('Error al obtener play list por id');      
     }
+};
+
+export const downloadTrack = async (track: Track) => {
+  try {
+    const cache = await caches.open('music-tracks-cache');
+    const cachedResponse = await cache.match(track.preview);
+    if (cachedResponse) return true;
+    const response = await fetch(track.preview, {
+      mode: 'cors',
+      credentials: 'omit'
+    });
+
+    if (!response.ok) throw new Error("Fallo al descargar el archivo de audio");
+    await cache.put(track.preview, response); 
+    await saveTrackOffline(track);
+    return true;
+  } catch (error) {
+    console.error("Error en downloadTrack:", error);
+    throw error;
+  }
 };
