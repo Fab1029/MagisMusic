@@ -19,6 +19,13 @@ import { errorToast } from "./CustomSonner";
 import type { Track } from "@/models/Track";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useLocation } from "react-router-dom";
+import { Download, CheckCircle2, Loader2 } from "lucide-react";
+import { downloadTrack } from "@/services/deezer";
+import { toast } from "sonner";
+import { useState } from "react";
+import { useNetwork } from "@/hooks/useNetwork";
+import { useAuth } from "@/providers/authProvider"; 
+import { infoToast } from "./CustomSonner";
 
 interface CustomTableProps {
   data: Track[];
@@ -30,21 +37,72 @@ export function CustomTable({ data, columns, showHeaders = true }: CustomTablePr
   const { idJam, socket} = useJamStore();
   const { songs, currentSongIndex, replaceQueue } = usePlayerStore();
   const isJamPath = useLocation().pathname.split('/')[1] === 'jam' ? true : false
-
+  const [downloadingIds, setDownloadingIds] = useState<string[]>([]);
+  const isOnline = useNetwork()
+  const { isLoggedIn } = useAuth();
+  
+  const handleDownload = async (e: React.MouseEvent, track: Track) => {
+    e.stopPropagation(); 
+    if (!isLoggedIn) {
+      infoToast(
+        'Acción no permitida',
+        'Debes iniciar sesión para descargar'
+      );
+      return;
+    }
+    const trackId = String(track.id);
+    setDownloadingIds(prev => [...prev, track.id]);
+    
+    try {
+      await downloadTrack(track);
+      toast.success(`${track.title} descargada para modo offline`);
+    } catch (error) {
+      toast.error("Error al descargar la canción");
+    } finally {
+      setDownloadingIds(prev => prev.filter(id => id !== trackId));
+    }
+  };
+  
   const columnsWithId = useMemo<ColumnDef<Track, any>[]>(() => {
     const idColumn: ColumnDef<Track, any> = {
       id: "id_column",
       header: "#",
       cell: ({ row }) => row.index + 1,
     };
-    return [idColumn, ...columns];
-  }, [columns]);
+
+    const actionColumn: ColumnDef<Track, any> = {
+      id: "actions",
+      header: "Offline",
+      cell: ({ row }) => {
+        if (!isOnline) return null;
+        const track = row.original;
+        const isDownloading = downloadingIds.includes(String(track.id));
+
+        return (
+          <button
+            onClick={(e) => handleDownload(e, track)}
+            disabled={isDownloading}
+            className="p-2 hover:bg-white/10 rounded-full transition-colors text-gray-400 hover:text-white disabled:opacity-50"
+          >
+            {isDownloading ? (
+              <Loader2 className="h-5 w-5 animate-spin" />
+            ) : (
+              <Download className="h-5 w-5" />
+            )}
+          </button>
+        );
+      },
+    };
+
+    return [idColumn, ...columns, actionColumn];
+  }, [columns, downloadingIds]);
 
   const table = useReactTable({
     data,
     columns: columnsWithId,
     getCoreRowModel: getCoreRowModel(),
   });
+  
 
   const handleOnClickRow = (index: number) => {
 
