@@ -9,6 +9,7 @@ import { Toaster } from "sonner";
 import JamView from "@/components/JamView";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
+import PlaylistView from "@/components/PlaylistView";
 
 function AppRoutes() {
   return (
@@ -21,6 +22,7 @@ function AppRoutes() {
           <Route path="section/:filter" element={<SectionView />} />
           <Route path="content/:id/:filter" element={<ContentView />} />
           <Route path="jam/:jamId" element={<JamView />} />
+          <Route path="playlist" element={<PlaylistView />} />
         </Route>
 
         <Route path="login" element={<Login />} />
