@@ -22,6 +22,74 @@ export const postPlayList = async (accessToken:string, name: string) => {
     }
 }
 
+export const updatePlayList = async (accessToken:string, playlistId:number, name: string) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${playlistId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ name }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error updating playlist");
+        }
+
+        const data = await response.json();
+        return data;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const deleteTrackFromPlaylist = async (accessToken:string, playlistId:number, trackId:number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${playlistId}/tracks/${trackId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+
+        if (!response.ok) {
+            throw new Error("Error deleting track from playlist");
+        }
+
+        if (response.status === 204) return null;   
+        const data = await response.json();
+        return data;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const deletePlaylist = async (accessToken:string, playlistId:number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${playlistId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+
+        if (!response.ok) {
+            throw new Error("Error deleting playlist");
+        }
+
+        if (response.status === 204) return null;   
+        const data = await response.json();
+        return data;
+    }catch (error) {
+        throw error;
+    }
+}
+
 export const getPlayLists = async (accessToken:string) => {
     try {
         const response = await fetch(`${BASE_URL}`, {
@@ -66,7 +134,7 @@ export const getPlayListByID = async (accessToken:string, playlistId: string) =>
     }
 }
 
-export const addTracksToPlayList = async (accessToken:string, playlistId: string, tracks: number[]) => {
+export const addTracksToPlayList = async (accessToken:string, playlistId: number, tracks: number[]) => {
     try {
 
         const response = await fetch(`${BASE_URL}/${playlistId}/tracks`, {

@@ -6,6 +6,7 @@ export interface InfoCardProps {
   description?: string;
   textButton?: string;
   className?: string;
+  onPress?: () => void;
 }
 
 function InfoCard({
@@ -13,6 +14,7 @@ function InfoCard({
   description,
   textButton,
   className,
+  onPress,
 }: InfoCardProps) {
   return (
     <div
@@ -28,7 +30,13 @@ function InfoCard({
         <p className="text-sm text-foreground/80">{description}</p>
       )}
 
-      <Button variant="pillHover" className="inline-flex w-auto self-start">{textButton}</Button>
+      <Button 
+        variant="pillHover" 
+        className="inline-flex w-auto self-start"
+        onClick={onPress}
+      >
+        {textButton}
+      </Button>
     </div>
   );
 }

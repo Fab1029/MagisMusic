@@ -10,8 +10,10 @@ import { filters } from "@/store/useSearchStore";
 import { useAuth } from "@/providers/authProvider";
 import { errorToast, infoToast, successToast } from "./CustomSonner";
 import { getSearchArtistsByQuery } from "@/services/deezer";
-import { addTracksToPlayList, getPlayLists } from "@/services/playlists";
+import { getPlayLists } from "@/services/playlists";
 import { useQuery } from "@tanstack/react-query";
+import { useDeleteTrackFromPlaylist, useAddTrackToPlaylist } from "@/hooks/useUserPlaylists";
+import { usePlaylistStore } from "@/store/usePlaylistStore";
 
 const OptionCell = ({ row }: { row: { original: Track } }) => {
   const { idJam, socket } = useJamStore();
@@ -37,6 +39,10 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
     locationPath === 'search' ||
     (locationPath === 'content' && [filters[1], filters[3], filters[4]].includes(typePath));
 
+  const { playlists: storedPlaylists, currentPlaylistId } = usePlaylistStore();
+  const { mutate: deleteTrack } = useDeleteTrackFromPlaylist(accessToken!);
+  const { mutate: addTrackToPlaylist } = useAddTrackToPlaylist(accessToken!);
+
   const menuItems = [
     {
       key: 'playlist',
@@ -44,24 +50,39 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
       item: 
         isLoggedIn ? {
           label: 'Añadir a Playlist',
-          subItems: (isPlayListsLoading || !playLists)
+          subItems: (isPlayListsLoading || !storedPlaylists)
           ? [{label: "Cargando..."}]
-          : playLists.map((playlist:any) => ({
+          : storedPlaylists.map((playlist:any) => ({
               label: playlist.name,
               onClick: async () => {
-                try {
-                  await addTracksToPlayList(accessToken || '', playlist.id_playlist, [Number(row.original.id)]);
-                  successToast(
-                    'Exito',
-                    `Canción añadida a la playlist ${playlist.name}.`
-                  )
-                } catch (error) {
-                  errorToast(
-                    'Error',
-                    `No se pudo añadir la canción a la playlist ${playlist.name}.`
-                  )
+                console.log('lcick agg')
+                const isAlreadyInPlaylist = playlist.tracks.some(
+                  (track: Track) => track.id === row.original.id
+                );
+
+                if (isAlreadyInPlaylist) {
+                  infoToast(
+                    'Información',
+                    `La canción ya está en la playlist ${playlist.name}.`
+                  );
+                  return; 
                 }
-                
+                addTrackToPlaylist({ playlistId: playlist.id, trackId: Number(row.original.id) },
+                  {
+                    onSuccess: () => {
+                      successToast(
+                        'Éxito',
+                        `Canción añadida a la playlist ${playlist.name}.`
+                      )
+                    },
+                    onError: () => {
+                      errorToast(
+                        'Error',
+                        `No se pudo añadir la canción a la playlist ${playlist.name}.`
+                      )
+                    }
+                  }
+                );
               }
           }))
         } : {
@@ -82,6 +103,18 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
           const artistID = artist[0].id;
 
           navigate(`/content/${artistID}/${filters[2]}`);
+        },
+      },
+    },
+    {
+      key: 'deleteSongPlaylist',
+      show: ['playlist'].includes(locationPath),
+      item: {
+        label: 'Eliminar de la playlist',
+        onClick: async() => {
+          console.log(`Eliminar de la playlist ${row.original.id}`)
+          if (!currentPlaylistId) return;
+          deleteTrack({ playlistId: currentPlaylistId!, trackId: Number(row.original.id) });
         },
       },
     },
