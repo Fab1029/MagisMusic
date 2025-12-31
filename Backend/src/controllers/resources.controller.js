@@ -5,6 +5,21 @@ import ResourcesService from "../services/resources.service.js";
 const router = Router();
 const service = new ResourcesService();
 
+router.get("/liked/:type", async (req, res, next) => {
+    try {
+        const { type } = req.params;
+        const userId = req.user.id;
+
+        const likedResources = await service.getLikedResourcesByType({
+            id_user: userId,
+            type: type
+        });
+
+        res.status(200).json(likedResources);
+    } catch (error) {
+        next(error);
+    }
+});
 
 router.get("/:type/:idResource", async (req, res, next) => {
     try {
@@ -57,7 +72,5 @@ router.post("/", async (req, res, next) => {
     next(error);
   }
 });
-
-
 
 export default router;

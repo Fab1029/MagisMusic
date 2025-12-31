@@ -59,3 +59,30 @@ export const toogleResourceLike = async (
   }
 };
 
+export const getLikedResources = async (
+  type: "track" | "album" | "artist" | "playlist",
+  accessToken: string
+) => {
+    try {
+			const response = await fetch(`${BASE_URL}/liked/${type}`, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+				},
+			});
+
+			if (!response.ok) {
+				return false
+			}
+
+  		const data = await response.json();
+
+			if (!data) {
+				return false
+			}
+
+    	return data;
+		}catch (error) {
+			return false
+    }
+};
