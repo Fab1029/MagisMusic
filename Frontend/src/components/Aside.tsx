@@ -15,8 +15,9 @@ import { useAuth } from "@/providers/authProvider";
 import { useUserPlaylists, useCreatePlaylist } from "@/hooks/useUserPlaylists";
 import { useSearchStore } from "@/store/useSearchStore";
 import { usePlaylistStore } from "@/store/usePlaylistStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Playlist } from "@/store/usePlaylistStore";
+import { useUserArtistsLiked } from "@/hooks/useUserResources";
 
 interface AsideProps {
   isAsideMinimized: boolean;
@@ -47,7 +48,7 @@ const Aside: React.FC<AsideProps> = ({
   ];
 
   const navigate = useNavigate();
-  const { query, setQuery } = useSearchStore();
+  const { setQuery } = useSearchStore();
 
   const {isLoggedIn, user, accessToken} = useAuth();
 
@@ -61,12 +62,15 @@ const Aside: React.FC<AsideProps> = ({
   const baseOptions = ["Playlist", "Artistas"];
   const optionsButtonPill = idJam ? [...baseOptions, "Jam"] : baseOptions;
 
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
+  const { data:likedArtists, isLoading: isLoadingArtists} = useUserArtistsLiked(accessToken!);
+
   useEffect(() => {
     if (playlists) {
       setPlaylists(playlists);
     }
   }, [playlists]);
-
+  //console.log(accessToken);
   const crearPlaylist = () => {
     if (isLoggedIn) {
       const playlistNumber = (playlists?.length ?? 0) + 1;
@@ -84,9 +88,6 @@ const Aside: React.FC<AsideProps> = ({
         setCurrentPlaylist(normalizedPlaylist.id);
         
         navigate(`/playlist/${normalizedPlaylist.id}`);
-          /*setPlaylists([...storedPlaylists, newPlayList]);
-          setCurrentPlaylist(newPlayList.id);
-          navigate(`/playlist/${newPlayList.id}`);*/
         }
       });
     } else {
@@ -124,8 +125,12 @@ const Aside: React.FC<AsideProps> = ({
     }
   };
  
-  const handleFilterPlaylist = () => console.log("Filtro: Playlist");
-  const handleFilterArtistas = () => console.log("Filtro: Artistas");
+  const handleFilterPlaylist = () => {
+    setActiveFilter(activeFilter === "Playlist" ? null : "Playlist");
+  }
+  const handleFilterArtistas = () => {
+    setActiveFilter(activeFilter === "Artistas" ? null : "Artistas");
+  }
 
   const handleFilterJams = () => {
     if (idJam) navigate(`/jam/${idJam}`);
@@ -219,7 +224,7 @@ const Aside: React.FC<AsideProps> = ({
           <div className="flex flex-col gap-4 mb-4">
             <div className="flex gap-3 flex-wrap">
               {optionsButtonPill.map((btn) => (
-                <Button key={btn} variant="pill" onClick={accionesPill[btn]}>
+                <Button key={btn} variant={activeFilter === btn ? "pillHover" : "pill"} onClick={accionesPill[btn]}>
                   {btn}
                 </Button>
               ))}
@@ -238,7 +243,7 @@ const Aside: React.FC<AsideProps> = ({
         )}
 
         {/* Lista de playlists */}
-        {(isLoggedIn && storedPlaylists?.length > 0) && 
+        {(isLoggedIn && storedPlaylists?.length > 0 && (activeFilter == "Playlist" || !activeFilter)) && 
           <div className="flex flex-col gap-4">
             {storedPlaylists.map((pl) => (
               <ListItemCard 
@@ -248,6 +253,23 @@ const Aside: React.FC<AsideProps> = ({
                 onPress={() => {
                   setCurrentPlaylist(pl.id)
                   navigate(`/playlist/${pl.id}`)
+                }}
+              />
+            ))}
+          </div>
+        }
+
+        {/* Lista de artistas */}
+        {(isLoggedIn && likedArtists && likedArtists.length > 0 && (activeFilter == "Artistas" || !activeFilter)) && 
+          <div className="flex flex-col gap-4">
+            {likedArtists.map((ar) => (
+              <ListItemCard 
+                key={ar.id}
+                name = {ar.name}
+                description={'Artista'}
+                image= {ar.image}
+                onPress={() => {
+                  navigate(`/playlist/${ar.id}`)
                 }}
               />
             ))}

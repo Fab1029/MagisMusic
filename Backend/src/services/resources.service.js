@@ -42,4 +42,12 @@ export default class ResourcesService {
 
         return await this.resourcesRepository.putResource(resourceData);
     }
+
+    async getLikedResourcesByType(resourceData) {
+        if(!this.types.includes(resourceData.type)) {
+            throw new CustomError('Invalid resource type', 400);
+        }
+
+        return await this.resourcesRepository.getLikedResourcesByType(resourceData);
+    }
 }

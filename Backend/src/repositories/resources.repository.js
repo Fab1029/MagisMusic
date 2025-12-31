@@ -58,4 +58,25 @@ export default class ResourcesRepository {
 
         return data;
     }
+
+    async getLikedResourcesByType({ id_user, type }) {
+        const { data, error } = await this.db
+            .from("Resource")
+            .select("id_resource")
+            .eq("id_user", id_user)
+            .eq("type", type)
+            .eq("isLike", true);
+
+        if (error) {
+            throw new CustomError("Internal server error", 500);
+        }
+
+        const ids = data.map(item => item.id_resource);
+
+        return {
+            type,
+            total: ids.length,
+            data: ids
+        };
+    }
 }
