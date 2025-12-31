@@ -2,7 +2,7 @@ import { create } from "zustand";
 import type { Track } from "@/models/Track";
 
 export interface Playlist {
-  id_playlist: number;
+  id: number;
   name: string;
   tracks: Track[];
 }
@@ -27,6 +27,6 @@ export const usePlaylistStore = create<PlaylistState>((set, get) => ({
 
   getCurrentPlaylist: () => {
     const { playlists, currentPlaylistId } = get();
-    return playlists.find(p => p.id_playlist === currentPlaylistId);
+    return playlists.find(p => p.id === currentPlaylistId);
   },
 }));

@@ -15,7 +15,8 @@ import { useAuth } from "@/providers/authProvider";
 import { useUserPlaylists, useCreatePlaylist } from "@/hooks/useUserPlaylists";
 import { useSearchStore } from "@/store/useSearchStore";
 import { usePlaylistStore } from "@/store/usePlaylistStore";
-import { use, useEffect } from "react";
+import { useEffect } from "react";
+import type { Playlist } from "@/store/usePlaylistStore";
 
 interface AsideProps {
   isAsideMinimized: boolean;
@@ -49,14 +50,14 @@ const Aside: React.FC<AsideProps> = ({
   const { query, setQuery } = useSearchStore();
 
   const {isLoggedIn, user, accessToken} = useAuth();
-  console.log(accessToken);
+
   const { replaceQueue } = usePlayerStore();
   const { idJam, connectToJam, setIsDialogOpen, setURI } = useJamStore();
   
   const {data: playlists, isLoading, error} = useUserPlaylists(accessToken ?? null);
   const { mutate: createPlaylist, isPending } = useCreatePlaylist(accessToken!);
 
-  const { setPlaylists, setCurrentPlaylist } = usePlaylistStore();
+  const { playlists: storedPlaylists, setPlaylists, setCurrentPlaylist } = usePlaylistStore();
   const baseOptions = ["Playlist", "Artistas"];
   const optionsButtonPill = idJam ? [...baseOptions, "Jam"] : baseOptions;
 
@@ -72,8 +73,20 @@ const Aside: React.FC<AsideProps> = ({
       const defaultName = `My Playlist #${playlistNumber}`;
       createPlaylist(defaultName, {
         onSuccess: (newPlayList) => {
+        const normalizedPlaylist: Playlist = {
+          id: newPlayList.id, 
+          name: newPlayList.name,
+          tracks: [] 
+        };
+
+ 
+        setPlaylists([...storedPlaylists, normalizedPlaylist]);
+        setCurrentPlaylist(normalizedPlaylist.id);
+        
+        navigate(`/playlist/${normalizedPlaylist.id}`);
+          /*setPlaylists([...storedPlaylists, newPlayList]);
           setCurrentPlaylist(newPlayList.id);
-          navigate(`/playlist/${newPlayList.id}`)
+          navigate(`/playlist/${newPlayList.id}`);*/
         }
       });
     } else {
@@ -110,8 +123,6 @@ const Aside: React.FC<AsideProps> = ({
       console.error("Error creando Jam:", error);
     }
   };
-
-  console.log(playlists);
  
   const handleFilterPlaylist = () => console.log("Filtro: Playlist");
   const handleFilterArtistas = () => console.log("Filtro: Artistas");
@@ -227,16 +238,16 @@ const Aside: React.FC<AsideProps> = ({
         )}
 
         {/* Lista de playlists */}
-        {(isLoggedIn && playlists?.length > 0) && 
+        {(isLoggedIn && storedPlaylists?.length > 0) && 
           <div className="flex flex-col gap-4">
-            {playlists.map((pl) => (
+            {storedPlaylists.map((pl) => (
               <ListItemCard 
-                key={pl.id_playlist}
+                key={pl.id}
                 name = {pl.name}
                 description={`Playlist • ${user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0]}`}
                 onPress={() => {
-                  setCurrentPlaylist(pl.id_playlist)
-                  navigate(`/playlist/${pl.id_playlist}`)
+                  setCurrentPlaylist(pl.id)
+                  navigate(`/playlist/${pl.id}`)
                 }}
               />
             ))}

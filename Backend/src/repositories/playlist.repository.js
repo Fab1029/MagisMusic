@@ -46,7 +46,7 @@ export default class PlayListRepository {
             );
 
             return {
-                id_playlist: playList.id_playlist,
+                id: playList.id_playlist,
                 name: playList.name,
                 tracks
             };

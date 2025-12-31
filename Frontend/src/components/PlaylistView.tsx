@@ -10,10 +10,13 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import EditPlaylistDialog from "./EditPlaylistDialog";
+import { useDeletePlaylist } from "@/hooks/useUserPlaylists";
+import { useNavigate } from "react-router-dom";
 
 export default function PlaylistView () {
   const { id } = useParams();
-  const { user } = useAuth();
+  const { user, accessToken } = useAuth();
+  const navigate = useNavigate();
 
   const { playlists, setCurrentPlaylist } = usePlaylistStore();
   const { replaceQueue } = usePlayerStore();
@@ -21,7 +24,23 @@ export default function PlaylistView () {
   const isMobile = useIsMobile();
   const [isEditOpen, setIsEditOpen] = useState(false)
 
-  const playlist = playlists.find(p => p.id_playlist === Number(id));
+  const playlist = playlists.find(p => p.id === Number(id));
+  const {mutate: deletePlaylist} = useDeletePlaylist(accessToken!);
+  const editarPlaylist = () => setIsEditOpen(true);
+  const eliminarPlaylist = () => {
+    if (!playlist) return;
+    deletePlaylist(playlist.id, {
+      onSuccess: () => {
+        navigate('/')
+      }
+    })
+  };
+
+  const items = [{ label: "Editar"},{label: "Eliminar"}]
+  const acciones: Record<string, () => void> = {
+    Editar: editarPlaylist,
+    Eliminar: eliminarPlaylist,
+  };
 
   useEffect(() => {
     if (id) setCurrentPlaylist(Number(id));
@@ -55,7 +74,7 @@ export default function PlaylistView () {
       <EditPlaylistDialog
         isOpen={isEditOpen}
         setIsOpen={setIsEditOpen}
-        playlistId={playlist.id_playlist}
+        playlistId={playlist.id}
         currentName={playlist.name}
       />
 
@@ -104,7 +123,8 @@ export default function PlaylistView () {
               </Button>
             }
             infoHover="Más opciones"
-            menuItems={[{ label: "Editar"},{label: "Eliminar"}]}
+            menuItems={items}
+            onSelect={(item) => acciones[item.label]?.()}
           />
           
         </div>

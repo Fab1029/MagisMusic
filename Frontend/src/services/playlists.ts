@@ -59,6 +59,7 @@ export const deleteTrackFromPlaylist = async (accessToken:string, playlistId:num
             throw new Error("Error deleting track from playlist");
         }
 
+        if (response.status === 204) return null;   
         const data = await response.json();
         return data;
     }catch (error) {
@@ -78,9 +79,10 @@ export const deletePlaylist = async (accessToken:string, playlistId:number) => {
 
 
         if (!response.ok) {
-            throw new Error("Error deleting track from playlist");
+            throw new Error("Error deleting playlist");
         }
 
+        if (response.status === 204) return null;   
         const data = await response.json();
         return data;
     }catch (error) {
@@ -132,7 +134,7 @@ export const getPlayListByID = async (accessToken:string, playlistId: string) =>
     }
 }
 
-export const addTracksToPlayList = async (accessToken:string, playlistId: string, tracks: number[]) => {
+export const addTracksToPlayList = async (accessToken:string, playlistId: number, tracks: number[]) => {
     try {
 
         const response = await fetch(`${BASE_URL}/${playlistId}/tracks`, {

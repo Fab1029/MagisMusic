@@ -141,7 +141,8 @@ function ContentView() {
               label: playlist.name,
               onClick: async () => {
                 try {
-                  await addTracksToPlayList(accessToken || '', playlist.id_playlist, getTracksById());
+                  console.log('Click en content para agg')
+                  await addTracksToPlayList(accessToken || '', playlist.id, getTracksById());
                   successToast(
                     'Exito',
                     `Canciones añadida a la playlist ${playlist.name}.`
