@@ -34,7 +34,7 @@ export const updatePlayList = async (accessToken:string, playlistId:number, name
         });
 
         if (!response.ok) {
-            throw new Error("Error creating playlist");
+            throw new Error("Error updating playlist");
         }
 
         const data = await response.json();
@@ -44,6 +44,49 @@ export const updatePlayList = async (accessToken:string, playlistId:number, name
     }
 }
 
+export const deleteTrackFromPlaylist = async (accessToken:string, playlistId:number, trackId:number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${playlistId}/tracks/${trackId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+
+        if (!response.ok) {
+            throw new Error("Error deleting track from playlist");
+        }
+
+        const data = await response.json();
+        return data;
+    }catch (error) {
+        throw error;
+    }
+}
+
+export const deletePlaylist = async (accessToken:string, playlistId:number) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${playlistId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
+
+
+        if (!response.ok) {
+            throw new Error("Error deleting track from playlist");
+        }
+
+        const data = await response.json();
+        return data;
+    }catch (error) {
+        throw error;
+    }
+}
 
 export const getPlayLists = async (accessToken:string) => {
     try {

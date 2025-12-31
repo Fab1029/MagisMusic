@@ -51,4 +51,24 @@ export default class PlayListService {
         return await this.playListRepository.updatePlayList(playListId, name);
     }
     
+    async deleteTrackFromPlaylist(playListId, trackId) {
+        if(playListId < 1) { 
+            throw new CustomError("Playlist ID invalid", 400);
+        }
+
+        if(trackId < 1) { 
+            throw new CustomError("Track ID invalid", 400);
+        }
+
+        return await this.playListRepository.deleteTrackFromPlaylist(playListId, trackId)
+    }
+
+    async deletePlaylist(playListId) {
+        if(playListId < 1) { 
+            throw new CustomError("Playlist ID invalid", 400);
+        }
+
+        return await this.playListRepository.deletePlaylist(playListId)
+    }
+
 }

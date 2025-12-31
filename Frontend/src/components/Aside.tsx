@@ -49,6 +49,7 @@ const Aside: React.FC<AsideProps> = ({
   const { query, setQuery } = useSearchStore();
 
   const {isLoggedIn, user, accessToken} = useAuth();
+  console.log(accessToken);
   const { replaceQueue } = usePlayerStore();
   const { idJam, connectToJam, setIsDialogOpen, setURI } = useJamStore();
   

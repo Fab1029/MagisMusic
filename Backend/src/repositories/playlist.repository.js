@@ -115,4 +115,33 @@ export default class PlayListRepository {
         return data;
     }
 
+    async deleteTrackFromPlaylist(playListId, trackId) {
+        const {data, error} = await this.db
+            .from('PlayList_Track')
+            .delete()
+            .eq('id_playlist', playListId)
+            .eq('id_track', trackId)
+            .select('*')
+        
+        if (error) {
+            throw new CustomError("Internal server error", 500);
+        }
+
+        return data;
+    }
+
+    async deletePlaylist(playListId) {
+        const {data, error} = await this.db
+            .from('PlayList')
+            .delete()
+            .eq('id', playListId)
+            .select('*')
+        
+        if (error) {
+            throw new CustomError("Internal server error", 500);
+        }
+
+        return data;
+    }
+
 }

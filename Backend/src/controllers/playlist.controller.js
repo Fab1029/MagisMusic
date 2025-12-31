@@ -65,4 +65,33 @@ router.patch("/:id", async (req, res, next) => {
     }
 });
 
+router.delete("/:playlistId/tracks/:trackId", async (req, res, next) => {
+    try {
+        const playListId = req.params.playlistId;
+        const trackId = req.params.trackId;
+
+        const response = await service.deleteTrackFromPlaylist(playListId, trackId);
+        res.status(204).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+router.delete("/:playlistId", async (req, res, next) => {
+    try {
+        const playListId = req.params.playlistId;
+
+        const response = await service.deletePlaylist(playListId);
+
+         if (response.length === 0) {
+            return res.status(404).json({ message: "Playlist not found" });
+        }
+        res.status(204).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
+
+
 export default router;
