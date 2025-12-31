@@ -36,7 +36,6 @@ const Aside: React.FC<AsideProps> = ({
 }) => {
   const items_agregar = [
     { label: "Playlist", description: "Crea una lista de reproducción" },
-    { label: "Carpeta", description: "Organiza tus listas de reproducción" },
     { label: "Jam", description: "Escuchen juntos desde cualquier lugar" },
   ];
 
@@ -55,7 +54,7 @@ const Aside: React.FC<AsideProps> = ({
   const { replaceQueue } = usePlayerStore();
   const { idJam, connectToJam, setIsDialogOpen, setURI } = useJamStore();
   
-  const {data: playlists, isLoading, error} = useUserPlaylists(accessToken ?? null);
+  const {data: playlists, isLoading: isLoadingPlaylists, error} = useUserPlaylists(accessToken ?? null);
   const { mutate: createPlaylist, isPending } = useCreatePlaylist(accessToken!);
 
   const { playlists: storedPlaylists, setPlaylists, setCurrentPlaylist } = usePlaylistStore();
@@ -100,8 +99,6 @@ const Aside: React.FC<AsideProps> = ({
     navigate('/search/podcasts/Todo')
   }
 
-  const crearCarpeta = () => console.log("Crear carpeta");
-
   const crearJam = async () => {
     console.log("Crear Jam");
     try {
@@ -145,7 +142,6 @@ const Aside: React.FC<AsideProps> = ({
 
   const acciones: Record<string, () => void> = {
     Playlist: crearPlaylist,
-    Carpeta: crearCarpeta,
     Jam: crearJam,
   };
 
@@ -186,7 +182,7 @@ const Aside: React.FC<AsideProps> = ({
                   <img className="w-5 h-5" src={icons.agregarIcon} alt="Opciones" />
                 </Button>
               }
-              infoHover="Crear playlist, carpeta o jam"
+              infoHover="Crear playlist o jam"
               menuItems={items_agregar}
               onSelect={(item) => acciones[item.label]?.()}
             />
@@ -205,7 +201,7 @@ const Aside: React.FC<AsideProps> = ({
                 <span className="font-bold">Create</span>
               </Button>
             }
-            infoHover="Crear playlist, carpeta o jam"
+            infoHover="Crear playlist o jam"
             menuItems={items_agregar}
             onSelect={(item) => acciones[item.label]?.()}
           />
@@ -243,24 +239,30 @@ const Aside: React.FC<AsideProps> = ({
         )}
 
         {/* Lista de playlists */}
-        {(isLoggedIn && storedPlaylists?.length > 0 && (activeFilter == "Playlist" || !activeFilter)) && 
-          <div className="flex flex-col gap-4">
-            {storedPlaylists.map((pl) => (
-              <ListItemCard 
-                key={pl.id}
-                name = {pl.name}
-                description={`Playlist • ${user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0]}`}
-                onPress={() => {
-                  setCurrentPlaylist(pl.id)
-                  navigate(`/playlist/${pl.id}`)
-                }}
-              />
-            ))}
+        {isLoadingPlaylists ? (
+          <p className="ml-2 mb-2 text-s text-muted-foreground animate-pulse">Cargando playlists...</p>
+        ) : (
+          isLoggedIn && storedPlaylists?.length > 0 && (activeFilter == "Playlist" || !activeFilter)) && 
+            <div className="flex flex-col gap-4">
+              {storedPlaylists.map((pl) => (
+                <ListItemCard 
+                  key={pl.id}
+                  name = {pl.name}
+                  description={`Playlist • ${user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0]}`}
+                  onPress={() => {
+                    setCurrentPlaylist(pl.id)
+                    navigate(`/playlist/${pl.id}`)
+                  }}
+                />
+              ))}
           </div>
         }
 
         {/* Lista de artistas */}
-        {(isLoggedIn && likedArtists && likedArtists.length > 0 && (activeFilter == "Artistas" || !activeFilter)) && 
+        {isLoadingArtists ? (
+          <p className="ml-2 text-s text-muted-foreground animate-pulse">Cargando artistas...</p>
+        ) : (
+        isLoggedIn && likedArtists && likedArtists.length > 0 && (activeFilter == "Artistas" || !activeFilter)) && 
           <div className="flex flex-col gap-4">
             {likedArtists.map((ar) => (
               <ListItemCard 
