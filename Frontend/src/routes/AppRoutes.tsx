@@ -22,7 +22,7 @@ function AppRoutes() {
           <Route path="section/:filter" element={<SectionView />} />
           <Route path="content/:id/:filter" element={<ContentView />} />
           <Route path="jam/:jamId" element={<JamView />} />
-          <Route path="playlist" element={<PlaylistView />} />
+          <Route path="playlist/:id" element={<PlaylistView />} />
         </Route>
 
         <Route path="login" element={<Login />} />

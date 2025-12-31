@@ -53,5 +53,16 @@ router.post("/:id/tracks", async (req, res, next) => {
     }
 });
 
+router.patch("/:id", async (req, res, next) => {
+    try {
+        const playListId = req.params.id;
+        const { name } = req.body;
+
+        const response = await service.updatePlayList(playListId, name);
+        res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+});
 
 export default router;

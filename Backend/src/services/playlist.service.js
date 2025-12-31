@@ -38,5 +38,17 @@ export default class PlayListService {
 
         return await this.playListRepository.addTracksToPlayList(playListId, tracks);
     }
+
+    async updatePlayList(playListId, name) {
+        if(playListId < 1) { 
+            throw new CustomError("Playlist ID invalid", 400);
+        }
+
+        if (!name || name.trim().length === 0) {
+            throw new CustomError("The playlist name cannot be empty")
+        }
+
+        return await this.playListRepository.updatePlayList(playListId, name);
+    }
     
 }

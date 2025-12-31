@@ -100,4 +100,19 @@ export default class PlayListRepository {
         return data;
     }   
 
+    async updatePlayList(playListId, name) {
+        const {data, error} = await this.db
+            .from('PlayList')
+            .update({name})
+            .eq('id', playListId)
+            .select('*')
+            .single();
+
+        if (error) {
+            throw new CustomError("Internal server error", 500);
+        }
+
+        return data;
+    }
+
 }

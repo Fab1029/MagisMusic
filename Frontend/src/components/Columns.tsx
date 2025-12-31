@@ -85,6 +85,16 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
         },
       },
     },
+    {
+      key: 'deleteSongPlaylist',
+      show: ['playlist'].includes(locationPath),
+      item: {
+        label: 'Eliminar de la playlist',
+        onClick: async() => {
+          console.log('Eliminar de la playlist')
+        },
+      },
+    },
   ]
     .filter(({ show }) => show)
     .map(({ item }) => item);

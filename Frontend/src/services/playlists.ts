@@ -22,6 +22,29 @@ export const postPlayList = async (accessToken:string, name: string) => {
     }
 }
 
+export const updatePlayList = async (accessToken:string, playlistId:number, name: string) => {
+    try {
+        const response = await fetch(`${BASE_URL}/${playlistId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ name }),
+        });
+
+        if (!response.ok) {
+            throw new Error("Error creating playlist");
+        }
+
+        const data = await response.json();
+        return data;
+    }catch (error) {
+        throw error;
+    }
+}
+
+
 export const getPlayLists = async (accessToken:string) => {
     try {
         const response = await fetch(`${BASE_URL}`, {
