@@ -1,4 +1,7 @@
 const BASE_URL = "/api/v1/playlists"
+import { downloadTrack } from "./deezer"; 
+import { savePlaylistOffline } from "@/lib/offlineDb";
+import type{ Playlist } from "@/store/usePlaylistStore";
 
 export const postPlayList = async (accessToken:string, name: string) => {
     try {
@@ -157,3 +160,17 @@ export const addTracksToPlayList = async (accessToken:string, playlistId: number
         throw error;
     }
 }
+
+export const downloadFullPlaylist = async (playlist: Playlist) => {
+  try {
+    const downloadPromises = playlist.tracks.map(track => 
+      downloadTrack(track, false) 
+    );
+    await Promise.all(downloadPromises);
+
+    await savePlaylistOffline(playlist);
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};

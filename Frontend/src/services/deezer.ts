@@ -182,19 +182,28 @@ export const getPlayListById = async(id: number) => {
     }
 };
 
-export const downloadTrack = async (track: Track) => {
+export const downloadTrack = async (track: Track, isIndividual: boolean = true) => {
   try {
     const cache = await caches.open('music-tracks-cache');
     const cachedResponse = await cache.match(track.preview);
-    if (cachedResponse) return true;
+    
+    // Si ya existe en cache, igual actualizamos IndexedDB 
+    if (cachedResponse) {
+      await saveTrackOffline(track, isIndividual);
+      return true;
+    }
+
     const response = await fetch(track.preview, {
       mode: 'cors',
       credentials: 'omit'
     });
 
     if (!response.ok) throw new Error("Fallo al descargar el archivo de audio");
+    
     await cache.put(track.preview, response); 
-    await saveTrackOffline(track);
+    
+    await saveTrackOffline(track, isIndividual);
+    
     return true;
   } catch (error) {
     console.error("Error en downloadTrack:", error);

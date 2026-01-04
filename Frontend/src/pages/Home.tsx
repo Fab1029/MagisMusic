@@ -1,4 +1,3 @@
-import { Outlet } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import Aside from "@/components/Aside";
 import { FloatingPlayer } from "@/components/FloatingPlayer";
@@ -7,14 +6,17 @@ import { usePlayerStore } from "@/store/usePlayerStore";
 import { useState } from "react";
 import { useNetwork } from "@/hooks/useNetwork";
 import { OfflineView } from "@/components/OfflineView";
+import { Outlet, useLocation } from "react-router-dom";
 
 function Home() {
   const { songs } = usePlayerStore();
   const isOnline = useNetwork();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
-
+  const location = useLocation();
+  const isPlaylistRoute = location.pathname.includes('/playlist/');
   const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
   const dummyToggleAside = () => {}; 
+  
 
   return (
     <div className="flex flex-col w-screen h-screen">
@@ -38,15 +40,9 @@ function Home() {
           
           {/* LÓGICA DE CONEXIÓN */}
           {!isOnline ? (
-            <OfflineView />
+            !isPlaylistRoute ? <OfflineView /> : <Outlet />
           ) : (
-            <>
-              <Outlet />
-              <footer>
-                <AppFooter />
-              </footer>
-            </>
-            
+            <Outlet />
           )}
 
         </div>

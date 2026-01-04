@@ -19,13 +19,13 @@ import { errorToast } from "./CustomSonner";
 import type { Track } from "@/models/Track";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useLocation } from "react-router-dom";
-import { Download, CheckCircle2, Loader2 } from "lucide-react";
-import { downloadTrack } from "@/services/deezer";
+import { Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useNetwork } from "@/hooks/useNetwork";
 import { useAuth } from "@/providers/authProvider"; 
 import { infoToast } from "./CustomSonner";
+import { saveTrackOffline } from "@/lib/offlineDb";
 
 interface CustomTableProps {
   data: Track[];
@@ -54,7 +54,7 @@ export function CustomTable({ data, columns, showHeaders = true }: CustomTablePr
     setDownloadingIds(prev => [...prev, track.id]);
     
     try {
-      await downloadTrack(track);
+      await saveTrackOffline(track, true);
       toast.success(`${track.title} descargada para modo offline`);
     } catch (error) {
       toast.error("Error al descargar la canción");

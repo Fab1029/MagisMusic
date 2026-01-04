@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { getOfflineTracks } from "@/lib/offlineDb";
 import { CustomTable } from "./CustomTable";
 import type{ Track } from "@/models/Track";
+import { getOfflineIndividualTracks } from "@/lib/offlineDb";
+
 
 export const OfflineView = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
 
   useEffect(() => {
-    getOfflineTracks().then((data) => {
-      console.log("Canciones recuperadas de IndexedDB:", data);
-      setTracks(data);
-    });
+    getOfflineIndividualTracks().then(setTracks);
   }, []);
 
   const offlineColumns = [
@@ -32,11 +30,12 @@ export const OfflineView = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Mis Descargas</h2>
+      <h2 className="text-2xl font-bold mb-4">Mis Descargas</h2>
+      <p className="text-sm text-muted-foreground mb-6">Canciones descargadas</p>
       {tracks.length > 0 ? (
         <CustomTable data={tracks} columns={offlineColumns} showHeaders={true} />
       ) : (
-        <p>No se encontraron canciones offline</p>
+        <p>No tienes descargas</p>
       )}
     </div>
   );

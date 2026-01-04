@@ -12,19 +12,24 @@ import { TooltipDropdownButton } from "./TooltipDropdownButton";
 import EditPlaylistDialog from "./EditPlaylistDialog";
 import { useDeletePlaylist } from "@/hooks/useUserPlaylists";
 import { useNavigate } from "react-router-dom";
+import { downloadFullPlaylist } from "@/services/playlists";
+import { toast } from "sonner";
+import { useNetwork } from "@/hooks/useNetwork";
+import { getOfflinePlaylistById } from "@/lib/offlineDb";
+import type{ Playlist } from "@/store/usePlaylistStore";
+
 
 export default function PlaylistView () {
   const { id } = useParams();
   const { user, accessToken } = useAuth();
   const navigate = useNavigate();
-
+  const isOnline = useNetwork();
+  const [offlinePlaylist, setOfflinePlaylist] = useState<Playlist | null>(null);
   const { playlists, setCurrentPlaylist } = usePlaylistStore();
   const { replaceQueue } = usePlayerStore();
 
   const isMobile = useIsMobile();
   const [isEditOpen, setIsEditOpen] = useState(false)
-
-  const playlist = playlists.find(p => p.id === Number(id));
   const {mutate: deletePlaylist} = useDeletePlaylist(accessToken!);
   const editarPlaylist = () => setIsEditOpen(true);
   const eliminarPlaylist = () => {
@@ -35,16 +40,38 @@ export default function PlaylistView () {
       }
     })
   };
+  
+  const [isDownloading, setIsDownloading] = useState(false);
 
-  const items = [{ label: "Editar"},{label: "Eliminar"}]
+  const descargarPlaylist = async () => {
+    if (!playlist) return;
+    setIsDownloading(true);
+    try {
+      await downloadFullPlaylist(playlist);
+      toast.success(`Playlist "${playlist.name}" lista para modo offline`);
+    } catch (error) {
+      toast.error("Hubo un error al descargar la playlist");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const items = [{ label: "Descargar", disabled: isDownloading },{ label: "Editar"},{label: "Eliminar"}]
   const acciones: Record<string, () => void> = {
+    Descargar: descargarPlaylist,
     Editar: editarPlaylist,
     Eliminar: eliminarPlaylist,
   };
 
   useEffect(() => {
-    if (id) setCurrentPlaylist(Number(id));
-  }, [id]);
+    if (!isOnline && id) {
+      getOfflinePlaylistById(Number(id)).then(setOfflinePlaylist);
+    }
+  }, [id, isOnline]);
+
+  const playlist = isOnline 
+    ? playlists.find(p => p.id === Number(id)) 
+    : offlinePlaylist;
 
   if (!playlist) {
     return (
@@ -66,8 +93,6 @@ export default function PlaylistView () {
       </div>
     );
   }
-
-
 
   return (
     <div>
