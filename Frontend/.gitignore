@@ -25,3 +25,6 @@ dist-ssr
 
 # Variables de entorno para desarrollo
 .env
+
+# Archivos temporales del plugin PWA
+dev-dist/
