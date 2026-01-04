@@ -15,12 +15,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-interface MenuItem {
+export interface MenuItem {
   label: string
   shortcut?: string
   disabled?: boolean
   subItems?: MenuItem[]
-  onClick?: () => void
+  onClick?: () => void | Promise<void> 
 }
 
 interface CustomDropdownMenuProps {

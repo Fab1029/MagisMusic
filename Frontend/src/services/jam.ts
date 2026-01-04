@@ -1,17 +1,19 @@
-const BASE_URL = "/api/jam"
+const JAM_URL = import.meta.env.VITE_BACKEND_JAM_URL;
+const BASE_URL = `${JAM_URL}/api/v1/jam/`
 
-export const createJam = async() => {
+export const createJam = async(accessToken:string) => {
     try{
         const pathName = window.location.origin
-        const response = await fetch(`${BASE_URL}/create`, {
+        const response = await fetch(`${BASE_URL}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
           }
         });
 
         if (!response.ok) {
-            throw new Error('Error al obtener crear Jam');            
+            throw new Error('Error al crear Jam');            
         }
 
         let data =  await response.json();
