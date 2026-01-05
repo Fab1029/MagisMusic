@@ -8,7 +8,7 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 import { columns, columnsMobile } from "./Columns";
 import icons from "@/constants/icons";
 import ShareDialog from "./ShareDialog";
-
+import { useAuth } from "@/providers/authProvider";
 
 export default function JamView() {
   const isMobile = useIsMobile();
@@ -25,11 +25,20 @@ export default function JamView() {
   } = useJamStore();
 
   const { songs } = usePlayerStore();
-  
+  const {isLoggedIn } = useAuth();
+
   const handleLeaveJam = () => {
     leaveJam();
     navigate('/');
   };
+
+  const handleJoinJam = () => {
+    if (isLoggedIn) {
+      connectToJam(idJamRoute)
+    } else {
+      navigate('/login')
+    }
+  }
 
   return (
     <div>
@@ -55,7 +64,7 @@ export default function JamView() {
           {idJam === "" ? (
             <Button variant="play" 
               className="hover:scale-105"
-              onClick={() => connectToJam(idJamRoute)}
+              onClick={handleJoinJam}
               >
               Unirse
             </Button>

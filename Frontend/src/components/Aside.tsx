@@ -100,25 +100,29 @@ const Aside: React.FC<AsideProps> = ({
   }
 
   const crearJam = async () => {
-    console.log("Crear Jam");
-    try {
-      const res = await createJam(accessToken!);
-      console.log(res);
-      const jamId = res.jamId;
-      console.log("Jam creado:", jamId);
+    if (isLoggedIn) {
+      console.log("Crear Jam");
+      try {
+        const res = await createJam(accessToken!);
+        console.log(res);
+        const jamId = res.jamId;
+        console.log("Jam creado:", jamId);
 
-      connectToJam(jamId);
-      
-      /* Determinar URI */
-      setURI(res.link);
-      /* Limpiar cola de reproducción */
-      replaceQueue([]);
-      /* Mostrar dialogo */
-      setIsDialogOpen(true);
+        connectToJam(jamId);
+        
+        /* Determinar URI */
+        setURI(res.link);
+        /* Limpiar cola de reproducción */
+        replaceQueue([]);
+        /* Mostrar dialogo */
+        setIsDialogOpen(true);
 
-      navigate(`/jam/${jamId}`);
-    } catch (error) {
-      console.error("Error creando Jam:", error);
+        navigate(`/jam/${jamId}`);
+      } catch (error) {
+        console.error("Error creando Jam:", error);
+      }
+    } else {
+      navigate('/login')
     }
   };
  
