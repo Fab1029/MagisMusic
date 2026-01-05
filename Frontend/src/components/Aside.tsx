@@ -69,7 +69,7 @@ const Aside: React.FC<AsideProps> = ({
       setPlaylists(playlists);
     }
   }, [playlists]);
-  console.log(accessToken);
+  //console.log(accessToken);
   const crearPlaylist = () => {
     if (isLoggedIn) {
       const playlistNumber = (playlists?.length ?? 0) + 1;
@@ -102,7 +102,7 @@ const Aside: React.FC<AsideProps> = ({
   const crearJam = async () => {
     console.log("Crear Jam");
     try {
-      const res = await createJam();
+      const res = await createJam(accessToken!);
       console.log(res);
       const jamId = res.jamId;
       console.log("Jam creado:", jamId);

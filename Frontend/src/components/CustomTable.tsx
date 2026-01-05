@@ -20,6 +20,7 @@ import type { Track } from "@/models/Track";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useLocation } from "react-router-dom";
 import { Download, Loader2 } from "lucide-react";
+import { downloadTrack } from "@/services/deezer";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useNetwork } from "@/hooks/useNetwork";
@@ -34,7 +35,7 @@ interface CustomTableProps {
 }
 
 export function CustomTable({ data, columns, showHeaders = true }: CustomTableProps) {
-  const { idJam, socket} = useJamStore();
+  const { idJam, socket, requestControlEvent} = useJamStore();
   const { songs, currentSongIndex, replaceQueue } = usePlayerStore();
   const isJamPath = useLocation().pathname.split('/')[1] === 'jam' ? true : false
   const [downloadingIds, setDownloadingIds] = useState<string[]>([]);
@@ -105,16 +106,13 @@ export function CustomTable({ data, columns, showHeaders = true }: CustomTablePr
   
 
   const handleOnClickRow = (index: number) => {
-
+    const isSocketOpen = socket?.readyState === WebSocket.OPEN;
     if (isJamPath) {
-      if (idJam && socket?.connected) 
-        socket.emit("jamEvent", {
-          jamId: idJam,
-          event: { type: "PLAY_SONG", index: index },
-        });
+      if (idJam && isSocketOpen) 
+        requestControlEvent("PLAY_SONG", index)
     }
     else {
-      if (idJam && socket?.connected) 
+      if (idJam &&isSocketOpen) 
         errorToast(
           "Error en reproducción",
           "Desvincúlate del jam para reproducir localmente"

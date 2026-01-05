@@ -14,9 +14,10 @@ import { getPlayLists } from "@/services/playlists";
 import { useQuery } from "@tanstack/react-query";
 import { useDeleteTrackFromPlaylist, useAddTrackToPlaylist } from "@/hooks/useUserPlaylists";
 import { usePlaylistStore } from "@/store/usePlaylistStore";
+import type { MenuItem } from "./CustomDropdownMenu";
 
 const OptionCell = ({ row }: { row: { original: Track } }) => {
-  const { idJam, socket } = useJamStore();
+  const { idJam, socket, requestAddSong } = useJamStore();
   const { pathname } = useLocation();
 
   const locationPath = pathname.split('/')[1];
@@ -43,7 +44,7 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
   const { mutate: deleteTrack } = useDeleteTrackFromPlaylist(accessToken!);
   const { mutate: addTrackToPlaylist } = useAddTrackToPlaylist(accessToken!);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
       key: 'playlist',
       show: ['content', 'search', 'jam'].includes(locationPath),
@@ -120,10 +121,10 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
     },
   ]
     .filter(({ show }) => show)
-    .map(({ item }) => item);
+    .map(({ item }) => item as MenuItem);
 
 
-  if (idJam && socket?.connected) {
+  if (idJam && socket?.readyState === WebSocket.OPEN) {
     menuItems.unshift({
       label: 'Agregar al Jam',
       onClick: () => {
@@ -131,13 +132,8 @@ const OptionCell = ({ row }: { row: { original: Track } }) => {
           `Canción ${row.original.title} agregada al Jam ${idJam}`
         );
 
-        socket.emit('jamEvent', {
-          jamId: idJam,
-          event: {
-            type: 'ADD_SONG',
-            data: row.original,
-          },
-        });
+        requestAddSong(row.original); 
+        successToast('Jam', `"${row.original.title}" añadida a la cola del Jam.`);
       },
     });
   }

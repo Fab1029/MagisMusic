@@ -1,12 +1,11 @@
 import { create } from "zustand";
-import { io, Socket } from "socket.io-client";
 import { usePlayerStore } from "@/store/usePlayerStore";
 
 interface JamState {
   uri: string;
   idJam: string;
   isDialogOpen: boolean;
-  socket: Socket | null;
+  socket: WebSocket | null;
 
   leaveJam: () => void;
   setURI: (uri: string) => void;
@@ -38,37 +37,41 @@ export const useJamStore = create<JamState>((set, get) => ({
   connectToJam: (idJam) => {
     const existingSocket = get().socket;
 
-    if (existingSocket?.connected && get().idJam === idJam) {
+    // Si ya existe una conexión para este Jam, no hacer nada
+    if (existingSocket?.readyState === WebSocket.OPEN && get().idJam === idJam) {
       return;
     }
 
     // Desconecta si hay otro socket
-    existingSocket?.disconnect();
+    if (existingSocket) {
+      existingSocket?.close();
+    }
 
-    const socket = io(import.meta.env.VITE_BACKEND_URL, {
-      transports: ["websocket"],
-    });
+    const wsUrl = `${import.meta.env.VITE_BACKEND_JAM_WS_URL}/api/v1/jam/${idJam}`
+    const socket = new WebSocket(wsUrl)
 
-    set({ idJam, socket });
-
-    socket.emit("joinJam", idJam );
+    socket.onopen = () => {
+      console.log("✅ Conectado al Jam via WebSocket");
+      set({ idJam, socket });
+    };
 
     // Centralizacion de eventos de escucha
-    socket.on("jamEvent", (event) => {
+    socket.onmessage = ((event) => {
+      const data = JSON.parse(event.data);
       const player = usePlayerStore.getState();
-      console.log("Evento de Jam recibido:", event);
+      console.log("Evento de Jam recibido:", data);
 
-      switch (event.type) {
+      switch (data.type) {
         case "ADD_SONG":
-          if (event.data){
+          if (data.data){
             console.log(player.songs);
-            player.addSong(event.data);
+            player.addSong(data.data);
           } 
           break;
 
         case "PLAY_SONG":
-          if (event.index !== undefined && event.index !== null) {
-            player.replaceQueue(player.songs, event.index);            
+          if (data.index !== undefined && data.index !== null) {
+            player.replaceQueue(player.songs, data.index);            
           } else {
             player.togglePlaying();
           }
@@ -83,53 +86,48 @@ export const useJamStore = create<JamState>((set, get) => ({
           break;
 
         default:
-          console.warn("Evento desconocido:", event);
+          console.warn("Evento desconocido:", data.type);
       }
     });
 
-    socket.on("disconnect", () => {
+    socket.onclose = () => {
       console.log("Desconectado del Jam.");
       set({ idJam: "", socket: null });
-    });
+    };
+
+    socket.onerror = (error) => {
+      console.error("⚠️ Error en WebSocket:", error);
+    };
   },
 
   requestControlEvent: (eventType, index) => {
     const { idJam, socket } = get();
-    if (idJam && socket?.connected) {
+    if (idJam && socket?.readyState === WebSocket.OPEN) {
       console.log(`[JamRequest] Enviando evento ${eventType}`);
-      socket.emit("jamEvent", {
-        jamId: idJam,
-        event: { type: eventType, index },
-      });
+      socket.send(JSON.stringify({
+        type: eventType,
+        index: index,
+      }));
     }
   },
 
   requestAddSong: (songData) => {
     const { idJam, socket } = get();
-    if (idJam && socket?.connected) {
+    if (idJam && socket?.readyState === WebSocket.OPEN) {
       console.log(`[JamRequest] Añadiendo canción: ${songData.title}`);
-      socket.emit("jamEvent", {
-        jamId: idJam,
-        event: { type: "ADD_SONG", data: songData },
-      });
+      socket.send(JSON.stringify({
+        type: "ADD_SONG",
+        data: songData
+      }));
     }
   },
 
   leaveJam: () => {
-    set((state) => {
-      
-      if (state.socket && state.idJam){
-        state.socket.emit("leave_jam", state.idJam);
-        state.socket.disconnect();
-        usePlayerStore.getState().replaceQueue([]);
-      }
-
-      return {
-        uri: '',
-        idJam: '',
-        socket: null,
-        isDialogOpen: false
-      }
-    })
+    const { socket } = get();
+    if (socket) {
+      socket.close();
+    }
+    usePlayerStore.getState().replaceQueue([]);
+    set({ uri: '', idJam: '', socket: null, isDialogOpen: false });
   },
 }));

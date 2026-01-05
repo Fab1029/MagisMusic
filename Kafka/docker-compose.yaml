@@ -6,22 +6,12 @@ services:
       - "39092:9092"
       - "29092:29092"
     environment:
-      # Activar modo KRaft (sin Zookeeper)
       KAFKA_KRAFT_MODE: 'true'
-
-      # ID único del clúster
       CLUSTER_ID: '1L6g7nGhU-eAKfL--X25wo'
-
-      # ID único del nodo (solo uno en este caso)
       KAFKA_NODE_ID: 1
-
-      # Roles que cumple el nodo
       KAFKA_PROCESS_ROLES: broker,controller
-
-      # Define el "quorum" de controladores (solo uno)
       KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
 
-       # Listeners internos y externos
       KAFKA_LISTENERS: >
         PLAINTEXT_EXTERNAL://0.0.0.0:9092,
         PLAINTEXT_INTERNAL://0.0.0.0:29092,
@@ -36,18 +26,11 @@ services:
         PLAINTEXT_INTERNAL:PLAINTEXT,
         CONTROLLER:PLAINTEXT
 
-      # Define qué listener usa el controlador
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-
-      # Indicar a kafka que lsitener usar para comunicarse consigo mismo o entre brokers
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
-
-      # Factores de replicación internos mínimos (solo 1 nodo)
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-
-      # Carpeta interna de logs de Kafka
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
     volumes:
@@ -55,10 +38,13 @@ services:
 
   kafka-ui:
     image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "5000:8080"
     environment:
+      KAFKA_CLUSTERS_0_NAME: "Local Kafka"
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:29092"
     depends_on:
       - kafka
-
 volumes:
   kafka_data:
