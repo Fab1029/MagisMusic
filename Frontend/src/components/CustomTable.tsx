@@ -20,7 +20,6 @@ import type { Track } from "@/models/Track";
 import { usePlayerStore } from "@/store/usePlayerStore";
 import { useLocation } from "react-router-dom";
 import { Download, Loader2 } from "lucide-react";
-import { downloadTrack } from "@/services/deezer";
 import { toast } from "sonner";
 import { useState } from "react";
 import { useNetwork } from "@/hooks/useNetwork";
