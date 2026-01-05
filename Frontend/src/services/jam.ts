@@ -18,7 +18,7 @@ export const createJam = async(accessToken:string) => {
 
         let data =  await response.json();
      
-        data.link = `${pathName}/jam/${data.jamId}`;
+        //data.link = `${pathName}/jam/${data.jamId}`;
         return data;
 
     }catch(error) {
