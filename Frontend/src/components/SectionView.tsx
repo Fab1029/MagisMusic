@@ -1,0 +1,47 @@
+import {
+  getMostPopularAlbums,
+  getMostPopularArtists,
+  getMostPopularPlayLists,
+  getMostPopularTracks
+} from "@/services/deezer";
+import { filters } from "@/store/useSearchStore";
+import { useQuery } from "@tanstack/react-query";
+import GridPanel from "./GridPanel";
+import { useLocation } from "react-router-dom";
+
+const SectionView = () => {
+  const filter = useLocation().pathname.split('/')[2];
+
+  const handleQuery = (limit: number = 40) => {
+    switch (filter) {
+      case filters[1]:
+        return  getMostPopularTracks(limit);
+      case filters[2]:
+        return  getMostPopularArtists(limit);
+      case filters[3]:
+        return  getMostPopularAlbums(limit);
+      case filters[4]:
+        return  getMostPopularPlayLists(limit);
+      default:
+        return [];
+    }
+  };
+
+  const data = useQuery({
+    queryKey: ["dataSectionView", filter],
+    queryFn: () => handleQuery(),
+    refetchOnReconnect: true,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false
+  });
+
+  return (
+    <div className="gap-1 md:gap-5 flex flex-col">
+      <h1 className="text-2xl md:text-3xl font-bold capitalize">{filter}</h1>
+      <GridPanel data={data} isProfile={filter === filters[2]} />
+    </div>
+  );
+};
+
+export default SectionView;
