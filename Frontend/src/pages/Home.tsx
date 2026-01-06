@@ -23,7 +23,7 @@ function Home() {
       <header className="shrink-0">
          <NavBar 
           toggleMobileMenu={toggleMobileMenu} 
-          isAsideMinimized={false} 
+          isAsideMinimized={false}
         />
       </header>
 
@@ -44,12 +44,15 @@ function Home() {
           ) : (
             <Outlet />
           )}
-
+          <AppFooter/>
         </div>
+
+        
 
         {songs.length > 0 && (
           <FloatingPlayer />
         )}
+
       </main>
     </div>
   );

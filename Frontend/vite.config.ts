@@ -115,13 +115,27 @@ export default defineConfig(({ mode }) => ({
   },
   server: {
     host: true,
-    allowedHosts: ['tfabian.mocki.work'],
+    allowedHosts: ['magismusic.mocki.work'],
     proxy: {
-      '/api': {
+      '/api-deezer': {
         target: 'http://localhost:4000',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '/api'),
+        rewrite: (path) => path.replace(/^\/api-deezer/, '/api'),
+      },
+
+      '/api-jam': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-jam/, '/api'),
+      },
+
+      '/ws-jam': {
+        target: 'ws://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/ws-jam/, '/api'),
       },
     },
+
+    
   },
 }))

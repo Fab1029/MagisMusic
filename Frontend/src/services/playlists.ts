@@ -1,4 +1,4 @@
-const BASE_URL = "/api/v1/playlists"
+const BASE_URL = "/api-deezer/v1/playlists"
 import { downloadTrack } from "./deezer"; 
 import { savePlaylistOffline } from "@/lib/offlineDb";
 import type{ Playlist } from "@/store/usePlaylistStore";

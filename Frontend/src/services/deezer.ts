@@ -1,11 +1,11 @@
-const BASE_URL = "/api/v1/deezer"
+const BASE_URL = "/api-deezer/v1/deezer"
 import { saveTrackOffline } from "@/lib/offlineDb";
 import type{ Track } from "@/models/Track";
 
 export const getMostPopularTracks = async(limit = 10) => {
     try{
         const response = await fetch(`${BASE_URL}/tracks?limit=${limit}`);
-
+        
         if (!response.ok) {
             throw new Error('Error al obtener canciones populares');            
         }

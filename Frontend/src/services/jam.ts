@@ -1,8 +1,10 @@
 const JAM_URL = import.meta.env.VITE_BACKEND_JAM_URL;
-const BASE_URL = `${JAM_URL}/api/v1/jam/`
+const BASE_URL = `/api-jam/v1/jam/`
+
 
 export const createJam = async(accessToken:string) => {
     try{
+        console.log(BASE_URL);
         const pathName = window.location.origin
         const response = await fetch(`${BASE_URL}`, {
           method: "POST",
@@ -18,7 +20,8 @@ export const createJam = async(accessToken:string) => {
 
         let data =  await response.json();
      
-        //data.link = `${pathName}/jam/${data.jamId}`;
+        data.link = `${pathName}/jam/${data.jamId}`;
+        //console.log('ESTO ES:', `${pathName}/jam/${data.jamId}`);
         return data;
 
     }catch(error) {

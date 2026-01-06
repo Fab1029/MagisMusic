@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { usePlayerStore } from "@/store/usePlayerStore";
+const BASE_URL = "/ws-jam/v1/jam"
 
 interface JamState {
   uri: string;
@@ -47,7 +48,7 @@ export const useJamStore = create<JamState>((set, get) => ({
       existingSocket?.close();
     }
 
-    const wsUrl = `${import.meta.env.VITE_BACKEND_JAM_WS_URL}/api/v1/jam/${idJam}`
+    const wsUrl = `${BASE_URL}/${idJam}`
     const socket = new WebSocket(wsUrl)
 
     socket.onopen = () => {

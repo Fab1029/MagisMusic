@@ -86,7 +86,7 @@ const NavBar: React.FC<NavBarProps> = ({ toggleMobileMenu, isAsideMinimized }) =
         <img className="w-full h-full object-contain" src={icons.menuIcon} alt="Icon Menu"/>
       </Button>
       {(isLoggedIn && user) ? (
-        <div>
+        <div className="hidden md:flex">
           <CustomDropdownMenu
             trigger={
               <div className="gap-1 flex items-center justify-center cursor-pointer">
@@ -109,11 +109,12 @@ const NavBar: React.FC<NavBarProps> = ({ toggleMobileMenu, isAsideMinimized }) =
           />
         </div>
       ): (
-        <div className="hidden md:flex gap-5">
+        <div className="hidden md:flex md:gap-5">
           <Button onClick={() => navigate('/register')} variant="pillHoverSecondary" className="text-md py-6">Registrate</Button>
           <Button onClick={() => navigate('/login')} variant="pillHover" className="text-md py-6">Inicia sesión</Button>
         </div>
       )}
+      
       
 
     </nav>

@@ -27,8 +27,8 @@ manager = ConnectionManager()
 @router.post("/")     
 async def create_jam(user=Depends(auth_middleware)):
     jam_data = await JamService.create_jam()
-    link = f"{settings.FRONTEND_URL}/jam/{jam_data['jamId']}"
-    return {**jam_data, "link": link, "message": "Jam creado exitosamente"}
+    #link = f"{settings.FRONTEND_URL}/jam/{jam_data['jamId']}"
+    return {**jam_data, "message": "Jam creado exitosamente"}
 
 @router.websocket("/{jam_id}")
 async def jam_websocket(websocket: WebSocket, jam_id: str):

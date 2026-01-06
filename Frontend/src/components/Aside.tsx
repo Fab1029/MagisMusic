@@ -48,8 +48,7 @@ const Aside: React.FC<AsideProps> = ({
 
   const navigate = useNavigate();
   const { setQuery } = useSearchStore();
-
-  const {isLoggedIn, user, accessToken} = useAuth();
+  const {isLoggedIn, user, logout, accessToken} = useAuth();
 
   const { replaceQueue } = usePlayerStore();
   const { idJam, connectToJam, setIsDialogOpen, setURI } = useJamStore();
@@ -162,7 +161,7 @@ const Aside: React.FC<AsideProps> = ({
     >
       {/* Encabezado */}
       <div className="flex flex-col gap-3 p-3 md:p-0 md:flex-row md:justify-between md:items-center">
-        <div className="flex justify-between items-center w-full md:w-auto p-1 md:p-0">
+        <div className="flex flex-row items-center justify-between">
           <Button
             onClick={toggleMobileMenu}
             variant="ghost"
@@ -171,6 +170,40 @@ const Aside: React.FC<AsideProps> = ({
             <X className="w-6 h-6 text-white" />
           </Button>
 
+          {(isLoggedIn && user) ? (
+            <div className="md:hidden">
+              <CustomDropdownMenu
+                trigger={
+                  <div className="gap-1 flex items-center justify-center cursor-pointer">
+                    <span className="text-sm text-secondary">
+                      Hola,
+                    </span>
+                    <span className="text-sm text-secondary"> 
+                      {user.user_metadata?.full_name?.split(' ')[0] || user.email}
+                    </span>
+                    {user?.user_metadata?.avatar_url && (
+                      <img
+                        className="w-10 h-10 rounded-full object-contain"
+                        src={user?.user_metadata?.avatar_url}
+                      />
+                    )}
+                    
+                  </div>
+                }
+                menuItems={[{label: 'Cerrar sesion', onClick: async() => {await logout()}}]}
+              />
+            </div>
+          ): (
+            <div className="flex gap-5 md:hidden">
+              <Button onClick={() => navigate('/register')} variant="pillHoverSecondary" className="text-xs py-5">Registrate</Button>
+              <Button onClick={() => navigate('/login')} variant="pillHover" className="text-xs py-5">Inicia sesión</Button>
+            </div>
+          )}
+          
+        </div>
+        
+
+        <div className="flex justify-between items-center w-full md:w-auto p-1 md:p-0">
           <h1 className="font-bold transition-opacity duration-300 text-lg opacity-100 md:inline">
             Tu biblioteca
           </h1>
