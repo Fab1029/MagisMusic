@@ -68,7 +68,7 @@ const Aside: React.FC<AsideProps> = ({
       setPlaylists(playlists);
     }
   }, [playlists]);
-  //console.log(accessToken);
+  console.log(accessToken);
   const crearPlaylist = () => {
     if (isLoggedIn) {
       const playlistNumber = (playlists?.length ?? 0) + 1;

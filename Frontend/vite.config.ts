@@ -117,6 +117,12 @@ export default defineConfig(({ mode }) => ({
     host: true,
     allowedHosts: ['magismusic.mocki.work'],
     proxy: {
+      '/api-gateway': {
+        target: 'http://localhost:8085',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api-gateway/, '/api'),
+      },
+
       '/api-deezer': {
         target: 'http://localhost:4000',
         changeOrigin: true,

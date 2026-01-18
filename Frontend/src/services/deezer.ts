@@ -1,4 +1,4 @@
-const BASE_URL = "/api-deezer/v1/deezer"
+const BASE_URL = "/api-gateway/v1/deezer"
 import { saveTrackOffline } from "@/lib/offlineDb";
 import type{ Track } from "@/models/Track";
 
