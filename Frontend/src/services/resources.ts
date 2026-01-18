@@ -1,4 +1,4 @@
-const BASE_URL = "/api-deezer/v1/resources"
+const BASE_URL = "/api-gateway/v1/resources/"
 
 
 export const getIsLikeResource = async (

@@ -68,7 +68,7 @@ const Aside: React.FC<AsideProps> = ({
       setPlaylists(playlists);
     }
   }, [playlists]);
-  //console.log(accessToken);
+  console.log(accessToken);
   const crearPlaylist = () => {
     if (isLoggedIn) {
       const playlistNumber = (playlists?.length ?? 0) + 1;
@@ -115,7 +115,7 @@ const Aside: React.FC<AsideProps> = ({
         replaceQueue([]);
         /* Mostrar dialogo */
         setIsDialogOpen(true);
-
+        setActiveFilter("Jam");
         navigate(`/jam/${jamId}`);
       } catch (error) {
         console.error("Error creando Jam:", error);
@@ -133,7 +133,10 @@ const Aside: React.FC<AsideProps> = ({
   }
 
   const handleFilterJams = () => {
-    if (idJam) navigate(`/jam/${idJam}`);
+    if (idJam) {
+      setActiveFilter(activeFilter === "Jam" ? null : "Jam");
+      navigate(`/jam/${idJam}`);
+    }
     else console.warn("No hay un Jam activo para mostrar.");
   };
 

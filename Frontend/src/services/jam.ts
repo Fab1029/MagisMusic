@@ -1,5 +1,5 @@
 const JAM_URL = import.meta.env.VITE_BACKEND_JAM_URL;
-const BASE_URL = `/api-jam/v1/jam/`
+const BASE_URL = `/api-gateway/v1/jam/`
 
 
 export const createJam = async(accessToken:string) => {
